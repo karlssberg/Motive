@@ -1,6 +1,7 @@
 using Motiv.BooleanPredicateProposition.PropositionBuilders;
 using Motiv.BooleanResultPredicateProposition.PropositionBuilders;
 using Motiv.ExpressionTreeProposition.PropositionBuilders;
+using Motiv.HigherOrderProposition;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanPredicate;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree;

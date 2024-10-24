@@ -547,4 +547,72 @@ public class ExpressionTreeJustificationTests
         // Assert
         act.Justification.Should().BeEquivalentTo(expectedAssertion);
     }
+
+    [Fact]
+    public void Should_justify_all_operation_when_using_subtypes_of_ienumerable()
+    {
+        var allPositive =
+            Spec.From((ICollection<int> numbers) => numbers.All(n => n > 0))
+                .Create("all positive");
+
+        var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Justification.Should().Be(
+            """
+            ¬all positive
+                numbers.All((int n) => n > 0) == false
+                    n <= 0
+            """);
+    }
+
+    [Fact]
+    public void Should_justify_any_operation_when_using_subtypes_of_ienumerable()
+    {
+        var allPositive =
+            Spec.From((ICollection<int> numbers) => numbers.Any(n => n > 0))
+                .Create("all positive");
+
+        var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Justification.Should().Be(
+            """
+            all positive
+                numbers.Any((int n) => n > 0) == true
+                    n > 0
+            """);
+    }
+
+    [Fact]
+    public void Should_justify_all_operation_when_using_an_array()
+    {
+        var allPositive =
+            Spec.From((int[] numbers) => numbers.All(n => n > 0))
+                .Create("all positive");
+
+        var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Justification.Should().Be(
+            """
+            ¬all positive
+                numbers.All((int n) => n > 0) == false
+                    n <= 0
+            """);
+    }
+
+    [Fact]
+    public void Should_justify_any_operation_when_using_an_array()
+    {
+        var allPositive =
+            Spec.From((int[] numbers) => numbers.Any(n => n > 0))
+                .Create("all positive");
+
+        var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Justification.Should().Be(
+            """
+            all positive
+                numbers.Any((int n) => n > 0) == true
+                    n > 0
+            """);
+    }
 }

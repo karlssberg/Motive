@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
+using Motiv.HigherOrderProposition;
+using Motiv.HigherOrderProposition.ExpressionTree;
 
 namespace Motiv.ExpressionTreeProposition;
 
@@ -77,28 +79,47 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
     {
         return expression switch
         {
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
-                when IsSpecPredicate() =>
+            { Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
+                when IsSpecPredicate() &&
+                     IsCollectionsType() =>
                 TransformSpecExpression(expression, CreateAnySpec),
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
-                when IsBooleanResultPredicate() =>
+            { Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
+                when IsBooleanResultPredicate() &&
+                     IsCollectionsType() =>
                 TransformPredicateExpression(expression, CreateAnySpec),
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
-                when IsBooleanPredicate() && IsSimpleEnumerableRelationship() =>
+            { Method.Name: nameof(Enumerable.Any), Arguments.Count: 2 }
+                when IsBooleanPredicate() &&
+                     IsSimpleEnumerableRelationship() &&
+                     IsCollectionsType() =>
                 TransformBinaryPredicateExpression(expression, CreateAnySpec),
-
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
-                when IsSpecPredicate() =>
+            { Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
+                when IsSpecPredicate() &&
+                     IsCollectionsType() =>
                 TransformSpecExpression(expression, CreateAllSpec),
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
-                when IsBooleanResultPredicate() =>
+            { Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
+                when IsBooleanResultPredicate() &&
+                     IsCollectionsType() =>
                 TransformPredicateExpression(expression, CreateAllSpec),
-            { Method.DeclaringType.Name: nameof(Enumerable), Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
-                when IsBooleanPredicate() && IsSimpleEnumerableRelationship() =>
+            { Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
+                when IsBooleanPredicate() &&
+                     IsSimpleEnumerableRelationship() &&
+                     IsCollectionsType() =>
                 TransformBinaryPredicateExpression(expression, CreateAllSpec),
 
             _ => TransformQuasiProposition(expression, parameter)
         };
+
+        bool IsCollectionsType()
+        {
+            var declaringType = expression.Arguments.First().Type;
+
+            var collections = declaringType?
+                .FindInterfaces(
+                    (type, _) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>),
+                    null);
+
+            return collections?.Length > 0;
+        }
 
         bool IsSpecPredicate()
         {
@@ -141,7 +162,14 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                 return false;
 
             var model = predicateExpression.Type.GetGenericArguments().First();
-            return typeof(IEnumerable<>).MakeGenericType(model) == parameter.Type;
+
+            var parameterAsEnumerable = parameter.Type
+                .FindInterfaces(
+                    (type, _) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>),
+                    null)
+                .FirstOrDefault();
+
+            return typeof(IEnumerable<>).MakeGenericType(model) == parameterAsEnumerable;
         }
     }
 
@@ -334,102 +362,115 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
             unConverted);
     }
 
-    private SpecBase<IEnumerable<T>, string> TransformAnyExpressionInternal<T>(
-        object argument, Expression statement)
+    private SpecBase<TCollection, string> TransformAnyExpressionInternal<T, TCollection>(
+        object argument, Expression statement) where TCollection : IEnumerable<T>
     {
         return argument switch
         {
             SpecBase<T> spec =>
-                CreateAnySatisfiedSpec(spec, statement),
+                CreateAnySatisfiedSpec<T, TCollection>(spec, statement),
             Expression<Func<T, PolicyResultBase<string>>> predicate =>
-                CreateAnySatisfiedSpec(predicate, statement),
+                CreateAnySatisfiedSpec<T, TCollection>(predicate, statement),
             Expression<Func<T, BooleanResultBase<string>>> predicate =>
-                CreateAnySatisfiedSpec(predicate, statement),
+                CreateAnySatisfiedSpec<T, TCollection>(predicate, statement),
             Expression<Func<T, bool>> predicate =>
-                CreateAnySatisfiedSpec(predicate, statement),
+                CreateAnySatisfiedSpec<T, TCollection>(predicate, statement),
             _ => throw new InvalidOperationException($"Unsupported predicate type: {argument.GetType()}")
         };
     }
 
-    private static SpecBase<IEnumerable<T>, string> CreateAnySatisfiedSpec<T>(SpecBase<T> spec, Expression statement)
+    private static SpecBase<TCollection, string> CreateAnySatisfiedSpec<T, TCollection>(SpecBase<T> spec, Expression statement)
+        where TCollection : IEnumerable<T>
     {
         return Spec
             .Build(spec.ToExplanationSpec())
             .AsAnySatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> CreateAnySatisfiedSpec<T>(Expression<Func<T, PolicyResultBase<string>>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAnySatisfiedSpec<T, TCollection>(Expression<Func<T, PolicyResultBase<string>>> predicate, Expression statement)
+        where TCollection : IEnumerable<T>
     {
         return Spec
             .From(predicate)
             .AsAnySatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> CreateAnySatisfiedSpec<T>(Expression<Func<T, BooleanResultBase<string>>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAnySatisfiedSpec<T, TCollection>(Expression<Func<T, BooleanResultBase<string>>> predicate, Expression statement)
+        where TCollection : IEnumerable<T>
     {
         return Spec
             .From(predicate)
             .AsAnySatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> CreateAnySatisfiedSpec<T>(Expression<Func<T, bool>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAnySatisfiedSpec<T, TCollection>(Expression<Func<T, bool>> predicate, Expression statement)
+        where TCollection : IEnumerable<T>
     {
         return Spec
             .From(predicate)
             .AsAnySatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> TransformAllExpressionInternal<T>(
-        object argument, Expression statement)
+    private SpecBase<TCollection, string> TransformAllExpressionInternal<T, TCollection>(
+        object argument, Expression statement) where TCollection : IEnumerable<T>
     {
         return argument switch
         {
             SpecBase<T> spec =>
-                CreateAllSatisfiedSpec(spec, statement),
+                CreateAllSatisfiedSpec<T, TCollection>(spec, statement),
             Expression<Func<T, PolicyResultBase<string>>> predicate =>
-                CreateAllSatisfiedSpec(predicate, statement),
+                CreateAllSatisfiedSpec<T, TCollection>(predicate, statement),
             Expression<Func<T, BooleanResultBase<string>>> predicate =>
-                CreateAllSatisfiedSpec(predicate, statement),
+                CreateAllSatisfiedSpec<T, TCollection>(predicate, statement),
             Expression<Func<T, bool>> predicate =>
-                CreateAllSatisfiedSpec(predicate, statement),
+                CreateAllSatisfiedSpec<T, TCollection>(predicate, statement),
             _ => throw new InvalidOperationException($"Unsupported predicate type: {argument.GetType()}")
         };
     }
 
-    private SpecBase<IEnumerable<T>,string> CreateAllSatisfiedSpec<T>(SpecBase<T> spec, Expression statement)
+    private SpecBase<TCollection, string> CreateAllSatisfiedSpec<T, TCollection>(SpecBase<T> spec, Expression statement) where TCollection : IEnumerable<T>
     {
         return Spec
             .Build(spec.ToExplanationSpec())
             .AsAllSatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> CreateAllSatisfiedSpec<T>(Expression<Func<T, BooleanResultBase<string>>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAllSatisfiedSpec<T, TCollection>(Expression<Func<T, BooleanResultBase<string>>> predicate, Expression statement) where TCollection : IEnumerable<T>
     {
         return Spec
             .From(predicate)
             .AsAllSatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>, string> CreateAllSatisfiedSpec<T>(Expression<Func<T, PolicyResultBase<string>>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAllSatisfiedSpec<T, TCollection>(Expression<Func<T, PolicyResultBase<string>>> predicate, Expression statement) where TCollection : IEnumerable<T>
     {
         return Spec
             .From(predicate)
             .AsAllSatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
-    private SpecBase<IEnumerable<T>,string> CreateAllSatisfiedSpec<T>(Expression<Func<T, bool>> predicate, Expression statement)
+    private SpecBase<TCollection, string> CreateAllSatisfiedSpec<T, TCollection>(Expression<Func<T, bool>> predicate, Expression statement) where TCollection : IEnumerable<T>
     {
+
         return Spec
             .From(predicate)
             .AsAllSatisfied()
-            .Create(CreateExpressionStatement<T>(statement));
+            .Create(CreateExpressionStatement<T>(statement))
+            .ChangeModelTo<TCollection>();
     }
 
     private static Expression CreateExpressionStatement<T>(Expression statement)
@@ -546,13 +587,13 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                 BindingFlags.NonPublic | BindingFlags.Instance)!;
 
     private SpecBase<TModel, string> CreateAnySpec(Expression expression, Type itemType, object argument) =>
-            (SpecBase<TModel, string>)(AnyFactoryMethodInfo.MakeGenericMethod(itemType).Invoke(this, [argument, expression])
+            (SpecBase<TModel, string>)(AnyFactoryMethodInfo.MakeGenericMethod(itemType, typeof(TModel)).Invoke(this, [argument, expression])
                                        ?? throw new InvalidOperationException(
                                            $"The factory method {AnyFactoryMethodInfo.Name} returned null."));
 
 
     private SpecBase<TModel, string> CreateAllSpec(Expression expression, Type itemType, object argument) =>
-            (SpecBase<TModel, string>)(AllFactoryMethodInfo.MakeGenericMethod(itemType).Invoke(this, [argument, expression])
+            (SpecBase<TModel, string>)(AllFactoryMethodInfo.MakeGenericMethod(itemType, typeof(TModel)).Invoke(this, [argument, expression])
                                        ?? throw new InvalidOperationException(
                                            $"The factory method {AllFactoryMethodInfo.Name} returned null."));
 

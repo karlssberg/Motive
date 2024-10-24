@@ -172,4 +172,16 @@ public class ExpressionTreeExplanationTests
                     n <= 0
             """);
     }
+
+    [Fact]
+    public void Should_assert_why_a_higher_order_predicate_was_unsatisfied()
+    {
+        var areAllInRange =
+            Spec.From((ICollection<int> numbers) => numbers.All(n => n > 0 & n <= 10))
+                .Create("all in range");
+
+        var result = areAllInRange.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Assertions.Should().BeEquivalentTo("numbers.All((int n) => n > 0 & n <= 10) == false");
+    }
 }

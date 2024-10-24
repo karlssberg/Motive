@@ -50,6 +50,7 @@ var result = isMember.IsSatisfiedBy("Ben");
 result.Satisfied;  // true
 result.Assertions; // ["members.Contains(\"Ben\") == true"]
 ```
+
 ## Using `WhenTrue()` and `WhenFalse()`
 
 Like the `Spec.Build()` method, the `Spec.From()` method can also be used with the `WhenTrue()` and `WhenFalse()`
@@ -71,11 +72,33 @@ result.Justification; // is odd
                       //     n % 2 != 0
 ```
 
+## Inlining Any and All LINQ methods
+
+Expression can inline the `All` and `Any` methods from LINQ, which will be transformed into their Motiv equivalents.
+
+For example:
+
+```csharp
+var areAnyEvenAndAllPositive = Spec.From((IEnumerable<int> numbers) =>
+                                       numbers.Any(n => n % 2 == 0)
+                                       & numbers.All(n => n > 0))
+                                   .Create("contains even and all positive numbers");
+
+var result = areAnyEvenAndAllPositive.IsSatisfiedBy([-1, 2, 3]);
+
+result.Satisfied;     // false
+result.Assertions;    // ["numbers.All(n => n > 0) == false"]
+result.Justification; // ¬contains even and all positive numbers
+                      //     numbers.All(n => n > 0) == false
+                      //         n <= 0
+```
+
 ## Using Inline Propositions
 
 Propositions can be used within the lambda expression of the `Spec.From()` method, and have their assertions and
 metadata automatically incorporated into the final result.
-This allows you to customize the assertions and metadata of the proposition, without having to create a separate
+This allows you to customize the assertions and metadata of underlying sub-expression without having to break apart
+the lambda expression into individual propositions.
 
 ```csharp
 var isAdmin =

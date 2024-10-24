@@ -53,7 +53,7 @@ Motiv can be applied in various scenarios, including:
 * **Dynamic Logic**: Compose logic at runtime based on user input.
 * **Rules Processing**: Declaratively define and compose complex _if-then_ rules.
 * **Conditional State**: Yield different states based on complex criteria.
-* **Auditing**: Log _why_ something happened, instead of _what_ happened.
+* **Auditing**: Log _why_ it happened, instead of _what_.
 
 ## Installation
 
@@ -70,17 +70,18 @@ dotnet add package Motiv
 
 ### From Lambda Expression Tree to Propositions
 
-When given an `Expression<Func<T, bool>>`, Motiv will transform it into a syntax tree of propositions, with each
-underlying sub-expression describing the outcome of the logic that it performed.
+The simpliest way to use Motiv is with an `Expression<Func<T, bool>>`,
+Motiv will transform it into a multiple individual propositions,
+with each underlying sub-expression describing the outcome of the logic that it performed.
 
 ```csharp
 ```csharp
-Expression<Func<Customer, bool>> expression = customer =>
-    customer.CreditScore > 600 & customer.Income > 100000;
+Expression<Func<Customer, bool>> ;
 
-var isEligibleForLoan =
-    Spec.From(expression)
-        .Create("eligible for loan");
+var isEligibleForLoan = Spec.From((Customer customer) =>
+                                customer.CreditScore > 600
+                                & customer.Income > 100000)
+                            .Create("eligible for loan");
 
 var result = isEligibleForLoan.IsSatisfiedBy(eligibleCustomer);
 
@@ -97,9 +98,8 @@ Create and evaluate a `Func<T, bool>` proposition:
 Func<Customer, bool> expression = customer =>
     customer.CreditScore > 600 & customer.Income > 100000;
 
-var isEligibleForLoan =
-    Spec.Build(expression)
-        .Create("eligible for loan");
+var isEligibleForLoan = Spec.Build(expression)
+                            .Create("eligible for loan");
 
 var result = isEligibleForLoan.IsSatisfiedBy(eligibleCustomer);
 
@@ -113,16 +113,11 @@ result.Assertions; // ["eligible for loan"]
 Use `WhenTrue()` and `WhenFalse()` for user-friendly explanations:
 
 ```csharp
-var isEligibleForLoan =
-    Spec.Build((Customer customer) =>
-            customer is
-            {
-                CreditScore: > 600,
-                Income: > 100000
-            })
-        .WhenTrue("eligible for a loan")
-        .WhenFalse("not eligible for a loan")
-        .Create();
+var isEligibleForLoan = Spec.Build((Customer customer) =>
+                                     customer is { CreditScore: > 600, Income: > 100000 })
+                            .WhenTrue("eligible for a loan")
+                            .WhenFalse("not eligible for a loan")
+                            .Create();
 
 var result = isEligibleForLoanPolicy.IsSatisfiedBy(ineligibleCustomer);
 
@@ -135,16 +130,11 @@ result.Reason;     // "not eligible for a loan"
 Use `WhenTrue()` and `WhenFalse()` with types other than `string`:
 
 ```csharp
-var isEligibleForLoanPolicy =
-    Spec.Build((Customer customer) =>
-            customer is
-            {
-                CreditScore: > 600,
-                Income: > 100000
-            })
-        .WhenTrue(MyEnum.EligibleForLoan)
-        .WhenFalse(MyEnum.NotEligibleForLoan)
-        .Create("eligible for a loan");
+var isEligibleForLoanPolicy =  Spec.Build((Customer customer) =>
+                                     customer is { CreditScore: > 600, Income: > 100000 })
+                                   .WhenTrue(MyEnum.EligibleForLoan)
+                                   .WhenFalse(MyEnum.NotEligibleForLoan)
+                                   .Create("eligible for a loan");
 
 var result = isEligibleForLoanPolicy.IsSatisfiedBy(eligibleCustomer);
 
@@ -158,17 +148,15 @@ result.Reason;     // "eligible for a loan"
 Combine propositions using boolean operators:
 
 ```csharp
-var hasGoodCreditScore =
-    Spec.Build((Customer customer) => customer.CreditScore > 600)
-        .WhenTrue("good credit score")
-        .WhenFalse("inadequate credit score")
-        .Create();
+var hasGoodCreditScore = Spec.Build((Customer customer) => customer.CreditScore > 600)
+                             .WhenTrue("good credit score")
+                             .WhenFalse("inadequate credit score")
+                             .Create();
 
-var hasSufficientIncome =
-    Spec.Build((Customer customer) => customer.Income > 100000)
-        .WhenTrue("sufficient income")
-        .WhenFalse("insufficient income")
-        .Create();
+var hasSufficientIncome = Spec.Build((Customer customer) => customer.Income > 100000)
+                              .WhenTrue("sufficient income")
+                              .WhenFalse("insufficient income")
+                              .Create();
 
 var isEligibleForLoan = hasGoodCreditScore & hasSufficientIncome;
 
@@ -184,12 +172,11 @@ result.Assertions; // ["good credit score", "sufficient income"]
 Provide facts about collections:
 
 ```csharp
-var allNegative =
-    Spec.Build((int n) => n < 0)
-        .AsAllSatisfied()
-        .WhenTrue("all are negative")
-        .WhenFalseYield(eval => eval.FalseModels.Select(n => $"{n} is not negative"))
-        .Create();
+var allNegative = Spec.Build((int n) => n < 0)
+                      .AsAllSatisfied()
+                      .WhenTrue("all are negative")
+                      .WhenFalseYield(eval => eval.FalseModels.Select(n => $"{n} is not negative"))
+                      .Create();
 
 var result = allNegative.IsSatisfiedBy([-1, 2, 3]);
 

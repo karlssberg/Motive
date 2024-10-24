@@ -613,4 +613,27 @@ public class TutorialTests
         result.Reason.Should().Be("¬all are negative");
         result.Assertions.Should().BeEquivalentTo("2 is not negative", "3 is not negative");
     }
+
+    [Fact]
+    public void Should_demonstrate_the_usage_of_all_and_any()
+    {
+        var areAnyEvenAndAllInRange =
+            Spec.From((ICollection<int> numbers) =>
+                    numbers.Any(n => n % 2 == 0)
+                    & numbers.All(n => n > 0 & n <= 10))
+                .Create("any even and all in range");
+
+        var result = areAnyEvenAndAllInRange.IsSatisfiedBy([-1, 2, 3]);
+
+        result.Satisfied.Should().BeFalse();       // false
+        result.Assertions.Should().BeEquivalentTo("numbers.All((int n) => n > 0 & n <= 10) == false");
+        result.Justification.Should().Be(
+            """
+            ¬any even and all in range
+                AND
+                    numbers.All((int n) => n > 0 & n <= 10) == false
+                        AND
+                            n <= 0
+            """);
+    }
 }
