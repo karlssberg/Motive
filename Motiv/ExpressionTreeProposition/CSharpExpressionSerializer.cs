@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -306,6 +307,9 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 return VisitStringInterpolation(node);
             case { DeclaringType.FullName: $"Motiv.ExpressionTreeProposition.{nameof(Display)}", Name: nameof(Display.AsValue) }:
                 return VisitSerializeAsValue(ResolveMethodArguments(node).First());
+            case { DeclaringType.FullName: "System.Reflection.MethodInfo", Name: nameof(Delegate.CreateDelegate) }:
+                // ignore
+                return Visit(node.Object)!;
         }
 
         var isExtensionMethod = node.Method.IsDefined(typeof(ExtensionAttribute), false);
@@ -641,6 +645,7 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
             TimeSpan timespan => $"TimeSpan.Parse(\"{timespan}\")",
             Regex regex => $"new Regex(@\"{regex}\")",
             Type t => $"typeof({t.FullName})",
+            MethodInfo methodInfo => $"{methodInfo.DeclaringType!.Name}.{methodInfo.Name}",
             _ when declaredType.IsEnum => $"{declaredType.Name}.{obj}",
             _ when IsSupported(obj) => obj.ToString(),
             _ => null

@@ -182,6 +182,6 @@ public class ExpressionTreeExplanationTests
 
         var result = areAllInRange.IsSatisfiedBy([-1, 2, 3]);
 
-        result.Assertions.Should().BeEquivalentTo("numbers.All((int n) => n > 0 & n <= 10) == false");
+        result.Assertions.Should().BeEquivalentTo("n <= 0");
     }
 }

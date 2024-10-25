@@ -626,7 +626,7 @@ public class TutorialTests
         var result = areAnyEvenAndAllInRange.IsSatisfiedBy([-1, 2, 3]);
 
         result.Satisfied.Should().BeFalse();       // false
-        result.Assertions.Should().BeEquivalentTo("numbers.All((int n) => n > 0 & n <= 10) == false");
+        result.Assertions.Should().BeEquivalentTo("n <= 0");
         result.Justification.Should().Be(
             """
             ¬any even and all in range

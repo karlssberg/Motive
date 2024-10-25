@@ -92,6 +92,7 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                      IsSimpleEnumerableRelationship() &&
                      IsCollectionsType() =>
                 TransformBinaryPredicateExpression(expression, CreateAnySpec),
+
             { Method.Name: nameof(Enumerable.All), Arguments.Count: 2 }
                 when IsSpecPredicate() &&
                      IsCollectionsType() =>
@@ -105,20 +106,23 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                      IsSimpleEnumerableRelationship() &&
                      IsCollectionsType() =>
                 TransformBinaryPredicateExpression(expression, CreateAllSpec),
-
             _ => TransformQuasiProposition(expression, parameter)
         };
 
         bool IsCollectionsType()
         {
             var declaringType = expression.Arguments.First().Type;
+            var isEnumerable = declaringType.IsGenericType
+                               && declaringType.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+            if (isEnumerable)
+                return true;
 
-            var collections = declaringType?
-                .FindInterfaces(
-                    (type, _) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>),
+            var collections = declaringType.FindInterfaces(
+                    (type, _) => type.IsGenericType
+                                 && type.GetGenericTypeDefinition() == typeof(IEnumerable<>),
                     null);
 
-            return collections?.Length > 0;
+            return collections.Length > 0;
         }
 
         bool IsSpecPredicate()
@@ -167,7 +171,8 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                 .FindInterfaces(
                     (type, _) => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>),
                     null)
-                .FirstOrDefault();
+                .FirstOrDefault()
+                ?? parameter.Type;
 
             return typeof(IEnumerable<>).MakeGenericType(model) == parameterAsEnumerable;
         }
@@ -331,10 +336,10 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
         var args = expression.Arguments.Take(2).ToArray();
         var enumerableExpression = args[0];
         var predicateExpression = UnwrapConvertExpression(args[1]);
-        if (predicateExpression is not LambdaExpression lambdaExpression)
+        if (predicateExpression is not LambdaExpression expr)
             throw new InvalidOperationException("Unsupported predicate type");
 
-        var unConverted = UnConvertLambdaBody(lambdaExpression);
+        var unConverted = UnConvertLambdaBody(expr);
 
         var enumerableItemType = GetEnumerableItemType(enumerableExpression.Type)!;
         return factory(
@@ -350,10 +355,10 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
         var args = expression.Arguments.Take(2).ToArray();
         var enumerableExpression = args[0];
         var predicateExpression = UnwrapConvertExpression(args[1]);
-        if (predicateExpression is not LambdaExpression lambdaExpression)
+        if (predicateExpression is not LambdaExpression expr)
             throw new InvalidOperationException("Unsupported predicate type");
 
-        var unConverted = UnConvertLambdaBody(lambdaExpression);
+        var unConverted = UnConvertLambdaBody(expr);
 
         var enumerableItemType = GetEnumerableItemType(enumerableExpression.Type)!;
         return factory(

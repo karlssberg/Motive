@@ -10,9 +10,9 @@
 
 ## Decisions Made Clear
 
-Motiv is a solution to the _[Boolean Blindness](https://existentialtype.wordpress.com/2011/03/15/boolean-blindness/)_
+Motiv is a pragmatic solution to the _[Boolean Blindness](https://existentialtype.wordpress.com/2011/03/15/boolean-blindness/)_
 problem (which is the loss of information resulting from the reduction of logic to a single true or false value).
-It does this by having logical expressions decomposed into individual atomic [propositions](https://en.wikipedia.org/wiki/Proposition),
+It achieves this by decomposing logical expressions into individual atomic [propositions](https://en.wikipedia.org/wiki/Proposition),
 so that during evaluation, the specific causes of a decision can be preserved, and then put to use.
 In most cases this will be a human-readable explanation of the decision, but it could equally be used to surface state.
 
