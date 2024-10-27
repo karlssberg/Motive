@@ -37,7 +37,7 @@ internal sealed class ExpressionTreeMetadataProposition<TModel, TMetadata, TPred
             var assertions = lazyMetadata.Value switch
             {
                 IEnumerable<string> because => because.ToArray(),
-                _ => [expression.ToExpressionAssertion(result.Satisfied).Humanize(model, parameter)]
+                _ => [expression.ToExpressionAssertion(result.Satisfied).Serialize(model, parameter)]
             };
 
             return new Explanation(assertions, result.ToEnumerable(),

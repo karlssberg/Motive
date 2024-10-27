@@ -8,7 +8,7 @@ internal class ExpressionTreeDescription<TModel, TPredicateResult>(
     ISpecDescription? underlyingDescription = null)
     : IExpressionDescription<TModel>
 {
-    public string Statement { get; } = expression.Body.Humanize();
+    public string Statement { get; } = expression.Body.Serialize();
 
     public string Detailed => string.Join(Environment.NewLine, GetDetailsAsLines());
 
@@ -28,6 +28,6 @@ internal class ExpressionTreeDescription<TModel, TPredicateResult>(
     public string ToAssertion(TModel model, bool satisfied)
     {
         var parameter = expression.Parameters.First();
-        return expression.ToExpressionAssertion(satisfied).Humanize(model, parameter);
+        return expression.ToExpressionAssertion(satisfied).Serialize(model, parameter);
     }
 }

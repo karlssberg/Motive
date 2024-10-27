@@ -186,7 +186,7 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
         var ifTrue = Transform(expression.IfTrue, parameter);
         var ifFalse = Transform(expression.IfFalse, parameter);
 
-        var whenConditional = expression.Humanize();
+        var whenConditional = expression.Serialize();
 
         return
             Spec.Build((TModel model) =>
@@ -213,9 +213,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => equalsExpression.Humanize(model, parameter))
-                .WhenFalse(model => notEqualsExpression.Humanize(model, parameter))
-                .Create(equalsExpression.Humanize());
+                .WhenTrue(model => equalsExpression.Serialize(model, parameter))
+                .WhenFalse(model => notEqualsExpression.Serialize(model, parameter))
+                .Create(equalsExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformNotEqualsExpression(
@@ -229,9 +229,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => notEqualExpression.Humanize(model, parameter))
-                .WhenFalse(model => equalExpression.Humanize(model, parameter))
-                .Create(notEqualExpression.Humanize());
+                .WhenTrue(model => notEqualExpression.Serialize(model, parameter))
+                .WhenFalse(model => equalExpression.Serialize(model, parameter))
+                .Create(notEqualExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformGreaterThanExpression(
@@ -245,9 +245,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => greaterThanExpression.Humanize(model, parameter))
-                .WhenFalse(model => lessThanOrEqualExpression.Humanize(model, parameter))
-                .Create(greaterThanExpression.Humanize());
+                .WhenTrue(model => greaterThanExpression.Serialize(model, parameter))
+                .WhenFalse(model => lessThanOrEqualExpression.Serialize(model, parameter))
+                .Create(greaterThanExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformGreaterThanOrEqualExpression(
@@ -261,9 +261,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => greaterThanOrEqualExpression.Humanize(model, parameter))
-                .WhenFalse(model => lessThanExpression.Humanize(model, parameter))
-                .Create(greaterThanOrEqualExpression.Humanize());
+                .WhenTrue(model => greaterThanOrEqualExpression.Serialize(model, parameter))
+                .WhenFalse(model => lessThanExpression.Serialize(model, parameter))
+                .Create(greaterThanOrEqualExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformLessThanExpression(
@@ -277,9 +277,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => lessThanExpression.Humanize(model, parameter))
-                .WhenFalse(model => greaterThanOrEqualExpression.Humanize(model, parameter))
-                .Create(lessThanExpression.Humanize());
+                .WhenTrue(model => lessThanExpression.Serialize(model, parameter))
+                .WhenFalse(model => greaterThanOrEqualExpression.Serialize(model, parameter))
+                .Create(lessThanExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformLessThanOrEqualExpression(
@@ -293,9 +293,9 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
 
         return
             Spec.Build(predicate)
-                .WhenTrue(model => lessThanOrEqualExpression.Humanize(model, parameter))
-                .WhenFalse(model => greaterThanExpression.Humanize(model, parameter))
-                .Create(lessThanOrEqualExpression.Humanize());
+                .WhenTrue(model => lessThanOrEqualExpression.Serialize(model, parameter))
+                .WhenFalse(model => greaterThanExpression.Serialize(model, parameter))
+                .Create(lessThanOrEqualExpression.Serialize());
     }
 
     private SpecBase<TModel, string> TransformUnaryExpression(
@@ -326,7 +326,7 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                 .Lambda(specExpression)
                 .Compile()
                 .DynamicInvoke()
-                ?? new InvalidOperationException($"The expression {expression.Humanize()} returned null."));
+                ?? new InvalidOperationException($"The expression {expression.Serialize()} returned null."));
     }
 
     private SpecBase<TModel, string> TransformPredicateExpression(
@@ -516,11 +516,10 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
         var (expressionAsBooleanResult, returnType) = ResolvePredicateResultExpression(expression);
         if (returnType == PredicateReturnType.BooleanResult)
         {
-            var statement = Expression.Equal(
+            var statement =
                 Expression.MakeMemberAccess(
                     expression,
-                    typeof(BooleanResultBase).GetProperty(nameof(BooleanResultBase.Satisfied))!),
-                Expression.Constant(true));
+                    typeof(BooleanResultBase).GetProperty(nameof(BooleanResultBase.Satisfied))!);
 
             return CreateSpecForBooleanResult(
                 expressionAsBooleanResult,
@@ -528,33 +527,34 @@ internal class ExpressionTreeTransformer<TModel>(Expression<Func<TModel, bool>> 
                 statement);
         }
 
-        var whenTrueExpression = Expression.Equal(expression, Expression.Constant(true));
-        var whenFalseExpression = Expression.Equal(expression, Expression.Constant(false));
-
-        return CreateSpecForBoolean(expression, parameter, whenTrueExpression, whenFalseExpression);
+        return CreateSpecForBoolean(
+            expression,
+            parameter,
+            expression.ToAssertionExpression(true),
+            expression.ToAssertionExpression(false));
     }
 
     private SpecBase<TModel, string> CreateSpecForBoolean(
         Expression expression,
         ParameterExpression parameter,
-        BinaryExpression whenTrueExpression,
-        BinaryExpression whenFalseExpression)
+        Expression whenTrueExpression,
+        Expression whenFalseExpression)
     {
         return
             Spec.Build(CreateFunc<TModel, bool>(expression, parameter))
-                .WhenTrue(model => whenTrueExpression.Humanize(model, parameter))
-                .WhenFalse(model => whenFalseExpression.Humanize(model, parameter))
-                .Create(whenTrueExpression.Humanize());
+                .WhenTrue(model => whenTrueExpression.Serialize(model, parameter))
+                .WhenFalse(model => whenFalseExpression.Serialize(model, parameter))
+                .Create(whenTrueExpression.Serialize());
     }
 
     private SpecBase<TModel, string> CreateSpecForBooleanResult(
         Expression expression,
         ParameterExpression parameter,
-        BinaryExpression propositionalStatementExpression)
+        Expression propositionalStatementExpression)
     {
         return
             Spec.Build(CreateFunc<TModel, BooleanResultBase<string>>(expression, parameter))
-                .Create(propositionalStatementExpression.Humanize());
+                .Create(propositionalStatementExpression.Serialize());
     }
 
     private static (Expression, PredicateReturnType) ResolvePredicateResultExpression(Expression expression)

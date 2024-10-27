@@ -457,8 +457,8 @@ public class ExpressionTreeAssertionTests
     }
 
     [Theory]
-    [InlineData("3", "obj is string == true")]
-    [InlineData(3, "obj is string == false")]
+    [InlineData("3", "obj is string")]
+    [InlineData(3, "obj is not string")]
     public void Should_assert_expressions_containing_a_type_comparison(object model, params string[] expectedAssertion)
     {
         // Assemble
@@ -1008,5 +1008,4 @@ public class ExpressionTreeAssertionTests
         // Assert
         act.Assertions.Should().BeEquivalentTo(expectedAssertion);
     }
-
 }

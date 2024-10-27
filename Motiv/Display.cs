@@ -1,4 +1,4 @@
-﻿namespace Motiv.ExpressionTreeProposition;
+﻿namespace Motiv;
 
 /// <summary>
 /// Provides hints to the serialization process.

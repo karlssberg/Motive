@@ -6,7 +6,7 @@ namespace Motiv.Shared;
 internal sealed class ExpressionDescription(Expression statement, ISpecDescription? underlyingDescription = null) : ISpecDescription
 {
 
-    public string Statement => statement.Humanize();
+    public string Statement => statement.Serialize();
 
     public string Detailed => string.Join(Environment.NewLine, GetDetailsAsLines());
 
@@ -21,7 +21,7 @@ internal sealed class ExpressionDescription(Expression statement, ISpecDescripti
     }
 
     public string ToReason(bool satisfied) =>
-        statement.ToExpressionAssertion(satisfied).Humanize();
+        statement.ToExpressionAssertion(satisfied).Serialize();
 
     public override string ToString() => Statement;
 }

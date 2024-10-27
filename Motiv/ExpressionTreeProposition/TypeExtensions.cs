@@ -103,12 +103,12 @@ internal static class ExpressionTreeExtensions
         return false;
     }
 
-    internal static string Humanize(this Expression expression)
+    internal static string Serialize(this Expression expression)
     {
         return new CSharpExpressionSerializer().Serialize(expression);
     }
 
-    internal static string Humanize<T>(this Expression expression, T parameterValue, ParameterExpression parameter)
+    internal static string Serialize<T>(this Expression expression, T parameterValue, ParameterExpression parameter)
     {
         return new CSharpExpressionSerializer<T>(parameterValue, parameter).Serialize(expression);
     }

@@ -327,4 +327,19 @@ public class ExpressionTreeTests
         act.Satisfied.Should().Be(expectedResult);
         act.Assertions.Should().BeEquivalentTo(expectedAssertion);
     }
+
+    [Fact]
+    public void Should_add_arithmetic_parentheses_based_on_precedence_rules()
+    {
+        // Arrange
+        var sut = Spec
+            .From((int n) => (1 + n) * (20 - n) / ((n + 1) * 2) / 2 > 0)
+            .Create("compound-arithmetic");
+
+        // Act
+        var act = sut.IsSatisfiedBy(1);
+
+        // Assert
+        act.Assertions.Should().BeEquivalentTo("(1 + n) * (20 - n) / ((n + 1) * 2) / 2 > 0");
+    }
 }

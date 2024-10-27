@@ -18,7 +18,7 @@ internal class ExpressionAsStatementDescription<TModel> : IExpressionDescription
         _expression = expression;
         _parameter = parameter;
         _underlyingDescription = underlyingDescription;
-        var statement = expression.Humanize();
+        var statement = expression.Serialize();
         _trueBecause = $"{statement} == true";
         _falseBecause = $"{statement} == false";
         Statement = statement;
@@ -45,5 +45,5 @@ internal class ExpressionAsStatementDescription<TModel> : IExpressionDescription
 
 
     public string ToAssertion(TModel model, bool satisfied) =>
-        _expression.ToExpressionAssertion(satisfied).Humanize(model, _parameter);
+        _expression.ToExpressionAssertion(satisfied).Serialize(model, _parameter);
 }
