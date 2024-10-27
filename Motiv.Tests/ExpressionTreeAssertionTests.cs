@@ -568,9 +568,9 @@ public class ExpressionTreeAssertionTests
     }
 
     [Theory]
-    [InlineData(1, 1, "((p.Item1 - 1) * (p.Item2 - -1)) / 2 < p.Item1 * p.Item2")]
-    [InlineData(2, 0, "((p.Item1 - 1) * (p.Item2 - -1)) / 2 >= p.Item1 * p.Item2")]
-    [InlineData(3, 3, "((p.Item1 - 1) * (p.Item2 - -1)) / 2 < p.Item1 * p.Item2")]
+    [InlineData(1, 1, "(p.Item1 - 1) * (p.Item2 - -1) / 2 < p.Item1 * p.Item2")]
+    [InlineData(2, 0, "(p.Item1 - 1) * (p.Item2 - -1) / 2 >= p.Item1 * p.Item2")]
+    [InlineData(3, 3, "(p.Item1 - 1) * (p.Item2 - -1) / 2 < p.Item1 * p.Item2")]
     public void Should_assert_expressions_containing_arithmetic(decimal x, decimal y, params string[] expectedAssertion)
     {
         // Assembled

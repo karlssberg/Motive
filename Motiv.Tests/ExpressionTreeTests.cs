@@ -216,4 +216,115 @@ public class ExpressionTreeTests
         act.Satisfied.Should().Be(expectedResult);
         act.Assertions.Should().BeEquivalentTo(expectedAssertion);
     }
+
+    [Theory]
+    [InlineData(typeof(string), true, "typeof(IEnumerable<char>).IsAssignableFrom(t) == true")]
+    [InlineData(typeof(int), false, "typeof(IEnumerable<char>).IsAssignableFrom(t) == false")]
+    public void Should_evaluate_type_testing_expressions(Type type, bool expectedResult, params string[] expectedAssertion)
+    {
+        // Arrange
+        var sut = Spec
+            .From((Type t) => typeof(IEnumerable<char>).IsAssignableFrom(t))
+            .Create("type-test");
+
+        // Act
+        var act = sut.IsSatisfiedBy(type);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
+
+    [Theory]
+    [InlineData(1, true, "n * 2 / 2 + 1 - 1 == 1", "n < 1073741823")]
+    [InlineData(2147483647, false, "n * 2 / 2 + 1 - 1 != 2147483647")] // int.MaxValue
+    public void Should_evaluate_compound_arithmetic_expressions(int value, bool expectedResult, params string[] expectedAssertion)
+    {
+        // Arrange
+        var sut = Spec
+            .From((int n) => n * 2 / 2 + 1 - 1 == Display.AsValue(n) && n < int.MaxValue / 2)
+            .Create("compound-arithmetic");
+
+        // Act
+        var act = sut.IsSatisfiedBy(value);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
+
+    [Theory]
+    [InlineData(new[] { 1.5, 2.5 }, true, "arr[0] % 1 > 0", "arr[1] % 1 > 0")]
+    [InlineData(new[] { 1.0, 2.0 }, false, "arr[0] % 1 <= 0")]
+    public void Should_evaluate_array_element_access_with_complex_conditions(double[] values, bool expectedResult, params string[] expectedAssertion)
+    {
+        // Arrange
+        var sut = Spec
+            .From((double[] arr) => arr[0] % 1 > 0 && arr[1] % 1 > 0)
+            .Create("array-access");
+
+        // Act
+        var act = sut.IsSatisfiedBy(values);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
+
+    [Theory]
+    [InlineData("test", 4, true, "s.Length == 4")]
+    [InlineData("test", 5, false, "s.Length != 5")]
+    public void Should_evaluate_method_calls_with_out_parameters(string input, int expected, bool expectedResult, params string[] expectedAssertion)
+    {
+        // Arrange
+        var sut = Spec
+            .From((string s) => s.Length == Display.AsValue(expected))
+            .Create("method-call");
+
+        // Act
+        var act = sut.IsSatisfiedBy(input);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
+
+    [Theory]
+    [InlineData(new long[] { 1, 2, 3 }, true, "(int)arr[0] + (int)arr[1] + (int)arr[2] > 0")]
+    [InlineData(new long[] { 0, 0, 0 }, false, "(int)arr[0] + (int)arr[1] + (int)arr[2] <= 0")]
+    public void Should_evaluate_expressions_with_type_conversions(long[] input, bool expectedResult, params string[] expectedAssertion)
+    {
+        // Arrange
+        var sut = Spec
+            .From((long[] arr) => (int)arr[0] + (int)arr[1] + (int)arr[2] > 0)
+            .Create("type-conversion");
+
+        // Act
+        var act = sut.IsSatisfiedBy(input);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
+
+    [Theory]
+    [InlineData(42.0, true, "d == 42.0")]
+    [InlineData(42.1, false, "d != 42.0")]
+    public void Should_evaluate_expressions_with_constant_comparisons(decimal value, bool expectedResult, params string[] expectedAssertion)
+    {
+        // fyi: const identifiers are aggressively inlined by the compiler
+        const decimal comparison = 42.0m;
+
+        // Arrange
+        var sut = Spec
+            .From((decimal d) => d == comparison)
+            .Create("constant-comparison");
+
+        // Act
+        var act = sut.IsSatisfiedBy(value);
+
+        // Assert
+        act.Satisfied.Should().Be(expectedResult);
+        act.Assertions.Should().BeEquivalentTo(expectedAssertion);
+    }
 }

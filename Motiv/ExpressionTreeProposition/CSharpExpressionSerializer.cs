@@ -67,6 +67,15 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 OutputText.Append(']');
                 break;
             case ExpressionType.ConvertChecked
+                or ExpressionType.Convert
+                when CastHelper.IsExplicitNumericCast(node.Operand.Type, node.Type)
+                    && node.Operand.Type != typeof(Delegate):
+                OutputText.Append('(');
+                OutputText.Append(node.Type.ToCSharpName());
+                OutputText.Append(')');
+                Visit(node.Operand);
+                break;
+            case ExpressionType.ConvertChecked
                 or ExpressionType.Convert:
                 Visit(node.Operand);
                 break;
@@ -96,17 +105,24 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 OutputText.Append(" as ");
                 OutputText.Append(node.Type.ToCSharpName());
                 break;
+            case ExpressionType.TypeIs:
+                VisitAndMaybeApplyParentheses(node, node.Operand);
+                OutputText.Append(" is ");
+                OutputText.Append(node.Type.ToCSharpName());
+                break;
             case ExpressionType.OnesComplement:
                 OutputText.Append('~');
                 VisitAndMaybeApplyParentheses(node, node.Operand);
                 break;
             case ExpressionType.Increment or ExpressionType.PreIncrementAssign:
-                OutputText.Append("++");
+                OutputText.Append('(');
                 VisitAndMaybeApplyParentheses(node, node.Operand);
+                OutputText.Append(" + 1)");
                 break;
             case ExpressionType.Decrement or ExpressionType.PreDecrementAssign:
-                OutputText.Append("--");
+                OutputText.Append('(');
                 VisitAndMaybeApplyParentheses(node, node.Operand);
+                OutputText.Append(" - 1)");
                 break;
             case ExpressionType.PostIncrementAssign:
                 VisitAndMaybeApplyParentheses(node, node.Operand);
@@ -140,23 +156,38 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
             return binaryExpression;
         }
 
-        var isCheckedExpression = binaryExpression.NodeType is
-            ExpressionType.AddChecked or
-            ExpressionType.SubtractChecked;
+        switch (binaryExpression)
+        {
+            case { NodeType: ExpressionType.ArrayIndex }:
+                VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Left);
+                OutputText.Append('[');
+                VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Right);
+                OutputText.Append(']');
+                return binaryExpression;
+            default:
+                return VisitDefaultBinaryExpression();
+        };
 
-        if (isCheckedExpression) OutputText.Append("checked(");
+        Expression VisitDefaultBinaryExpression()
+        {
+            var isCheckedExpression = binaryExpression.NodeType is
+                ExpressionType.AddChecked or
+                ExpressionType.SubtractChecked;
 
-        VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Left, true);
+            if (isCheckedExpression) OutputText.Append("checked(");
 
-        OutputText.Append(' ');
-        OutputText.Append(GetBinaryOperatorSymbol(binaryExpression.NodeType));
-        OutputText.Append(' ');
+            VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Left, true);
 
-        VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Right, false);
+            OutputText.Append(' ');
+            OutputText.Append(GetBinaryOperatorSymbol(binaryExpression.NodeType));
+            OutputText.Append(' ');
 
-        if (isCheckedExpression) OutputText.Append(')');
+            VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Right, false);
 
-        return binaryExpression;
+            if (isCheckedExpression) OutputText.Append(')');
+
+            return binaryExpression;
+        }
     }
 
     protected override Expression VisitTypeBinary(TypeBinaryExpression node)
@@ -506,9 +537,6 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
         if (parentPrecedence != childPrecedence)
             return false;
 
-        if (parent.NodeType != child.NodeType)
-            return true;
-
         // Handle right-associative operators (e.g., assignment)
         if (IsRightAssociative(parent.NodeType) && !isLeft)
             return true;
@@ -523,10 +551,27 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
         {
             // Primary expressions (the highest precedence)
             ExpressionType.Call
+                or ExpressionType.ArrayLength
+                or ExpressionType.Invoke
+                or ExpressionType.New
+                or ExpressionType.NewArrayInit
+                or ExpressionType.NewArrayBounds
+                or ExpressionType.ListInit
+                or ExpressionType.MemberInit
                 or ExpressionType.MemberAccess
-                or ExpressionType.Index => 15,
+                or ExpressionType.Index
+                or ExpressionType.ArrayIndex => 15,
             // Unary operators
             ExpressionType.Not
+                or ExpressionType.NegateChecked
+                or ExpressionType.ConvertChecked
+                or ExpressionType.PreIncrementAssign
+                or ExpressionType.PreDecrementAssign
+                or ExpressionType.OnesComplement
+                or ExpressionType.IsTrue
+                or ExpressionType.IsFalse
+                or ExpressionType.Throw
+                or ExpressionType.Unbox
                 or ExpressionType.Negate
                 or ExpressionType.UnaryPlus
                 or ExpressionType.Convert => 14,
@@ -568,6 +613,12 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
             ExpressionType.Conditional => 2,
             // Assignment operators (lowest precedence)
             ExpressionType.Assign
+                or ExpressionType.AddAssignChecked
+                or ExpressionType.SubtractAssignChecked
+                or ExpressionType.MultiplyAssignChecked
+                or ExpressionType.PowerAssign
+                or ExpressionType.PostIncrementAssign
+                or ExpressionType.PostDecrementAssign
                 or ExpressionType.AddAssign
                 or ExpressionType.SubtractAssign
                 or ExpressionType.MultiplyAssign
@@ -578,6 +629,18 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 or ExpressionType.ExclusiveOrAssign
                 or ExpressionType.LeftShiftAssign
                 or ExpressionType.RightShiftAssign => 1,
+            ExpressionType.Block
+                or ExpressionType.Loop
+                or ExpressionType.Switch
+                or ExpressionType.Try
+                or ExpressionType.Goto
+                or ExpressionType.Label
+                or ExpressionType.Default
+                or ExpressionType.Extension
+                or ExpressionType.Quote
+                or ExpressionType.DebugInfo
+                or ExpressionType.Dynamic
+                or ExpressionType.RuntimeVariables => 0,
             _ => 0
         };
     }
@@ -644,7 +707,7 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
             DateTimeOffset dateTimeOffset => $"DateTimeOffset.Parse(\"{dateTimeOffset:O}\")",
             TimeSpan timespan => $"TimeSpan.Parse(\"{timespan}\")",
             Regex regex => $"new Regex(@\"{regex}\")",
-            Type t => $"typeof({t.FullName})",
+            Type t => $"typeof({t.ToCSharpName()})",
             MethodInfo methodInfo => $"{methodInfo.DeclaringType!.Name}.{methodInfo.Name}",
             _ when declaredType.IsEnum => $"{declaredType.Name}.{obj}",
             _ when IsSupported(obj) => obj.ToString(),
@@ -655,7 +718,6 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
     private static bool IsIgnoredNode(Expression node) =>
         node.NodeType switch
         {
-            ExpressionType.Quote => true,
             ExpressionType.IsTrue => true,
             ExpressionType.IsFalse => true,
             _ => false
