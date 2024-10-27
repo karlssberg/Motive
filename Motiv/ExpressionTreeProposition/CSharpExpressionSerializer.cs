@@ -107,11 +107,6 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 OutputText.Append('~');
                 VisitAndMaybeApplyParentheses(node, node.Operand);
                 break;
-            case ExpressionType.Quote:
-                OutputText.Append('"');
-                VisitAndMaybeApplyParentheses(node, node.Operand);
-                OutputText.Append('"');
-                break;
             case ExpressionType.TypeAs:
                 VisitAndMaybeApplyParentheses(node, node.Operand);
                 OutputText.Append(" as ");
@@ -568,7 +563,6 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
             ExpressionType.RightShift => ">>",
             ExpressionType.Not => "!",
             ExpressionType.Negate => "-",
-            ExpressionType.Quote => "\"",
             ExpressionType.Coalesce => "??",
             _ => nodeType.ToString()
         };
