@@ -617,23 +617,21 @@ public class TutorialTests
     [Fact]
     public void Should_demonstrate_the_usage_of_all_and_any()
     {
-        var areAnyEvenAndAllInRange =
-            Spec.From((ICollection<int> numbers) =>
-                    numbers.Any(n => n % 2 == 0)
-                    & numbers.All(n => n > 0 & n <= 10))
-                .Create("any even and all in range");
+        var areAnyEvenAndAllPositive = Spec.From((IEnumerable<int> numbers) =>
+                numbers.Any(n => n % 2 == 0)
+                & numbers.All(n => n > 0))
+            .Create("all positive numbers amd some are even");
 
-        var result = areAnyEvenAndAllInRange.IsSatisfiedBy([-1, 2, 3]);
+        var result = areAnyEvenAndAllPositive.IsSatisfiedBy([-1, 2, 3]);
 
-        result.Satisfied.Should().BeFalse();       // false
+        result.Satisfied.Should().BeFalse();
         result.Assertions.Should().BeEquivalentTo("n <= 0");
         result.Justification.Should().Be(
             """
-            ¬any even and all in range
+            ¬all positive numbers amd some are even
                 AND
-                    numbers.All((int n) => n > 0 & n <= 10) == false
-                        AND
-                            n <= 0
+                    numbers.All((int n) => n > 0) == false
+                        n <= 0
             """);
     }
 }
