@@ -193,8 +193,6 @@ public class ExpressionTreeJustificationTests
         act.Justification.Should().Be(expectedResult);
     }
 
-
-
     [Theory]
     [InlineData(
         """

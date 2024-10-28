@@ -1,9 +1,12 @@
 ﻿using System.Linq.Expressions;
-using System.Net.Security;
 
 namespace Motiv.Tests;
 
-public class ExpressionTypeTests
+/// <summary>
+/// Tests are derived from the ExpressionType enum values.  Only the types that can be used in a lambda expression
+/// tree in c# are given a c# representation.
+/// </summary>
+public class ExpressionTreeExpressionTypeTests
 {
     [Fact]
     public void Should_serialize_add_expression()

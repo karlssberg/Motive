@@ -21,7 +21,7 @@ In most cases this will be a human-readable explanation of the decision, but it 
 var isInRangeAndEven = Spec.From((int n) => n >= 1 & n <= 10 & n % 2 == 0)
                            .Create("in range and even");
 
-// Evaluate proposition (elsewhere in your code)
+// Evaluate proposition (typically elsewhere in your code)
 var result = isInRangeAndEven.IsSatisfiedBy(11);
 
 result.Satisfied;  // false
@@ -31,22 +31,22 @@ result.Reason;     // "¬in range and even"
 
 ## Why Use Motiv?
 
-Motiv primarily gives you visibility into your application's decision-making process by replacing opaque boolean
-expressions with semantically rich propositions.
+Motiv primarily gives you visibility into your application's decision-making process.
+It can also be used to dynamically surface state objects based on results of the underlying logic.
 
 Consider using Motiv if your project requires two or more of the following:
 
-1. **Visibility**: Provide detailed, real-time feedback about decisions made.
-2. **Decomposition**: Break down complex logic into meaningful subclauses for improved readability.
-3. **Reusability**: Reuse logic across multiple locations to reduce duplication.
+1. **Visibility**: Obtain concise explanations about the outcome of complex logic.
+2. **Decomposition**: Un-obfuscate boolean logic into self-explanatory proposition.
+3. **Reusability**: Reuse highly composable logic across multiple locations.
 4. **Modeling**: Explicitly model the logic in your domain as propositions.
-5. **Testing**: Simplify the testing your logic without mocking or stubbing dependencies.
+5. **Testing**: Test your application's boolean logic in isolation.
 
 ## Use Cases
 
 Motiv can be applied in various scenarios, including:
 
-* **User Feedback**: Provide detailed explanations about decision outcomes.
+* **User Feedback**: Give detailed explanations about decisions.
 * **Debugging**: Quickly find out the causes from complex logic.
 * **Multilingual Support**: Offer explanations in different languages.
 * **Validation**: Ensure user input meets specific criteria and provide detailed feedback.
@@ -70,9 +70,9 @@ dotnet add package Motiv
 
 ### From Lambda Expression Tree to Propositions
 
-The simpliest way to use Motiv is with an `Expression<Func<T, bool>>`,
-Motiv will transform it into a multiple individual propositions,
-with each underlying sub-expression describing the outcome of the logic that it performed.
+The simplest way to use Motiv is with an `Expression<Func<T, bool>>`,
+Motiv will recompose it into a multiple individual propositions,
+so that each underlying logical sub-expression asserts its contribution to the final decision.
 
 ```csharp
 ```csharp
