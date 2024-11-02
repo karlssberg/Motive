@@ -7,7 +7,7 @@ internal sealed class ExpressionTreeMultiMetadataProposition<TModel, TMetadata, 
     Expression<Func<TModel, TPredicateResult>> expression,
     Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenTrue,
     Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenFalse,
-    IExpressionDescription<TModel> description)
+    ISpecDescription description)
     : SpecBase<TModel, TMetadata>
 {
 
@@ -37,7 +37,7 @@ internal sealed class ExpressionTreeMultiMetadataProposition<TModel, TMetadata, 
             var assertions = metadata.Value switch
             {
                 IEnumerable<string> because => because.ToArray(),
-                _ => [description.ToAssertion(model, result.Satisfied)]
+                _ => result.Assertions
             };
             return new Explanation(
                 assertions,
@@ -46,9 +46,10 @@ internal sealed class ExpressionTreeMultiMetadataProposition<TModel, TMetadata, 
         });
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>
-            new BooleanResultDescriptionWithUnderlying(
+            new ExpressionTreeBooleanResultDescription(
                 result,
-                description.ToAssertion(model, result.Satisfied),
+                description.ToReason(result.Satisfied),
+                expression,
                 Description.Statement));
 
         return new ExpressionTreeBooleanResult<TMetadata>(

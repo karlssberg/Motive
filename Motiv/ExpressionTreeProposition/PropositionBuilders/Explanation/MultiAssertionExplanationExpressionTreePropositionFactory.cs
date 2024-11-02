@@ -26,12 +26,11 @@ public readonly ref struct MultiAssertionExplanationExpressionTreePropositionFac
             expression,
             trueBecause,
             falseBecause,
-            new OverridingExpressionDescription<TModel>(statement.ThrowIfNullOrWhitespace(nameof(statement))));
+            new OverridingExpressionDescription(statement.ThrowIfNullOrWhitespace(nameof(statement)), expression));
 
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
     /// </summary>
-    /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
     public SpecBase<TModel, string> Create() =>

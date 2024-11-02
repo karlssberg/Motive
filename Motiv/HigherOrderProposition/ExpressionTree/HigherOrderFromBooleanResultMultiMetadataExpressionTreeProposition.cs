@@ -8,7 +8,7 @@ internal sealed class HigherOrderFromBooleanResultMultiMetadataExpressionTreePro
     Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
     Func<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<TMetadata>> whenTrue,
     Func<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<TMetadata>> whenFalse,
-    IExpressionDescription<TModel> expressionDescription,
+    ISpecDescription description,
     Func<bool, IEnumerable<BooleanResult<TModel, string>>, IEnumerable<BooleanResult<TModel, string>>> causeSelector)
     : SpecBase<IEnumerable<TModel>, TMetadata>
 {
@@ -16,7 +16,7 @@ internal sealed class HigherOrderFromBooleanResultMultiMetadataExpressionTreePro
 
     public override IEnumerable<SpecBase> Underlying => [];
 
-    public override ISpecDescription Description => expressionDescription;
+    public override ISpecDescription Description => description;
 
     protected override BooleanResultBase<TMetadata> IsSpecSatisfiedBy(IEnumerable<TModel> models)
     {
@@ -48,9 +48,11 @@ internal sealed class HigherOrderFromBooleanResultMultiMetadataExpressionTreePro
             });
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>
-                new HigherOrderResultDescription<string>(
+                new HigherOrderExpressionTreeResultDescription<string>(
+                    isSatisfied,
                     Description.ToReason(isSatisfied),
                     typeof(TMetadata) == typeof(string) ? assertions.Value : [],
+                    expression,
                     causes.Value,
                     Description.Statement));
 

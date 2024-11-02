@@ -6,7 +6,7 @@ namespace Motiv.ExpressionTreeProposition;
 internal class ExpressionTreeDescription<TModel, TPredicateResult>(
     Expression<Func<TModel, TPredicateResult>> expression,
     ISpecDescription? underlyingDescription = null)
-    : IExpressionDescription<TModel>
+    : ISpecDescription
 {
     public string Statement { get; } = expression.Body.Serialize();
 

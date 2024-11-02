@@ -149,3 +149,5 @@ var hasAccess = Spec
     .From((User user) => user.IsActive & user.Roles.Any(isAdmin))
     .Create("has admin access");
 ```
+
+This also works with the results from evaluating propositions.

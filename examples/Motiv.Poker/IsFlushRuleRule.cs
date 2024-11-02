@@ -22,7 +22,7 @@ public class IsFlushRuleRule() : Policy<Hand, HandRank>(
             .Create($"has 5 {suit} cards");
 
     private static SpecBase<Card, string> IsSuit(Suit suit) =>
-        Spec.Build((Card card) => card.Suit == suit)
+        Spec.From((Card card) => card.Suit == Display.AsValue(suit))
             .WhenTrue(card => $"{card} is {suit}")
             .WhenFalse(card => $"{card} is not {suit}")
             .Create($"is {suit}");

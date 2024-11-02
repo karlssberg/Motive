@@ -38,9 +38,10 @@ internal sealed class ExpressionTreeExplanationProposition<TModel, TPredicateRes
                 result.ToEnumerable()));
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>
-            new BooleanResultDescriptionWithUnderlying(
+            new ExpressionTreeBooleanResultDescription(
                 result,
                 assertion.Value,
+                expression,
                 Description.Statement));
 
         return new ExpressionTreePolicyResult<string>(

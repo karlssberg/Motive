@@ -8,7 +8,7 @@ internal sealed class HigherOrderFromBooleanResultExplanationExpressionTreePropo
     Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
     Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause,
     Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> falseBecause,
-    IExpressionDescription<TModel> expressionDescription,
+    ISpecDescription description,
     Func<bool, IEnumerable<BooleanResult<TModel, string>>,
         IEnumerable<BooleanResult<TModel, string>>> causeSelector)
     : PolicyBase<IEnumerable<TModel>, string>
@@ -17,7 +17,7 @@ internal sealed class HigherOrderFromBooleanResultExplanationExpressionTreePropo
 
     public override IEnumerable<SpecBase> Underlying => [];
 
-    public override ISpecDescription Description => expressionDescription;
+    public override ISpecDescription Description => description;
 
     protected override PolicyResultBase<string> IsPolicySatisfiedBy(IEnumerable<TModel> models)
     {
@@ -43,9 +43,11 @@ internal sealed class HigherOrderFromBooleanResultExplanationExpressionTreePropo
         });
 
         var lazyDescription = new Lazy<ResultDescriptionBase>(() =>
-            new HigherOrderResultDescription<string>(
+            new HigherOrderExpressionTreeResultDescription<string>(
+                isSatisfied,
                 assertion.Value,
                 [],
+                expression,
                 causes.Value,
                 Description.Statement));
 

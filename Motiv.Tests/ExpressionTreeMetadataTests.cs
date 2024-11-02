@@ -1,6 +1,6 @@
 namespace Motiv.Tests;
 
-public class ExpressionTreeExplanationTests
+public class ExpressionTreeMetadataTests
 {
     [Fact]
     public void Should_yield_true_assertion_when_overriding_assertion()
@@ -8,26 +8,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue(_ => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(_ => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue((_, _) => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue((_, _) => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrueYield((_, _) => ["is positive"])
-            .WhenFalse("is not positive")
+            .WhenTrueYield((_, _) => new Metadata[] {new("is positive")})
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -36,7 +36,7 @@ public class ExpressionTreeExplanationTests
         var act = spec.IsSatisfiedBy(1);
 
         // Assert
-        act.Assertions.Should().BeEquivalentTo("is positive");
+        act.Assertions.Should().BeEquivalentTo("n > 0");
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ExpressionTreeExplanationTests
         var act = spec.IsSatisfiedBy(1);
 
         // Assert
-        act.Reason.Should().BeEquivalentTo("is-positive");
+        act.Reason.Should().Be("is-positive");
     }
 
     [Fact]
@@ -60,26 +60,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue(_ => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(_ => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue((_, _) => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue((_, _) => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrueYield((_, _) => ["is positive"])
-            .WhenFalse("is not positive")
+            .WhenTrueYield((_, _) => new Metadata[] {new("is positive")})
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -88,7 +88,7 @@ public class ExpressionTreeExplanationTests
         var act = spec.IsSatisfiedBy(1);
 
         // Assert
-        act.Reason.Should().BeEquivalentTo("is positive | is positive | is positive | is-positive");
+        act.Reason.Should().Be("is-positive | is-positive | is-positive | is-positive");
     }
 
     [Fact]
@@ -97,26 +97,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue(_ => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(_ => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue((_, _) => "is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue((_, _) => new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrueYield((_, _) => ["is positive"])
-            .WhenFalse("is not positive")
+            .WhenTrueYield((_, _) => new Metadata[] {new("is positive")})
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -128,13 +128,13 @@ public class ExpressionTreeExplanationTests
         act.Justification.Should().BeEquivalentTo(
             """
             OR
-                is positive
+                is-positive
                     (int n) => n > 0 == true
                         n > 0
-                is positive
+                is-positive
                     (int n) => n > 0 == true
                         n > 0
-                is positive
+                is-positive
                     (int n) => n > 0 == true
                         n > 0
                 is-positive
@@ -149,26 +149,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse(_ => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(_ => new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse((_, _) => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse((_, _) => new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalseYield((_, _) => ["is not positive"])
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalseYield((_, _) => [new Metadata("is not positive")])
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -177,7 +177,7 @@ public class ExpressionTreeExplanationTests
         var act = spec.IsSatisfiedBy(-1);
 
         // Assert
-        act.Assertions.Should().BeEquivalentTo("is not positive");
+        act.Assertions.Should().BeEquivalentTo("n <= 0");
     }
 
     [Fact]
@@ -201,26 +201,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse(_ => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(_ => new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse((_, _) => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse((_, _) => new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalseYield((_, _) => ["is not positive"])
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalseYield((_, _) => [new Metadata("is not positive")])
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -229,7 +229,7 @@ public class ExpressionTreeExplanationTests
         var act = spec.IsSatisfiedBy(-1);
 
         // Assert
-        act.Reason.Should().BeEquivalentTo("is not positive | is not positive | is not positive | ¬is-positive");
+        act.Reason.Should().BeEquivalentTo("¬is-positive | ¬is-positive | ¬is-positive | ¬is-positive");
     }
 
     [Fact]
@@ -238,26 +238,26 @@ public class ExpressionTreeExplanationTests
         // Assemble
         var literal = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse("is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(new Metadata("is not positive"))
             .Create("is-positive");
 
         var modelCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse(_ => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse(_ => new Metadata("is not positive"))
             .Create("is-positive");
 
         var resultCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalse((_, _) => "is not positive")
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalse((_, _) => new Metadata("is not positive"))
             .Create("is-positive");
 
         var multipleCallback = Spec
             .From((int n) => n > 0)
-            .WhenTrue("is positive")
-            .WhenFalseYield((_, _) => ["is not positive"])
+            .WhenTrue(new Metadata("is positive"))
+            .WhenFalseYield((_, _) => [new Metadata("is not positive")])
             .Create("is-positive");
 
         var spec = literal | modelCallback | resultCallback | multipleCallback;
@@ -269,13 +269,13 @@ public class ExpressionTreeExplanationTests
         act.Justification.Should().Be(
             """
             OR
-                is not positive
+                ¬is-positive
                     (int n) => n > 0 == false
                         n <= 0
-                is not positive
+                ¬is-positive
                     (int n) => n > 0 == false
                         n <= 0
-                is not positive
+                ¬is-positive
                     (int n) => n > 0 == false
                         n <= 0
                 ¬is-positive
@@ -295,4 +295,10 @@ public class ExpressionTreeExplanationTests
 
         result.Assertions.Should().BeEquivalentTo("n <= 0");
     }
+
+    public record Metadata(string Assertion)
+    {
+        public string Assertion { get; } = Assertion;
+    }
 }
+

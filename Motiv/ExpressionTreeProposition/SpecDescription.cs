@@ -2,7 +2,7 @@
 
 namespace Motiv.ExpressionTreeProposition;
 
-internal sealed class SpecDescription<TModel>(string statement, ISpecDescription? underlyingDescription = null) : IExpressionDescription<TModel>
+internal sealed class SpecDescription<TModel>(string statement, ISpecDescription? underlyingDescription = null) : ISpecDescription
 {
     public string Statement => statement;
 
@@ -21,7 +21,6 @@ internal sealed class SpecDescription<TModel>(string statement, ISpecDescription
     public string ToReason(bool satisfied)=>
         Statement.ToReason(satisfied);
 
-    public string ToAssertion(TModel _, bool satisfied) => Statement.ToReason(satisfied);
 
     public override string ToString() => Statement;
 }

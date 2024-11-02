@@ -18,4 +18,15 @@ internal static class ExpressionExtensions
                 Expression.Equal(expression, Expression.Constant(satisfied)),
         };
     }
+
+    internal static string ToAssertion(this LambdaExpression expression, bool satisfied)
+    {
+        var body = Expression.Equal(
+            Expression.Convert(expression.Body, typeof(object)),
+            Expression.Convert(Expression.Constant(satisfied), typeof(object)));
+
+        return Expression
+            .Lambda(body, expression.Parameters)
+            .Serialize();
+    }
 }

@@ -40,9 +40,10 @@ internal sealed class ExpressionTreeWithSingleTrueAssertionProposition<TModel, T
             new MetadataNode<string>(assertion.Value,
                 result.ToEnumerable()));
 
-        var description = new Lazy<ResultDescriptionBase>(() => new BooleanResultDescriptionWithUnderlying(
+        var resultDescription = new Lazy<ResultDescriptionBase>(() => new ExpressionTreeBooleanResultDescription(
             result,
             assertion.Value,
+            expression,
             Description.Statement));
 
         return new ExpressionTreePolicyResult<string>(
@@ -50,6 +51,6 @@ internal sealed class ExpressionTreeWithSingleTrueAssertionProposition<TModel, T
             assertion,
             metadataTier,
             explanation,
-            description);
+            resultDescription);
     }
 }

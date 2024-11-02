@@ -5,7 +5,7 @@ namespace Motiv.ECommerce.Policies;
 
 public class ShouldSplitOrderPolicy() : Policy<FulfillmentContext, IBehavior>(
     Spec.Build(IsExpensive)
-        .WhenTrue(new SplitOrderBehavior() as IBehavior)
+        .WhenTrue<IBehavior>(new SplitOrderBehavior())
         .WhenFalse(new DefaultBehavior())
         .Create("should split order"))
 {

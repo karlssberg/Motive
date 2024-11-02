@@ -3,7 +3,7 @@ using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition;
 
-internal class ExpressionAsStatementDescription<TModel> : IExpressionDescription<TModel>
+internal class ExpressionAsStatementDescription<TModel> : ISpecDescription
 {
     private readonly string _trueBecause;
     private readonly string _falseBecause;

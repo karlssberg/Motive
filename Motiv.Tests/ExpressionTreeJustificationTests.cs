@@ -6,17 +6,20 @@ public class ExpressionTreeJustificationTests
     [InlineData(-1,
         """
         ¬is-positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """)]
     [InlineData(0,
         """
         ¬is-positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """)]
     [InlineData(1,
         """
         is-positive
-            n > 0
+            (int n) => n > 0 == true
+                n > 0
         """)]
     public void Should_justify_expressions(int model, string expectedResult)
     {
@@ -36,17 +39,20 @@ public class ExpressionTreeJustificationTests
     [InlineData(-1,
         """
         n is not positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """)]
     [InlineData(0,
         """
         n is not positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """)]
     [InlineData(1,
         """
         n is positive
-            n > 0
+            (int n) => n > 0 == true
+                n > 0
         """)]
     public void Should_include_both_custom_assertions_and_underlying_assertions_in_the_justification(
         int model,
@@ -70,27 +76,31 @@ public class ExpressionTreeJustificationTests
         """
         ¬any-positive
             n is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
         """)]
     [InlineData(0,
         """
         ¬any-positive
             n is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
         """)]
     [InlineData(1,
         """
         any-positive
             n is positive
-                n > 0
+                (int n) => n > 0 == true
+                    n > 0
         """)]
     public void Should_include_underlying_assertions_in_the_justification_with_higher_order_propositions(int model, string expectedResult)
     {
         // Arrange
-        var underlying = Spec.From((int n) => n > 0)
-            .WhenTrue("n is positive")
-            .WhenFalse("n is not positive")
-            .Create("is-positive");
+        var underlying =
+            Spec.From((int n) => n > 0)
+                .WhenTrue("n is positive")
+                .WhenFalse("n is not positive")
+                .Create("is-positive");
 
         var sut =
             Spec.Build(underlying)
@@ -109,29 +119,37 @@ public class ExpressionTreeJustificationTests
         """
         none positive
             -1 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
             -2 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
             -3 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
         """, -1, -2, -3)]
     [InlineData(
         """
         none positive
             0 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
             -1 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
             -2 is not positive
-                n <= 0
+                (int n) => n > 0 == false
+                    n <= 0
         """, 0, -1, -2)]
     [InlineData(
         """
         some positive
             1 is positive
-                n > 0
+                (int n) => n > 0 == true
+                    n > 0
             2 is positive
-                n > 0
+                (int n) => n > 0 == true
+                    n > 0
         """, 0, 1, 2)]
     public void Should_include_both_custom_assertions_and_underlying_assertions_in_the_justification_with_higher_order_propositions(
         string expectedResult,
@@ -162,17 +180,20 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         3x not positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """, -1, -2, -3)]
     [InlineData(
         """
         3x not positive
-            n <= 0
+            (int n) => n > 0 == false
+                n <= 0
         """, 0, -1, -2)]
     [InlineData(
         """
         2x positive
-            n > 0
+            (int n) => n > 0 == true
+                n > 0
         """, 0, 1, 2)]
     public void Should_justify_higher_order_expression_tree_spec(
         string expectedResult,
@@ -198,24 +219,27 @@ public class ExpressionTreeJustificationTests
         """
         ¬should create guid
             ¬any positive
-                none positive
-                    n <= 0
+                (decimal n) => n > 0 == false
+                    none positive
+                        n <= 0
         """, -1, -2, -3)]
     [InlineData(
         """
         should create guid
             any positive
-                1 is positive
-                    n > 0
+                (decimal n) => n > 0 == true
+                    1 is positive
+                        n > 0
         """, 1, 0, -1)]
     [InlineData(
         """
         should create guid
             any positive
-                1 is positive
-                2 is positive
-                3 is positive
-                    n > 0
+                (decimal n) => n > 0 == true
+                    1 is positive
+                    2 is positive
+                    3 is positive
+                        n > 0
         """, 1, 2, 3)]
     public void Should_insert_yielded_assertions_of_encapsulated_higher_order(
         string expectedResult,
@@ -246,13 +270,15 @@ public class ExpressionTreeJustificationTests
     [Theory]
     [InlineData("""
                 any admins
-                    roles.Any((string role) => role == "admin") == true
-                        role == "admin"
+                    (IEnumerable<string> roles) => roles.Any((string role) => role == "admin") == true
+                        roles.Any((string role) => role == "admin") == true
+                            role == "admin"
                 """, "admin")]
     [InlineData("""
                 ¬any admins
-                    roles.Any((string role) => role == "admin") == false
-                        role != "admin"
+                    (IEnumerable<string> roles) => roles.Any((string role) => role == "admin") == false
+                        roles.Any((string role) => role == "admin") == false
+                            role != "admin"
                 """, "user")]
     public void Should_justify_any_linq_function_to_higher_order_proposition_when_boolean_is_returned(string expectedAssertion, string model)
     {
@@ -271,13 +297,15 @@ public class ExpressionTreeJustificationTests
     [Theory]
     [InlineData("""
                 any admins
-                    roles.Any((string role) => isAdminResult) == true
-                        is admin
+                    (IEnumerable<string> roles) => roles.Any((string role) => isAdminResult) == true
+                        roles.Any((string role) => isAdminResult) == true
+                            is admin
                 """, "admin")]
     [InlineData("""
                 ¬any admins
-                    roles.Any((string role) => isAdminResult) == false
-                        is not admin
+                    (IEnumerable<string> roles) => roles.Any((string role) => isAdminResult) == false
+                        roles.Any((string role) => isAdminResult) == false
+                            is not admin
                 """, "user")]
     public void Should_justify_any_linq_function_to_higher_order_proposition_when_boolean_result_is_returned(string expectedAssertion, string model)
     {
@@ -304,25 +332,28 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         any admins or super users
-            roles.Any((string role) => isSuperUser || isAdminResult) == true
-                OR
-                    is admin
+            (IEnumerable<string> roles) => roles.Any((string role) => isSuperUser || isAdminResult) == true
+                roles.Any((string role) => isSuperUser || isAdminResult) == true
+                    OR
+                        is admin
         """,
         "admin")]
     [InlineData(
         """
         any admins or super users
-            roles.Any((string role) => isSuperUser || isAdminResult) == true
-                is super user
+            (IEnumerable<string> roles) => roles.Any((string role) => isSuperUser || isAdminResult) == true
+                roles.Any((string role) => isSuperUser || isAdminResult) == true
+                    is super user
         """,
         "superuser")]
     [InlineData(
         """
         ¬any admins or super users
-            roles.Any((string role) => isSuperUser || isAdminResult) == false
-                OR
-                    is not super user
-                    is not admin
+            (IEnumerable<string> roles) => roles.Any((string role) => isSuperUser || isAdminResult) == false
+                roles.Any((string role) => isSuperUser || isAdminResult) == false
+                    OR
+                        is not super user
+                        is not admin
         """,
         "user")]
     public void Should_justify_any_linq_function_to_higher_order_proposition_when_multiple_boolean_results_are_returned(string expectedAssertion, string model)
@@ -357,26 +388,29 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         any admins or super users
-            roles.Any(isSuperUser | isAdminResult) == true
-                OR
-                    is admin
+            (IEnumerable<string> roles) => roles.Any(isSuperUser | isAdminResult) == true
+                roles.Any(isSuperUser | isAdminResult) == true
+                    OR
+                        is admin
         """,
         "admin")]
     [InlineData(
         """
         any admins or super users
-            roles.Any(isSuperUser | isAdminResult) == true
-                OR
-                    is super user
+            (IEnumerable<string> roles) => roles.Any(isSuperUser | isAdminResult) == true
+                roles.Any(isSuperUser | isAdminResult) == true
+                    OR
+                        is super user
         """,
         "superuser")]
     [InlineData(
         """
         ¬any admins or super users
-            roles.Any(isSuperUser | isAdminResult) == false
-                OR
-                    is not super user
-                    is not admin
+            (IEnumerable<string> roles) => roles.Any(isSuperUser | isAdminResult) == false
+                roles.Any(isSuperUser | isAdminResult) == false
+                    OR
+                        is not super user
+                        is not admin
         """,
         "user")]
     public void Should_justify_any_linq_function_to_higher_order_proposition_when_multiple_specs_are_returned(string expectedAssertion, string model)
@@ -409,15 +443,17 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         all admins
-            roles.All((string role) => isAdminResult) == true
-                is admin
+            (IEnumerable<string> roles) => roles.All((string role) => isAdminResult) == true
+                roles.All((string role) => isAdminResult) == true
+                    is admin
         """,
         "admin")]
     [InlineData(
         """
         ¬all admins
-            roles.All((string role) => isAdminResult) == false
-                is not admin
+            (IEnumerable<string> roles) => roles.All((string role) => isAdminResult) == false
+                roles.All((string role) => isAdminResult) == false
+                    is not admin
         """,
         "user")]
     public void Should_justify_all_linq_function_to_higher_order_proposition_when_boolean_result_is_returned(string expectedAssertion, string model)
@@ -445,25 +481,28 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         all admins or super users
-            roles.All((string role) => isSuperUser || isAdminResult) == true
-                OR
-                    is admin
+            (IEnumerable<string> roles) => roles.All((string role) => isSuperUser || isAdminResult) == true
+                roles.All((string role) => isSuperUser || isAdminResult) == true
+                    OR
+                        is admin
         """,
         "admin")]
     [InlineData(
         """
         all admins or super users
-            roles.All((string role) => isSuperUser || isAdminResult) == true
-                is super user
+            (IEnumerable<string> roles) => roles.All((string role) => isSuperUser || isAdminResult) == true
+                roles.All((string role) => isSuperUser || isAdminResult) == true
+                    is super user
         """,
         "superuser")]
     [InlineData(
         """
         ¬all admins or super users
-            roles.All((string role) => isSuperUser || isAdminResult) == false
-                OR
-                    is not super user
-                    is not admin
+            (IEnumerable<string> roles) => roles.All((string role) => isSuperUser || isAdminResult) == false
+                roles.All((string role) => isSuperUser || isAdminResult) == false
+                    OR
+                        is not super user
+                        is not admin
         """,
         "user")]
     public void Should_justify_all_linq_function_to_higher_order_proposition_when_multiple_boolean_results_are_returned(string expectedAssertion, string model)
@@ -498,26 +537,29 @@ public class ExpressionTreeJustificationTests
     [InlineData(
         """
         all admins or super users
-            roles.All(isSuperUser | isAdminResult) == true
-                OR
-                    is admin
+            (IEnumerable<string> roles) => roles.All(isSuperUser | isAdminResult) == true
+                roles.All(isSuperUser | isAdminResult) == true
+                    OR
+                        is admin
         """,
         "admin")]
     [InlineData(
         """
         all admins or super users
-            roles.All(isSuperUser | isAdminResult) == true
-                OR
-                    is super user
+            (IEnumerable<string> roles) => roles.All(isSuperUser | isAdminResult) == true
+                roles.All(isSuperUser | isAdminResult) == true
+                    OR
+                        is super user
         """,
         "superuser")]
     [InlineData(
         """
         ¬all admins or super users
-            roles.All(isSuperUser | isAdminResult) == false
-                OR
-                    is not super user
-                    is not admin
+            (IEnumerable<string> roles) => roles.All(isSuperUser | isAdminResult) == false
+                roles.All(isSuperUser | isAdminResult) == false
+                    OR
+                        is not super user
+                        is not admin
         """,
         "user")]
     public void Should_justify_all_linq_function_to_higher_order_proposition_when_multiple_specs_are_returned(string expectedAssertion, string model)
@@ -558,8 +600,9 @@ public class ExpressionTreeJustificationTests
         result.Justification.Should().Be(
             """
             ¬all positive
-                numbers.All((int n) => n > 0) == false
-                    n <= 0
+                (ICollection<int> numbers) => numbers.All((int n) => n > 0) == false
+                    numbers.All((int n) => n > 0) == false
+                        n <= 0
             """);
     }
 
@@ -568,15 +611,16 @@ public class ExpressionTreeJustificationTests
     {
         var allPositive =
             Spec.From((ICollection<int> numbers) => numbers.Any(n => n > 0))
-                .Create("all positive");
+                .Create("any positive");
 
         var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
 
         result.Justification.Should().Be(
             """
-            all positive
-                numbers.Any((int n) => n > 0) == true
-                    n > 0
+            any positive
+                (ICollection<int> numbers) => numbers.Any((int n) => n > 0) == true
+                    numbers.Any((int n) => n > 0) == true
+                        n > 0
             """);
     }
 
@@ -584,7 +628,7 @@ public class ExpressionTreeJustificationTests
     public void Should_justify_all_operation_when_using_an_array()
     {
         var allPositive =
-            Spec.From((int[] numbers) => numbers.All(n => n > 0))
+            Spec.From((int[] numbers) => numbers.All(n => n > 0) )
                 .Create("all positive");
 
         var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
@@ -592,8 +636,9 @@ public class ExpressionTreeJustificationTests
         result.Justification.Should().Be(
             """
             ¬all positive
-                numbers.All((int n) => n > 0) == false
-                    n <= 0
+                (int[] numbers) => numbers.All((int n) => n > 0) == false
+                    numbers.All((int n) => n > 0) == false
+                        n <= 0
             """);
     }
 
@@ -602,15 +647,52 @@ public class ExpressionTreeJustificationTests
     {
         var allPositive =
             Spec.From((int[] numbers) => numbers.Any(n => n > 0))
-                .Create("all positive");
+                .Create("any positive");
 
         var result = allPositive.IsSatisfiedBy([-1, 2, 3]);
 
         result.Justification.Should().Be(
             """
-            all positive
-                numbers.Any((int n) => n > 0) == true
-                    n > 0
+            any positive
+                (int[] numbers) => numbers.Any((int n) => n > 0) == true
+                    numbers.Any((int n) => n > 0) == true
+                        n > 0
             """);
+    }
+
+    [Theory]
+    [InlineData("""
+                is admin
+                    (ICollection<string> users) => (users.Any((string user) => user == "root") || users.Count == 1) == true
+                        OR
+                            users.Any((string user) => user == "root") == true
+                                user == "root"
+                """, "root")]
+    [InlineData("""
+                is admin
+                    (ICollection<string> users) => (users.Any((string user) => user == "root") || users.Count == 1) == true
+                        OR
+                            users.Count == 1
+                """, "user")]
+    [InlineData("""
+                ¬is admin
+                    (ICollection<string> users) => (users.Any((string user) => user == "root") || users.Count == 1) == false
+                        OR
+                            users.Any((string user) => user == "root") == false
+                                user != "root"
+                            users.Count != 1
+                """, "user", "super-user")]
+    public void Should_justify_multiple_clause_expressions(string expectedAssertion, params string[] model)
+    {
+        // Assemble
+        var sut =
+            Spec.From((ICollection<string> users) => users.Any(user => user == "root") || users.Count == 1)
+                .Create("is admin");
+
+        // Act
+        var act = sut.IsSatisfiedBy(model);
+
+        // Assert
+        act.Justification.Should().BeEquivalentTo(expectedAssertion);
     }
 }

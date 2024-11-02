@@ -7,6 +7,9 @@ internal static class ExpressionTreeExtensions
 {
     internal static string ToCSharpName(this Type type)
     {
+        if (type.IsArray)
+            return $"{GetTypeKeyword(type.GetElementType()!)}[]";
+
         var isNullableType = type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         var nullableSuffix = isNullableType ? "?" : string.Empty;
         type = isNullableType ? Nullable.GetUnderlyingType(type)! : type;

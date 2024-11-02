@@ -230,10 +230,20 @@ public class HandTests
                             OR
                                 a flush of Hearts
                                     KH is Hearts
+                                        (Card card) => card.Suit == Hearts == true
+                                            card.Suit == Suit.Hearts
                                     QH is Hearts
+                                        (Card card) => card.Suit == Hearts == true
+                                            card.Suit == Suit.Hearts
                                     JH is Hearts
+                                        (Card card) => card.Suit == Hearts == true
+                                            card.Suit == Suit.Hearts
                                     10H is Hearts
+                                        (Card card) => card.Suit == Hearts == true
+                                            card.Suit == Suit.Hearts
                                     9H is Hearts
+                                        (Card card) => card.Suit == Hearts == true
+                                            card.Suit == Suit.Hearts
             """);
     }
 }

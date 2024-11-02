@@ -384,13 +384,13 @@ public class TutorialTests
     public void Should_be_eligible_for_a_loan()
     {
         var hasGoodCreditScore =
-            Spec.Build((Customer customer) => customer.CreditScore > 600)
+            Spec.From((Customer customer) => customer.CreditScore > 600)
                 .WhenTrue("customer has a good credit score")
                 .WhenFalse("customer has an inadequate credit score")
                 .Create();
 
         var hasSufficientIncome =
-            Spec.Build((Customer customer) => customer.Income > 100000)
+            Spec.From((Customer customer) => customer.Income > 100000)
                 .WhenTrue("customer has sufficient income")
                 .WhenFalse("customer has insufficient income")
                 .Create();
@@ -410,7 +410,11 @@ public class TutorialTests
             ¬customer is eligible for a loan
                 AND
                     customer has an inadequate credit score
+                        (Customer customer) => customer.CreditScore > 600 == false
+                            customer.CreditScore <= 600
                     customer has insufficient income
+                        (Customer customer) => customer.Income > 100000 == false
+                            customer.Income <= 100000
             """);
     }
 
@@ -629,9 +633,10 @@ public class TutorialTests
         result.Justification.Should().Be(
             """
             ¬all positive numbers amd some are even
-                AND
-                    numbers.All((int n) => n > 0) == false
-                        n <= 0
+                (IEnumerable<int> numbers) => (numbers.Any((int n) => n % 2 == 0) & numbers.All((int n) => n > 0)) == false
+                    AND
+                        numbers.All((int n) => n > 0) == false
+                            n <= 0
             """);
     }
 }

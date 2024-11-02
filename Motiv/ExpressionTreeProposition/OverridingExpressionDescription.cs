@@ -1,9 +1,9 @@
-﻿using Motiv.Shared;
+﻿using System.Linq.Expressions;
+using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition;
 
-public class OverridingExpressionDescription<TModel>(string statement, ISpecDescription? underlyingDescription = null)
-    : IExpressionDescription<TModel>
+public class OverridingExpressionDescription(string statement, LambdaExpression expression,  ISpecDescription? underlyingDescription = null) : ISpecDescription
 {
     public string Statement => statement;
 
@@ -21,11 +21,6 @@ public class OverridingExpressionDescription<TModel>(string statement, ISpecDesc
 
     public string ToReason(bool satisfied) =>
         Statement.ToReason(satisfied);
-
-    public string ToAssertion(TModel _, bool satisfied)
-    {
-        return Statement.ToReason(satisfied);
-    }
 
     public override string ToString() => Statement;
 }
