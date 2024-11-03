@@ -1,8 +1,6 @@
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using Motiv.HigherOrderProposition;
 using Motiv.Tests.Customizations;
-using Motiv.Tests.HigherOrderProposition;
 
 namespace Motiv.Tests;
 

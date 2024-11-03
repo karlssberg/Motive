@@ -24,10 +24,4 @@ internal class ExpressionTreeDescription<TModel, TPredicateResult>(
 
     public string ToReason(bool satisfied)=>
         Statement.ToReason(satisfied);
-
-    public string ToAssertion(TModel model, bool satisfied)
-    {
-        var parameter = expression.Parameters.First();
-        return expression.ToExpressionAssertion(satisfied).Serialize(model, parameter);
-    }
 }

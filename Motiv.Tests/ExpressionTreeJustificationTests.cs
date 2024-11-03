@@ -176,6 +176,70 @@ public class ExpressionTreeJustificationTests
         act.Justification.Should().Be(expectedResult);
     }
 
+
+
+    [Theory]
+    [InlineData(
+        """
+        none positive
+            -1 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+            -2 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+            -3 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+        """, -1, -2, -3)]
+    [InlineData(
+        """
+        none positive
+            0 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+            -1 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+            -2 is not positive
+                (int n) => n > 0 == false
+                    n <= 0
+        """, 0, -1, -2)]
+    [InlineData(
+        """
+        some positive
+            1 is positive
+                (int n) => n > 0 == true
+                    n > 0
+            2 is positive
+                (int n) => n > 0 == true
+                    n > 0
+        """, 0, 1, 2)]
+    public void Should_include_both_custom_assertions_and_underlying_assertions_in_the_justification_with_higher_order_propositions_created_without_supplying_a_statement(
+        string expectedResult,
+        params int[] model)
+    {
+        // Arrange
+        var underlying =
+            Spec.From((int n) => n > 0)
+                .WhenTrue(n => $"{n} is positive")
+                .WhenFalse(n => $"{n} is not positive")
+                .Create();
+
+        var sut =
+            Spec.Build(underlying)
+                .AsAnySatisfied()
+                .WhenTrue("some positive")
+                .WhenFalse("none positive")
+                .Create("any-positive");
+
+        // Act
+        var act = sut.IsSatisfiedBy(model);
+
+        // Assert
+        act.Justification.Should().Be(expectedResult);
+    }
+
     [Theory]
     [InlineData(
         """

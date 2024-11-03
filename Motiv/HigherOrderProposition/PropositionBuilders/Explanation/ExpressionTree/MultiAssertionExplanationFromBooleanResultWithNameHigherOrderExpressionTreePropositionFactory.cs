@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Motiv.ExpressionTreeProposition;
 using Motiv.HigherOrderProposition.ExpressionTree;
-using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 
@@ -9,7 +8,7 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Expressio
 /// A factory for creating specifications based on a predicate and explanations for true and false conditions. This is particularly useful for handling edge-case scenarios where it would be impossible or impractical to create a specification that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
+/// <typeparam name="TPredicateResult">The return type of the predicate function.</typeparam>
 public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
     Expression<Func<TModel, TPredicateResult>> expression,
     Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
@@ -33,7 +32,7 @@ public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHig
                 .ToEnumerable()
                 .ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>>(),
             falseBecause,
-            new SpecDescription<TModel>(statement),
+            new SpecDescription(statement),
             causeSelector);
     }
 
@@ -50,6 +49,6 @@ public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHig
                 .ToEnumerable()
                 .ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>>(),
             falseBecause,
-            new SpecDescription<TModel>(trueBecause),
+            new SpecDescription(trueBecause),
             causeSelector);
 }

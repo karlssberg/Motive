@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Globalization;
 using System.Reflection;
-using Motiv.ExpressionTreeProposition;
 
 namespace Motiv.Tests;
 

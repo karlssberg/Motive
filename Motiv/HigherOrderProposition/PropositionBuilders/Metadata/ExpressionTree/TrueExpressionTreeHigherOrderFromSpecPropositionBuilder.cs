@@ -5,7 +5,6 @@ using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.BooleanResult
 using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Spec;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Spec;
-using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree;
 
@@ -104,24 +103,15 @@ public readonly ref struct TrueExpressionTreeHigherOrderFromSpecPropositionBuild
         new HigherOrderFromBooleanResultExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
             higherOrderPredicate,
-            new SpecDescription<TModel>(statement.ThrowIfNullOrWhitespace(nameof(statement))),
+            new SpecDescription(statement.ThrowIfNullOrWhitespace(nameof(statement))),
             causeSelector);
 
     /// <summary>Creates a proposition.</summary>
     /// <returns>A specification for the model.</returns>
-    public SpecBase<IEnumerable<TModel>, string> Create(Expression statement) =>
+    internal SpecBase<IEnumerable<TModel>, string> Create(Expression statement) =>
         new HigherOrderFromBooleanResultExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
             higherOrderPredicate,
             new ExpressionAsStatementDescription<TModel>(statement, expression.Parameters.First()),
-            causeSelector);
-
-    /// <summary>Creates a proposition.</summary>
-    /// <returns>A specification for the model.</returns>
-    public SpecBase<IEnumerable<TModel>, string> Create() =>
-        new HigherOrderFromBooleanResultExpressionTreeProposition<TModel, TPredicateResult>(
-            expression,
-            higherOrderPredicate,
-            new ExpressionTreeDescription<TModel, TPredicateResult>(expression),
             causeSelector);
 }

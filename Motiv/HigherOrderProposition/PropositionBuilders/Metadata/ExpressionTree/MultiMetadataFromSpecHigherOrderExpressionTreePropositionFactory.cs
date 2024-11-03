@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Motiv.ExpressionTreeProposition;
 using Motiv.HigherOrderProposition.ExpressionTree;
-using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree;
 
@@ -32,20 +31,7 @@ public readonly ref struct MultiMetadataFromSpecHigherOrderExpressionTreeProposi
             higherOrderPredicate,
             whenTrue,
             whenFalse,
-            new SpecDescription<TModel>(statement),
-            causeSelector);
-    }
-
-    /// <summary>Creates a specification.</summary>
-    /// <returns>A specification for the model.</returns>
-    public SpecBase<IEnumerable<TModel>, TMetadata> Create()
-    {
-        return new HigherOrderFromBooleanResultMultiMetadataExpressionTreeProposition<TModel, TMetadata, TPredicateResult>(
-            expression,
-            higherOrderPredicate,
-            whenTrue,
-            whenFalse,
-            new ExpressionTreeDescription<TModel, TPredicateResult>(expression),
+            new SpecDescription(statement),
             causeSelector);
     }
 }

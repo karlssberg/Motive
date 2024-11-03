@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
-using Motiv.HigherOrderProposition;
-using Motiv.HigherOrderProposition.ExpressionTree;
 
 namespace Motiv.ExpressionTreeProposition;
 

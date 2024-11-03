@@ -1,7 +1,6 @@
 using System.Linq.Expressions;
 using Motiv.ExpressionTreeProposition;
 using Motiv.HigherOrderProposition.ExpressionTree;
-using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 
@@ -31,7 +30,7 @@ public readonly ref struct ExplanationHigherOrderExpressionTreePropositionFactor
             higherOrderPredicate,
             trueBecause,
             falseBecause,
-            new SpecDescription<TModel>(statement),
+            new SpecDescription(statement),
             causeSelector);
     }
 }

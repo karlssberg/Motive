@@ -40,5 +40,5 @@ public readonly ref struct MultiAssertionExplanationWithNameExpressionTreePropos
                 .ToEnumerable()
                 .ToFunc<TModel, BooleanResultBase<string>, IEnumerable<string>>(),
             falseBecause,
-            new ExpressionTreeDescription<TModel, TPredicateResult>(expression));
+            new SpecDescription(trueBecause));
 }

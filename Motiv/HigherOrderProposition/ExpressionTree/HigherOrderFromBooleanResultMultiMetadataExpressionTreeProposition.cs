@@ -44,7 +44,7 @@ internal sealed class HigherOrderFromBooleanResultMultiMetadataExpressionTreePro
             metadata.Value switch
             {
                 IEnumerable<string>  reasons => reasons,
-                _ => [Description.Statement.ToReason(isSatisfied)]
+                _ => underlyingResults.GetAssertions()
             });
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>

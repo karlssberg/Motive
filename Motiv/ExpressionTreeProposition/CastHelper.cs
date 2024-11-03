@@ -1,6 +1,4 @@
-﻿using Motiv.HigherOrderProposition;
-
-namespace Motiv.ExpressionTreeProposition;
+﻿namespace Motiv.ExpressionTreeProposition;
 
 public static class CastHelper
 {

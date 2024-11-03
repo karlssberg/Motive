@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Metadata;
 
@@ -24,14 +23,4 @@ public readonly ref struct MultiMetadataPropositionExpressionTreeFactory<TModel,
             whenTrue,
             whenFalse,
             new OverridingExpressionDescription(statement.ThrowIfNullOrWhitespace(nameof(statement)), expression));
-
-    /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
-    /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
-    /// <returns>A proposition for the model.</returns>
-    public SpecBase<TModel, TMetadata> Create() =>
-        new ExpressionTreeMultiMetadataProposition<TModel, TMetadata, TPredicateResult>(
-            expression,
-            whenTrue,
-            whenFalse,
-            new ExpressionTreeDescription<TModel, TPredicateResult>(expression));
 }

@@ -43,13 +43,15 @@ internal sealed class HigherOrderFromBooleanResultMetadataExpressionTreeProposit
             metadata.Value switch
             {
                 IEnumerable<string>  reasons => reasons,
-                _ => description.ToReason(isSatisfied).ToEnumerable()
+                _ => underlyingResults.GetAssertions()
             });
 
         var lazyDescription = new Lazy<ResultDescriptionBase>(() =>
-            new HigherOrderResultDescription<string>(
+            new HigherOrderExpressionTreeResultDescription<string>(
+                isSatisfied,
                 Description.ToReason(isSatisfied),
                 [],
+                expression,
                 causes.Value,
                 Description.Statement));
 

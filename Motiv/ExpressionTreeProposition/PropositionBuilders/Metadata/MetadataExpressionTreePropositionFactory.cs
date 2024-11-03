@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Metadata;
 

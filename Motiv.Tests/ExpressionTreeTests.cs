@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using Motiv.ExpressionTreeProposition;
-
-namespace Motiv.Tests;
+﻿namespace Motiv.Tests;
 
 public class ExpressionTreeTests
 {

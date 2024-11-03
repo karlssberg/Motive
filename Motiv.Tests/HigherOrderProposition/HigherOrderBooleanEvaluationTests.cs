@@ -1,5 +1,4 @@
-﻿using AutoFixture.Xunit2;
-using Motiv.HigherOrderProposition;
+﻿using Motiv.HigherOrderProposition;
 
 namespace Motiv.Tests.HigherOrderProposition;
 

@@ -4,7 +4,6 @@ using Motiv.ExpressionTreeProposition.PropositionBuilders.Metadata;
 using Motiv.HigherOrderProposition;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree;
 using Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Spec;
-using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition.PropositionBuilders;
 

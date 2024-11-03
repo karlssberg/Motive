@@ -2,7 +2,7 @@
 
 namespace Motiv.ExpressionTreeProposition;
 
-internal sealed class SpecDescription<TModel>(string statement, ISpecDescription? underlyingDescription = null) : ISpecDescription
+internal sealed class SpecDescription(string statement, ISpecDescription? underlyingDescription = null) : ISpecDescription
 {
     public string Statement => statement;
 
