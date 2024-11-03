@@ -42,7 +42,7 @@ public readonly ref struct FalseExpressionTreeAssertionFromBooleanResultHigherOr
     /// Specifies an assertion to yield when the condition is false.
     /// </summary>
     /// <param name="falseBecause">A function that generates a human-readable reason when the condition is false.</param>
-    /// <returns>An instance of <see cref="MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory{TModel,TUnderlyingMetadata}" />.</returns>
+    /// <returns>An instance of <see cref="MultiAssertionExplanationFromBooleanResultHigherOrderExpressionTreePropositionFactory{TModel,TUnderlyingMetadata}" />.</returns>
     public MultiAssertionExplanationFromBooleanResultHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult> WhenFalseYield(
         Func<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>> falseBecause) =>
         new(expression,

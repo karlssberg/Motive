@@ -6,7 +6,6 @@ namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Explanation;
 /// A builder for creating propositions based on an lambda expression trees and explanation factories.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 /// <typeparam name="TPredicateResult">The return type of the predicate expression.</typeparam>
 public readonly ref struct FalseExpressionTreeAssertionPropositionBuilder<TModel, TPredicateResult>(
     Expression<Func<TModel, TPredicateResult>> expression,

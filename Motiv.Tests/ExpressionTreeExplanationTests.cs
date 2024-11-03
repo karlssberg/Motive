@@ -286,6 +286,43 @@ public class ExpressionTreeExplanationTests
     }
 
     [Fact]
+    public void Should_yield_false_assertion_when_true_multiple_assertions()
+    {
+        // Assemble
+        var literal = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => ["is positive"])
+            .WhenFalse("is not positive")
+            .Create("is-positive");
+
+        var modelCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => ["is positive"])
+            .WhenFalse(_ => "is not positive")
+            .Create("is-positive");
+
+        var resultCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => ["is positive"])
+            .WhenFalse((_, _) => "is not positive")
+            .Create("is-positive");
+
+        var multipleCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => ["is positive"])
+            .WhenFalseYield((_, _) => ["is not positive"])
+            .Create("is-positive");
+
+        var spec = literal | modelCallback | resultCallback | multipleCallback;
+
+        // Act
+        var act = spec.IsSatisfiedBy(-1);
+
+        // Assert
+        act.Assertions.Should().BeEquivalentTo("is not positive");
+    }
+
+    [Fact]
     public void Should_yield_false_assertion_when_overriding_assertion_from_higher_order_proposition()
     {
         // Assemble

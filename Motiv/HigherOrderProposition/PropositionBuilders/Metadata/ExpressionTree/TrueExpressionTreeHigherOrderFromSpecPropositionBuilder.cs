@@ -112,6 +112,6 @@ public readonly ref struct TrueExpressionTreeHigherOrderFromSpecPropositionBuild
         new HigherOrderFromBooleanResultExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
             higherOrderPredicate,
-            new ExpressionAsStatementDescription<TModel>(statement, expression.Parameters.First()),
+            new ExpressionAsStatementDescription(statement),
             causeSelector);
 }

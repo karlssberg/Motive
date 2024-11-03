@@ -24,9 +24,8 @@ public readonly ref struct ExplanationWithNameExpressionTreePropositionFactory<T
             expression,
             trueBecause,
             falseBecause,
-            new OverridingExpressionDescription(
-                statement.ThrowIfNullOrWhitespace(nameof(statement)),
-                expression));
+            new SpecDescription(
+                statement.ThrowIfNullOrWhitespace(nameof(statement))));
 
     /// <summary>
     /// Creates a proposition with explanations for when the condition is true or false. The propositional statement

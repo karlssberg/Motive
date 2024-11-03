@@ -21,12 +21,22 @@ internal static class ExpressionExtensions
 
     internal static string ToAssertion(this LambdaExpression expression, bool satisfied)
     {
-        var body = Expression.Equal(
-            Expression.Convert(expression.Body, typeof(object)),
-            Expression.Convert(Expression.Constant(satisfied), typeof(object)));
+        var body = GetAssertionExpression(expression.Body, satisfied);
 
         return Expression
             .Lambda(body, expression.Parameters)
             .Serialize();
+    }
+
+    internal static string ToAssertion(this Expression expression, bool satisfied)
+    {
+        return GetAssertionExpression(expression, satisfied).Serialize();
+    }
+
+    private static Expression GetAssertionExpression(this Expression expression, bool satisfied)
+    {
+        return Expression.Equal(
+            Expression.Convert(expression, typeof(object)),
+            Expression.Convert(Expression.Constant(satisfied), typeof(object)));
     }
 }

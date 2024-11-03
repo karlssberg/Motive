@@ -337,6 +337,43 @@ public class ExpressionTreeMetadataTests
     }
 
     [Fact]
+    public void Should_yield_false_assertion_when_true_multiple_assertions()
+    {
+        // Assemble
+        var literal = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => new [] { new Metadata("is positive") })
+            .WhenFalse(new Metadata("is not positive"))
+            .Create("is-positive");
+
+        var modelCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => new [] { new Metadata("is positive") })
+            .WhenFalse(_ => new Metadata("is not positive"))
+            .Create("is-positive");
+
+        var resultCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => new [] { new Metadata("is positive") })
+            .WhenFalse((_, _) => new Metadata("is not positive"))
+            .Create("is-positive");
+
+        var multipleCallback = Spec
+            .From((int n) => n > 0)
+            .WhenTrueYield((_, _) => new [] { new Metadata("is positive") })
+            .WhenFalseYield((_, _) => [new Metadata("is not positive")])
+            .Create("is-positive");
+
+        var spec = literal | modelCallback | resultCallback | multipleCallback;
+
+        // Act
+        var act = spec.IsSatisfiedBy(-1);
+
+        // Assert
+        act.Assertions.Should().BeEquivalentTo("n <= 0");
+    }
+
+    [Fact]
     public void Should_yield_false_assertion_when_overriding_higher_order_assertion()
     {
         // Assemble

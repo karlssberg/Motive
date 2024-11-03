@@ -31,9 +31,11 @@ internal sealed class HigherOrderFromBooleanResultExpressionTreeProposition<TMod
             causes.Value.SelectMany(result => result.MetadataTier.Metadata).DistinctWithOrderPreserved());
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>
-                new HigherOrderResultDescription<string>(
+                new HigherOrderExpressionTreeResultDescription<string>(
+                    isSatisfied,
                     Description.ToReason(isSatisfied),
                     [],
+                    expression,
                     causes.Value,
                     Description.Statement));
 

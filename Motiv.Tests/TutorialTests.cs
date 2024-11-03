@@ -636,7 +636,9 @@ public class TutorialTests
                 (IEnumerable<int> numbers) => (numbers.Any((int n) => n % 2 == 0) & numbers.All((int n) => n > 0)) == false
                     AND
                         numbers.All((int n) => n > 0) == false
-                            n <= 0
+                            (int n) => n > 0 == false
+                                n <= 0
             """);
     }
+
 }

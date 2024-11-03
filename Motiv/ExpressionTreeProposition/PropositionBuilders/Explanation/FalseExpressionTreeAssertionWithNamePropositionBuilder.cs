@@ -17,7 +17,7 @@ public readonly ref struct FalseExpressionTreeAssertionWithNamePropositionBuilde
     /// Specifies an assertion to yield when the condition is false.
     /// </summary>
     /// <param name="falseBecause">A human-readable reason why the condition is false.</param>
-    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel}" />.</returns>
+    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel, TPredicateResult}" />.</returns>
     public ExplanationWithNameExpressionTreePropositionFactory<TModel, TPredicateResult> WhenFalse(
         string falseBecause) =>
         new(expression,
@@ -28,7 +28,7 @@ public readonly ref struct FalseExpressionTreeAssertionWithNamePropositionBuilde
     /// Specifies an assertion to yield when the condition is false.
     /// </summary>
     /// <param name="falseBecause">A function that generates a human-readable reason when the condition is false.</param>
-    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel}" />.</returns>
+    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel, TPredicateResult}" />.</returns>
     public ExplanationWithNameExpressionTreePropositionFactory<TModel, TPredicateResult> WhenFalse(
         Func<TModel, string> falseBecause) =>
         new(expression,
@@ -39,7 +39,7 @@ public readonly ref struct FalseExpressionTreeAssertionWithNamePropositionBuilde
     /// Specifies an assertion to yield when the condition is false.
     /// </summary>
     /// <param name="falseBecause">A function that generates a human-readable reason when the condition is false.</param>
-    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel}" />.</returns>
+    /// <returns>An instance of <see cref="ExplanationWithNameExpressionTreePropositionFactory{TModel, TPredicateResult}" />.</returns>
     public ExplanationWithNameExpressionTreePropositionFactory<TModel, TPredicateResult> WhenFalse(
         Func<TModel, BooleanResultBase<string>, string> falseBecause) =>
         new(expression,
@@ -50,7 +50,7 @@ public readonly ref struct FalseExpressionTreeAssertionWithNamePropositionBuilde
     /// Specifies an assertion to yield when the condition is false.
     /// </summary>
     /// <param name="falseBecause">A function that generates a human-readable reason when the condition is false.</param>
-    /// <returns>An instance of <see cref="MultiAssertionExplanationWithNameExpressionTreePropositionFactory{TModel}" />.</returns>
+    /// <returns>An instance of <see cref="MultiAssertionExplanationWithNameExpressionTreePropositionFactory{TModel, TPredicateResult}" />.</returns>
     public MultiAssertionExplanationWithNameExpressionTreePropositionFactory<TModel, TPredicateResult> WhenFalseYield(
         Func<TModel, BooleanResultBase<string>, IEnumerable<string>> falseBecause) =>
         new(expression,

@@ -3,20 +3,15 @@ using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition;
 
-internal class ExpressionAsStatementDescription<TModel> : ISpecDescription
+internal class ExpressionAsStatementDescription : ISpecDescription
 {
     private readonly string _trueBecause;
     private readonly string _falseBecause;
-    private readonly Expression _expression;
-    private readonly ParameterExpression _parameter;
     private readonly ISpecDescription? _underlyingDescription;
 
     public ExpressionAsStatementDescription(Expression expression,
-        ParameterExpression parameter,
         ISpecDescription? underlyingDescription = null)
     {
-        _expression = expression;
-        _parameter = parameter;
         _underlyingDescription = underlyingDescription;
         var statement = expression.Serialize();
         _trueBecause = $"{statement} == true";
@@ -44,6 +39,4 @@ internal class ExpressionAsStatementDescription<TModel> : ISpecDescription
             : _falseBecause;
 
 
-    public string ToAssertion(TModel model, bool satisfied) =>
-        _expression.ToExpressionAssertion(satisfied).Serialize(model, _parameter);
 }
