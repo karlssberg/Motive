@@ -25,35 +25,26 @@ internal sealed class ExplanationProposition<TModel>(
 
     protected override PolicyResultBase<string> IsPolicySatisfiedBy(TModel model)
     {
-        var isSatisfied = InvokePredicate(model);
+        var isSatisfied = WrapException.CatchFuncExceptionOnBehalfOfSpecType(
+            this,
+            () => predicate(model),
+            nameof(predicate));
 
-        var assertion = GetAssertion(model, isSatisfied);
-
-        return CreatePolicyResult(isSatisfied, assertion);
-    }
-
-    private Lazy<string> GetAssertion(TModel model, bool isSatisfied) =>
-        new(() =>
+        var assertion = new Lazy<string>(() =>
             isSatisfied switch
             {
                 true => InvokeTrueBecauseFunction(model),
                 false => InvokeFalseBecauseFunction(model)
             });
 
-    private PolicyResultBase<string> CreatePolicyResult(bool isSatisfied, Lazy<string> assertion) =>
-        new PropositionPolicyResult<string>(
+        return new PropositionPolicyResult<string>(
             isSatisfied,
             assertion,
             new Lazy<MetadataNode<string>>(() => new MetadataNode<string>(assertion.Value, [])),
             new Lazy<Explanation>(() => new Explanation(assertion.Value, [], [])),
             new Lazy<ResultDescriptionBase>(() =>
                 new PropositionResultDescription(assertion.Value, Description.Statement)));
-
-    private bool InvokePredicate(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => predicate(model),
-            nameof(predicate));
+    }
 
     private string InvokeTrueBecauseFunction(TModel model) =>
         WrapException.CatchFuncExceptionOnBehalfOfSpecType(

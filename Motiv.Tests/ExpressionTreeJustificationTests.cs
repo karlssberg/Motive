@@ -283,26 +283,26 @@ public class ExpressionTreeJustificationTests
         """
         ¬should create guid
             ¬any positive
-                (decimal n) => n > 0 == false
-                    none positive
+                none positive
+                    (decimal n) => n > 0 == false
                         n <= 0
         """, -1, -2, -3)]
     [InlineData(
         """
         should create guid
             any positive
-                (decimal n) => n > 0 == true
-                    1 is positive
+                1 is positive
+                    (decimal n) => n > 0 == true
                         n > 0
         """, 1, 0, -1)]
     [InlineData(
         """
         should create guid
             any positive
-                (decimal n) => n > 0 == true
-                    1 is positive
-                    2 is positive
-                    3 is positive
+                1 is positive
+                2 is positive
+                3 is positive
+                    (decimal n) => n > 0 == true
                         n > 0
         """, 1, 2, 3)]
     public void Should_insert_yielded_assertions_of_encapsulated_higher_order(

@@ -20,32 +20,22 @@ internal sealed class HigherOrderResultDescription<TUnderlyingMetadata>(
     public override IEnumerable<string> GetJustificationAsLines()
     {
         yield return Reason;
-        var distinctWithOrderPreserved = additionalAssertions.DistinctWithOrderPreserved().ToArray();
-        foreach (var line in distinctWithOrderPreserved)
-            yield return line.Indent();
+        var distinctAssertions = additionalAssertions.DistinctWithOrderPreserved().ToArray();
+        var assertionIndent = distinctAssertions.Length > 0 ? 1 : 0;
+        foreach (var line in distinctAssertions)
+            yield return line.Indent(assertionIndent);
 
         foreach (var line in GetUnderlyingJustificationsAsLines())
         {
-            if (distinctWithOrderPreserved.Length > 0)
-                yield return line.Indent();
-            else
-                yield return line;
+            yield return line.Indent(assertionIndent + 1);
         }
     }
 
     private IEnumerable<string> GetUnderlyingJustificationsAsLines()
     {
-        foreach (var line in UnderlyingDetailsAsLines())
-            yield return line.Indent();
-
-        yield break;
-
-        IEnumerable<string> UnderlyingDetailsAsLines()
-        {
-            return _causes
+        return _causes
                 .DistinctWithOrderPreserved(result => result.Justification)
                 .SelectMany(cause => cause.Description.GetJustificationAsLines());
-        }
     }
 }
 

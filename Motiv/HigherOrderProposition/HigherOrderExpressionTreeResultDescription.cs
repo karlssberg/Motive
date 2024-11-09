@@ -24,31 +24,23 @@ internal sealed class HigherOrderExpressionTreeResultDescription<TUnderlyingMeta
     public override IEnumerable<string> GetJustificationAsLines()
     {
         yield return Reason;
-        yield return expression.ToAssertion(satisfied).Indent();
-        var distinctWithOrderPreserved = additionalAssertions.DistinctWithOrderPreserved().ToArray();
-        foreach (var line in distinctWithOrderPreserved)
-            yield return line.Indent(2);
+
+        var distinctAssertions = additionalAssertions.DistinctWithOrderPreserved().ToArray();
+        var assertionIndent = distinctAssertions.Length > 0 ? 1 : 0;
+        foreach (var assertion in distinctAssertions)
+            yield return assertion.Indent(assertionIndent);
+
+        yield return expression.ToAssertion(satisfied).Indent(assertionIndent + 1);
 
         foreach (var line in GetUnderlyingJustificationsAsLines())
         {
-            var levelOfIndentation = distinctWithOrderPreserved.Length > 0 ? 2 : 1;
-            yield return line.Indent(levelOfIndentation);
+            yield return line.Indent(assertionIndent + 2);
         }
     }
 
-    private IEnumerable<string> GetUnderlyingJustificationsAsLines()
-    {
-        foreach (var line in UnderlyingDetailsAsLines())
-            yield return line.Indent();
-
-        yield break;
-
-        IEnumerable<string> UnderlyingDetailsAsLines()
-        {
-            return _causes
-                .DistinctWithOrderPreserved(result => result.Justification)
-                .SelectMany(cause => cause.Description.GetJustificationAsLines());
-        }
-    }
+    private IEnumerable<string> GetUnderlyingJustificationsAsLines() =>
+        _causes
+            .DistinctWithOrderPreserved(result => result.Justification)
+            .SelectMany(cause => cause.Description.GetJustificationAsLines());
 }
 

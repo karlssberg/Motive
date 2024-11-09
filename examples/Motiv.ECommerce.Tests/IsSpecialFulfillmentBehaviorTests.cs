@@ -115,8 +115,8 @@ public class IsSpecialFulfillmentBehaviorTests
             """
             should locally fulfill
                 any perishable
-                    (InventoryPricedProduct product) => product.ExpireDate - product.DateInStock < TimeSpan.FromDays(30) == true
-                        Brand Model is perishable
+                    Brand Model is perishable
+                        (InventoryPricedProduct product) => product.ExpireDate - product.DateInStock < TimeSpan.FromDays(30) == true
                             product.ExpireDate - product.DateInStock < TimeSpan.FromDays(30)
             """);
     }
