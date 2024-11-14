@@ -1,4 +1,6 @@
-﻿namespace Motiv.Tests;
+﻿using System.Linq.Expressions;
+
+namespace Motiv.Tests;
 
 public class TutorialTests
 {
@@ -621,7 +623,7 @@ public class TutorialTests
     [Fact]
     public void Should_demonstrate_the_usage_of_all_and_any()
     {
-        var areAnyEvenAndAllPositive = Spec.From((IEnumerable<int> numbers) =>
+        var areAnyEvenAndAllPositive = Spec.From((ICollection<int> numbers) =>
                 numbers.Any(n => n % 2 == 0)
                 & numbers.All(n => n > 0))
             .Create("all positive numbers amd some are even");
@@ -633,12 +635,13 @@ public class TutorialTests
         result.Justification.Should().Be(
             """
             ¬all positive numbers amd some are even
-                (IEnumerable<int> numbers) => (numbers.Any((int n) => n % 2 == 0) & numbers.All((int n) => n > 0)) == false
+                (ICollection<int> numbers) => (numbers.Any((int n) => n % 2 == 0) & numbers.All((int n) => n > 0)) == false
                     AND
                         numbers.All((int n) => n > 0) == false
                             (int n) => n > 0 == false
                                 n <= 0
             """);
     }
+
 
 }

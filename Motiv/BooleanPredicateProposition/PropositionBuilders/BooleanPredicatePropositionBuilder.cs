@@ -104,7 +104,7 @@ public readonly ref struct BooleanPredicatePropositionBuilder<TModel>(Func<TMode
     public PolicyBase<TModel, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new ExplanationProposition<TModel>(
+        return new MinimalProposition<TModel>(
             predicate,
             new SpecDescription(statement));
     }

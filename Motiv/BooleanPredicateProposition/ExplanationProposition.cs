@@ -12,8 +12,8 @@ internal sealed class ExplanationProposition<TModel>(
     internal ExplanationProposition(Func<TModel, bool> predicate, ISpecDescription specDescription)
         : this(
             predicate,
-            _ => ReasonFromPropositionStatement(true, specDescription.Statement),
-            _ => ReasonFromPropositionStatement(false, specDescription.Statement),
+            _ => GetTrueAssertion(specDescription.Statement),
+            _ => GetFalseAssertion(specDescription.Statement),
             specDescription)
     {
     }
@@ -25,16 +25,13 @@ internal sealed class ExplanationProposition<TModel>(
 
     protected override PolicyResultBase<string> IsPolicySatisfiedBy(TModel model)
     {
-        var isSatisfied = WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => predicate(model),
-            nameof(predicate));
+        var isSatisfied = predicate(model);
 
         var assertion = new Lazy<string>(() =>
             isSatisfied switch
             {
-                true => InvokeTrueBecauseFunction(model),
-                false => InvokeFalseBecauseFunction(model)
+                true => trueBecause(model),
+                false => falseBecause(model)
             });
 
         return new PropositionPolicyResult<string>(
@@ -46,24 +43,13 @@ internal sealed class ExplanationProposition<TModel>(
                 new PropositionResultDescription(assertion.Value, Description.Statement)));
     }
 
-    private string InvokeTrueBecauseFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => trueBecause(model),
-            nameof(trueBecause));
+    private static string GetTrueAssertion(string proposition) =>
+        proposition.ContainsReservedCharacters()
+            ? $"({proposition})"
+            : proposition;
 
-    private string InvokeFalseBecauseFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => falseBecause(model),
-            nameof(falseBecause));
-
-    private static string ReasonFromPropositionStatement(bool isSatisfied, string proposition) =>
-        (isSatisfied, proposition.ContainsReservedCharacters()) switch
-        {
-            (true, true) => $"({proposition})",
-            (true, _) => proposition,
-            (false, true) => $"¬({proposition})",
-            (false, _) => $"¬{proposition}"
-        };
+    private static string GetFalseAssertion(string proposition) =>
+        proposition.ContainsReservedCharacters()
+            ? $"¬({proposition})"
+            : $"¬{proposition}";
 }

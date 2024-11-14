@@ -23,24 +23,14 @@ internal sealed class MetadataProposition<TModel, TMetadata>(
 
     protected override PolicyResultBase<TMetadata> IsPolicySatisfiedBy(TModel model)
     {
-        var isSatisfied = InvokePredicate(model);
+        var isSatisfied = predicate(model);
 
-        var metadata = ResolveMetadata(model, isSatisfied);
-
-        return CreatePolicyResult(metadata, isSatisfied);
-    }
-
-    private Lazy<TMetadata> ResolveMetadata(TModel model, bool isSatisfied)
-    {
-        return new Lazy<TMetadata>(() => isSatisfied switch
+        var metadata = new Lazy<TMetadata>(() => isSatisfied switch
         {
-            true => InvokeWhenTrueFunction(model),
-            false => InvokeWhenFalseFunction(model)
+            true => whenTrue(model),
+            false => whenFalse(model)
         });
-    }
 
-    private PolicyResultBase<TMetadata> CreatePolicyResult(Lazy<TMetadata> metadata, bool isSatisfied)
-    {
         var assertion = new Lazy<IEnumerable<string>> (() => metadata.Value switch
         {
             IEnumerable<string> because => because,
@@ -55,22 +45,4 @@ internal sealed class MetadataProposition<TModel, TMetadata>(
             new Lazy<ResultDescriptionBase>(() =>
                 new PropositionResultDescription(Description.ToReason(isSatisfied), Description.Statement)));
     }
-
-    private bool InvokePredicate(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => predicate(model),
-            nameof(predicate));
-
-    private TMetadata InvokeWhenTrueFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => whenTrue(model),
-            nameof(whenTrue));
-
-    private TMetadata InvokeWhenFalseFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => whenFalse(model),
-            nameof(whenFalse));
 }

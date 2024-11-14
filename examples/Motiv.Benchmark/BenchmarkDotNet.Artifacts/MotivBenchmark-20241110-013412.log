@@ -1,0 +1,19 @@
+// Validating benchmarks:
+// Benchmark MotivBenchmark.EvaluateIsInRangeAndEven: .NET Core 3.0(Runtime=.NET Core 3.0)
+//    * The required .NET Core SDK version 3.0 for runtime moniker NetCoreApp30 is not installed.
+
+// Benchmark MotivBenchmark.EvaluateIsEligibleForLoan: .NET Core 3.0(Runtime=.NET Core 3.0)
+//    * The required .NET Core SDK version 3.0 for runtime moniker NetCoreApp30 is not installed.
+
+// Benchmark MotivBenchmark.EvaluateIsInRangeAndEven: Mono(Runtime=Mono)
+//    * Mono is not installed or added to PATH, benchmark 'MotivBenchmark.EvaluateIsInRangeAndEven: Mono(Runtime=Mono)' will not be executed
+
+// Benchmark MotivBenchmark.EvaluateIsInRangeAndEven: Mono(Runtime=Mono)
+//    * The Roslyn toolchain is only supported on .NET Framework
+
+// Benchmark MotivBenchmark.EvaluateIsEligibleForLoan: Mono(Runtime=Mono)
+//    * Mono is not installed or added to PATH, benchmark 'MotivBenchmark.EvaluateIsEligibleForLoan: Mono(Runtime=Mono)' will not be executed
+
+// Benchmark MotivBenchmark.EvaluateIsEligibleForLoan: Mono(Runtime=Mono)
+//    * The Roslyn toolchain is only supported on .NET Framework
+

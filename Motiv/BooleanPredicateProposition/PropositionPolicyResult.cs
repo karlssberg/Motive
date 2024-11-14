@@ -3,7 +3,7 @@
 namespace Motiv.BooleanPredicateProposition;
 
 /// <summary>
-/// Represents a proposition that yields custom metadata based on the result of a boolean predicate.
+///     Represents a proposition that yields custom metadata based on the result of a boolean predicate.
 /// </summary>
 /// <param name="satisfied">The value of the proposition.</param>
 /// <param name="lazyValue">The value of the policy result.</param>
@@ -23,27 +23,27 @@ internal sealed class PropositionPolicyResult<TMetadata>(
     public override TMetadata Value => lazyValue.Value;
 
     /// <summary>
-    /// Gets the metadata tier of the result.
+    ///     Gets the metadata tier of the result.
     /// </summary>
     public override MetadataNode<TMetadata> MetadataTier => metadataTier.Value;
 
     /// <summary>
-    /// Gets the underlying results of the result.
+    ///     Gets the underlying results of the result.
     /// </summary>
     public override IEnumerable<BooleanResultBase> Underlying => [];
 
     /// <summary>
-    /// Gets the underlying results that share the same metadata type.
+    ///     Gets the underlying results that share the same metadata type.
     /// </summary>
     public override IEnumerable<BooleanResultBase<TMetadata>> UnderlyingWithValues => [];
 
     /// <summary>
-    /// Gets the causes of the result.
+    ///     Gets the causes of the result.
     /// </summary>
     public override IEnumerable<BooleanResultBase> Causes => [];
 
     /// <summary>
-    /// Gets the results that share the same metadata type that also helped determine the final result.
+    ///     Gets the results that share the same metadata type that also helped determine the final result.
     /// </summary>
     public override IEnumerable<BooleanResultBase<TMetadata>> CausesWithValues => [];
 
