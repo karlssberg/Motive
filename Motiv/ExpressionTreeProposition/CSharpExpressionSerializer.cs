@@ -345,7 +345,7 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
 
     protected override Expression VisitConstant(ConstantExpression node)
     {
-        var serialization = SerializeSupported(node.Value, node.Type) ?? node.Value.ToString();
+        var serialization = SerializeSupported(node.Value, node.Type) ?? node.Value?.ToString();
         OutputText.Append(serialization);
         return node;
     }

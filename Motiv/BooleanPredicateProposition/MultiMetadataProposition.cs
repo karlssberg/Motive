@@ -26,12 +26,12 @@ internal sealed class MultiMetadataProposition<TModel, TMetadata>(
     /// <returns>A BooleanResultBase object containing the result of the evaluation.</returns>
     protected override BooleanResultBase<TMetadata> IsSpecSatisfiedBy(TModel model)
     {
-        var isSatisfied = InvokePredicate(model);
+        var isSatisfied = predicate(model);
 
         var metadata = isSatisfied switch
         {
-            true => InvokeWhenTrueFunction(model),
-            false => InvokeWhenFalseFunction(model)
+            true => whenTrue(model),
+            false => whenFalse(model)
         };
 
         var assertion = metadata switch
@@ -43,26 +43,8 @@ internal sealed class MultiMetadataProposition<TModel, TMetadata>(
         return new PropositionBooleanResult<TMetadata>(
             isSatisfied,
             new Lazy<MetadataNode<TMetadata>>(() => new MetadataNode<TMetadata>(metadata, [])),
-            new Lazy<Explanation>(() => new Explanation(assertion, [], [])),
+            new Lazy<Explanation>(() => new Explanation(assertion)),
             new Lazy<ResultDescriptionBase>(() =>
                 new PropositionResultDescription(Description.ToReason(isSatisfied), Description.Statement)));
     }
-
-    private bool InvokePredicate(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => predicate(model),
-            nameof(predicate));
-
-    private IEnumerable<TMetadata> InvokeWhenTrueFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => whenTrue(model),
-            nameof(whenTrue));
-
-    private IEnumerable<TMetadata> InvokeWhenFalseFunction(TModel model) =>
-        WrapException.CatchFuncExceptionOnBehalfOfSpecType(
-            this,
-            () => whenFalse(model),
-            nameof(whenFalse));
 }

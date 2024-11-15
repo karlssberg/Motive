@@ -10,7 +10,6 @@ internal sealed class ExpressionTreeMultiMetadataProposition<TModel, TMetadata, 
     ISpecDescription description)
     : SpecBase<TModel, TMetadata>
 {
-
     public override IEnumerable<SpecBase> Underlying { get; } = [];
 
     private readonly ExpressionPredicate<TModel, TPredicateResult> _predicate = new(expression);
@@ -21,28 +20,33 @@ internal sealed class ExpressionTreeMultiMetadataProposition<TModel, TMetadata, 
     {
         var result = _predicate.Execute(model);
 
-        var metadata = new Lazy<IEnumerable<TMetadata>>(() =>
+        var metadataResolver =
             result.Satisfied switch
             {
-                true => whenTrue(model, result),
-                false => whenFalse(model, result)
-            });
+                true => whenTrue,
+                false => whenFalse
+            };
+
+        IEnumerable<TMetadata>? metadataResults = null;
 
         var metadataTier = new Lazy<MetadataNode<TMetadata>>(() =>
-            new MetadataNode<TMetadata>(metadata.Value,
-                result.ToEnumerable() as IEnumerable<BooleanResultBase<TMetadata>> ?? []));
+        {
+            metadataResults ??= metadataResolver(model, result);
+            return new MetadataNode<TMetadata>(metadataResolver(model, result),
+                result.ToEnumerable() as IEnumerable<BooleanResultBase<TMetadata>> ?? []);
+        });
 
         var explanation = new Lazy<Explanation>(() =>
         {
-            var assertions = metadata.Value switch
+            metadataResults ??= metadataResolver(model, result);
+            var assertions = metadataResults switch
             {
-                IEnumerable<string> because => because.ToArray(),
+                IEnumerable<string> because => because,
                 _ => result.Assertions
             };
             return new Explanation(
                 assertions,
-                result.ToEnumerable(),
-                result.ToEnumerable());
+                result);
         });
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>

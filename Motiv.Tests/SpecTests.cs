@@ -462,50 +462,6 @@ public class SpecTests
     }
 
     [Fact]
-    public void Should_wrap_thrown_exceptions_in_a_specification_exception_when_using_text_metadata()
-    {
-        // Arrange
-        var spec = Spec
-            .Build((Func<string?, bool>)(_ => throw new Exception("should be wrapped")))
-            .WhenTrue("should be used in exception message")
-            .WhenFalse("should not be used in exception message")
-            .Create();
-
-        // Act
-        var act = () => spec.IsSatisfiedBy(null);
-
-        // Assert
-        act.Should().Throw<SpecException>()
-            .WithMessage(
-                "*An 'Exception' was thrown with the message 'should be wrapped' " +
-                "while evaluating the 'predicate' parameter that was supplied to Spec<String> named 'should be used in exception message'.*")
-            .WithInnerExceptionExactly<Exception>();
-    }
-
-    [Fact]
-    public void Should_wrap_thrown_exceptions_in_a_specification_exception()
-    {
-        // Arrange
-        const string statement = "should be used in exception message";
-
-        var spec = Spec
-            .Build((Func<string?, bool>)(_ => throw new Exception("should be wrapped")))
-            .WhenTrue(true.ToString())
-            .WhenFalse(false.ToString())
-            .Create(statement);
-
-        // Act
-        var act = () => spec.IsSatisfiedBy(null);
-
-        // Assert
-        act.Should().Throw<SpecException>()
-            .WithMessage(
-                "*An 'Exception' was thrown with the message 'should be wrapped' " +
-                "while evaluating the 'predicate' parameter that was supplied to Spec<String> named 'should be used in exception message'.*")
-            .WithInnerExceptionExactly<Exception>();
-    }
-
-    [Fact]
     public void Should_provide_detailed_proposition()
     {
         // Arrange

@@ -6,53 +6,27 @@ using Motiv;
 var summary = BenchmarkRunner.Run<MotivBenchmark>();
 
 [DotTraceDiagnoser]
-[SimpleJob, InProcess]
+[InProcess]
 public class MotivBenchmark
 {
-    private readonly SpecBase<int> _isInRangeAndEven;
-    private readonly SpecBase<Customer> _isEligibleForLoan;
+    private readonly PolicyBase<int, string> _isPositive;
+    private readonly SpecBase<int, string> _isPositiveFromExpression;
 
     public MotivBenchmark()
     {
-        _isInRangeAndEven = Spec.Build((int n) => n >= 1 & n <= 10 & n % 2 == 0)
-                               .Create("in range and even");
+        _isPositive = Spec
+            .Build((int n) => n > 0)
+            .Create("is positive");
 
-        _isEligibleForLoan = Spec.Build((Customer customer) =>
-                                      customer.CreditScore > 600 & customer.Income > 100000)
-                                .Create("eligible for loan");
+        _isPositiveFromExpression = Spec
+            .From((int n) => n > 0)
+            .Create("is positive");
     }
 
     [Benchmark]
-    public BooleanResultBase<string> EvaluateIsInRangeAndEven()
+    public string[] EvaluateIsPositiveFromExpression()
     {
-        return _isInRangeAndEven.IsSatisfiedBy(11);
+        return _isPositiveFromExpression.IsSatisfiedBy(Random.Shared.Next(1, 21)).Assertions.ToArray();
     }
 
-    public bool EvaluateNativeIsInRangeAndEven()
-    {
-        return IsInRangeAndEven(11);
-    }
-
-    public bool EvaluateNativeIsEligibleForLoan()
-    {
-        var customer = new Customer { CreditScore = 650, Income = 120000 };
-        return IsEligibleForLoan(customer);
-    }
-
-    public BooleanResultBase<string> EvaluateIsEligibleForLoan()
-    {
-        var customer = new Customer { CreditScore = 650, Income = 120000 };
-        return _isEligibleForLoan.IsSatisfiedBy(customer);
-    }
-
-    private static bool IsInRangeAndEven(int n) => n >= 1 & n <= 10 & n % 2 == 0;
-
-    private static bool IsEligibleForLoan(Customer customer) => customer.CreditScore > 600 & customer.Income > 100000;
 }
-
-public class Customer
-{
-    public int CreditScore { get; set; }
-    public int Income { get; set; }
-}
-

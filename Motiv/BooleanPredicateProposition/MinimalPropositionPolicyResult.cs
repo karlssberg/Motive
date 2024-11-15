@@ -43,7 +43,7 @@ internal sealed class MinimalPropositionPolicyResult(
     public override IEnumerable<BooleanResultBase<string>> CausesWithValues => [];
 
     /// <summary>Gets the reasons for the result.</summary>
-    public override Explanation Explanation => new(assertion, [], []);
+    public override Explanation Explanation => new(assertion);
 
     /// <summary>Gets a value indicating whether the result is satisfied.</summary>
     public override bool Satisfied { get; } = satisfied;

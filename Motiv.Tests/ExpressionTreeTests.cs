@@ -130,20 +130,6 @@ public class ExpressionTreeTests
         act.Assertions.Should().BeEquivalentTo(expectedAssertion);
     }
 
-    [Fact]
-    public void Should_assert_expressions_containing_checked_operations_and_throw_when_overflowing()
-    {
-        // Arrange
-        var sut = Spec
-            .From((int n) => checked(n + 1) > n)
-            .Create("checked-operation");
-
-        // Act
-        var act = () => sut.IsSatisfiedBy(int.MaxValue);
-
-        act.Should().Throw<SpecException>();
-    }
-
     [Theory]
     [InlineData(5, "Enumerable.Range(1, n).Sum() == 15")]
     [InlineData(3, "Enumerable.Range(1, n).Sum() == 6")]

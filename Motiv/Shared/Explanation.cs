@@ -15,7 +15,7 @@ public sealed class Explanation
     /// <param name="assertion">The assertion.</param>
     /// <param name="causes">The causes.</param>
     /// <param name="results">The results that took part in the evaluation.</param>
-    internal Explanation(string assertion, IEnumerable<BooleanResultBase> causes, IEnumerable<BooleanResultBase> results)
+    internal Explanation(string assertion, IEnumerable<BooleanResultBase>? causes = null, IEnumerable<BooleanResultBase>? results = null)
         : this(assertion.ToEnumerable(), causes, results)
     {
     }
@@ -26,12 +26,28 @@ public sealed class Explanation
     /// <param name="assertions">The assertions.</param>
     /// <param name="causes">The causes.</param>
     /// <param name="results">The results that took part in the evaluation.</param>
-    internal Explanation(IEnumerable<string> assertions, IEnumerable<BooleanResultBase> causes, IEnumerable<BooleanResultBase> results)
+    internal Explanation(IEnumerable<string> assertions, IEnumerable<BooleanResultBase>? causes = null, IEnumerable<BooleanResultBase>? results = null)
     {
         var distinctAssertions = assertions.DistinctWithOrderPreserved().ToArray();
 
+        Causes = causes ?? [];
+        Results = results ?? [];
+        Assertions = distinctAssertions;
+        AllAssertions = distinctAssertions;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Explanation"/> class that redefines assertions.
+    /// </summary>
+    /// <param name="assertions">The assertions.</param>
+    /// <param name="cause">The cause.</param>
+    internal Explanation(IEnumerable<string> assertions, BooleanResultBase cause)
+    {
+        var distinctAssertions = assertions.DistinctWithOrderPreserved().ToArray();
+
+        BooleanResultBase[] causes = [cause];
         Causes = causes;
-        Results = results;
+        Results = causes;
         Assertions = distinctAssertions;
         AllAssertions = distinctAssertions;
     }
@@ -41,14 +57,13 @@ public sealed class Explanation
     /// </summary>
     /// <param name="causes">The causes.</param>
     /// <param name="results">The results that took part in the evaluation.</param>
-    internal Explanation(IEnumerable<BooleanResultBase> causes, IEnumerable<BooleanResultBase> results)
+    internal Explanation(IEnumerable<BooleanResultBase>? causes = null, IEnumerable<BooleanResultBase>? results = null)
     {
-        var causeCollection = causes as ICollection<BooleanResultBase> ?? causes.ToArray();
+        var causeCollection = causes as ICollection<BooleanResultBase> ?? causes?.ToArray() ?? [];
         var assertions = causeCollection.GetAssertions().DistinctWithOrderPreserved();
 
-        var allResult = results as ICollection<BooleanResultBase> ?? results.ToArray();
+        var allResult = results as ICollection<BooleanResultBase> ?? results?.ToArray() ?? [];
         var allAssertions = allResult.GetAllAssertions().DistinctWithOrderPreserved();
-
         Assertions = assertions;
         AllAssertions = allAssertions;
         Causes = causeCollection;
@@ -152,10 +167,9 @@ public sealed class Explanation
     /// <returns>The debugger display string.</returns>
     private string GetDebuggerDisplay()
     {
-        return HaveComprehensiveAssertions() || !Underlying.Any()
+        var hasComprehensiveAssertions = Assertions.HasAtLeast(2);
+        return hasComprehensiveAssertions || !Underlying.Any()
             ? ToString()
             : $$"""{{ToString()}} { {{Underlying.GetAssertions().Serialize()}} }""";
-
-        bool HaveComprehensiveAssertions() => Assertions.HasAtLeast(2);
     }
 }

@@ -6,7 +6,7 @@ namespace Motiv.Shared;
 /// <typeparam name="TMetadata">The type of the metadata.</typeparam>
 public class MetadataNode<TMetadata>
 {
-    private readonly Lazy<ISet<TMetadata>> _lazyMetadataCollection;
+    private readonly Lazy<ISet<TMetadata>> _lazyMetadataSet;
 
     private readonly Lazy<IEnumerable<MetadataNode<TMetadata>>> _lazyUnderlying;
 
@@ -17,18 +17,17 @@ public class MetadataNode<TMetadata>
         IEnumerable<TMetadata> metadata,
         IEnumerable<BooleanResultBase<TMetadata>> causes)
     {
-        var lazyMetadata = new Lazy<IEnumerable<TMetadata>>(() =>
-            metadata as ICollection<TMetadata> ?? metadata.ToArray());
+        var metadataCollection = metadata as ICollection<TMetadata> ?? metadata.ToArray();
 
         _lazyUnderlying = new Lazy<IEnumerable<MetadataNode<TMetadata>>>(() =>
-            ResolveUnderlying(lazyMetadata.Value, causes));
+            ResolveUnderlying(metadataCollection, causes));
 
-        _lazyMetadataCollection = new Lazy<ISet<TMetadata>>(() =>
+        _lazyMetadataSet = new Lazy<ISet<TMetadata>>(() =>
             metadata switch
             {
                 ISet<TMetadata> metadataTier => metadataTier,
-                IEnumerable<IComparable<TMetadata>> => new SortedSet<TMetadata>(lazyMetadata.Value),
-                _ => new HashSet<TMetadata>(lazyMetadata.Value)
+                IEnumerable<IComparable<TMetadata>> => new SortedSet<TMetadata>(metadataCollection),
+                _ => new HashSet<TMetadata>(metadataCollection)
             });
     }
 
@@ -44,7 +43,7 @@ public class MetadataNode<TMetadata>
     public IEnumerable<MetadataNode<TMetadata>> Underlying => _lazyUnderlying.Value;
 
     /// <summary>Gets the metadata associated with this node.</summary>
-    public IEnumerable<TMetadata> Metadata => _lazyMetadataCollection.Value;
+    public IEnumerable<TMetadata> Metadata => _lazyMetadataSet.Value;
 
     /// <summary>Returns a string that represents the current object.</summary>
     /// <returns>A string that represents the current object.</returns>
@@ -79,7 +78,7 @@ public class MetadataNode<TMetadata>
 
     private string GetDebugDisplay()
     {
-        return _lazyMetadataCollection.Value switch
+        return _lazyMetadataSet.Value switch
         {
             IEnumerable<string> assertions => assertions.Serialize(),
             IEnumerable<byte> numerics => numerics.Serialize(),
@@ -97,7 +96,7 @@ public class MetadataNode<TMetadata>
             IEnumerable<bool> booleans => booleans.Serialize(),
             IEnumerable<DateTime> dateTimes => dateTimes.Serialize(),
             IEnumerable<TimeSpan> timeSpans => timeSpans.Serialize(),
-            _ when typeof(TMetadata).IsEnum => _lazyMetadataCollection.Value.Serialize(),
+            _ when typeof(TMetadata).IsEnum => _lazyMetadataSet.Value.Serialize(),
             _ => base.ToString() ?? ""
         };
     }
