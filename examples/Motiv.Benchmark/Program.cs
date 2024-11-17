@@ -20,6 +20,8 @@ public class MotivBenchmark
 
         _isPositiveFromExpression = Spec
             .From((int n) => n > 0)
+            .WhenTrue("is positive")
+            .WhenFalse("is not positive")
             .Create("is positive");
     }
 

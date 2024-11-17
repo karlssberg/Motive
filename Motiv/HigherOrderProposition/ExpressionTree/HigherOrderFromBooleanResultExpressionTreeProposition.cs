@@ -28,7 +28,7 @@ internal sealed class HigherOrderFromBooleanResultExpressionTreeProposition<TMod
                 .ToArray());
 
         var metadata = new Lazy<IEnumerable<string>>(() =>
-            causes.Value.SelectMany(result => result.MetadataTier.Metadata).DistinctWithOrderPreserved());
+            causes.Value.SelectMany(result => result.MetadataTier.Metadata));
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() =>
                 new HigherOrderExpressionTreeResultDescription<string>(

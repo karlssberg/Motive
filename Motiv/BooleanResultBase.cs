@@ -18,6 +18,8 @@ public abstract class BooleanResultBase
     private const string True = "true";
     private const string False = "false";
 
+    private IEnumerable<string>? _assertions;
+
     /// <summary>Prevent inheritance from outside of this project/assembly.</summary>
     internal BooleanResultBase()
     {
@@ -66,7 +68,7 @@ public abstract class BooleanResultBase
     public string Justification => Description.Justification;
 
     /// <summary>Gets the assertions that determined this result.</summary>
-    public IEnumerable<string> Assertions => Explanation.Assertions;
+    public IEnumerable<string> Assertions => _assertions ??= Explanation.Assertions.DistinctWithOrderPreserved();
 
     /// <summary>Gets all the assertions yielded by the current result, including those that are non-determinative.</summary>
     /// <remarks>This will yield assertions from both satisfied and unsatisfied operands. </remarks>

@@ -17,17 +17,15 @@ public class MetadataNode<TMetadata>
         IEnumerable<TMetadata> metadata,
         IEnumerable<BooleanResultBase<TMetadata>> causes)
     {
-        var metadataCollection = metadata as ICollection<TMetadata> ?? metadata.ToArray();
-
         _lazyUnderlying = new Lazy<IEnumerable<MetadataNode<TMetadata>>>(() =>
-            ResolveUnderlying(metadataCollection, causes));
+            ResolveUnderlying(metadata, causes));
 
         _lazyMetadataSet = new Lazy<ISet<TMetadata>>(() =>
             metadata switch
             {
                 ISet<TMetadata> metadataTier => metadataTier,
-                IEnumerable<IComparable<TMetadata>> => new SortedSet<TMetadata>(metadataCollection),
-                _ => new HashSet<TMetadata>(metadataCollection)
+                IEnumerable<IComparable<TMetadata>> => new SortedSet<TMetadata>(metadata),
+                _ => new HashSet<TMetadata>(metadata)
             });
     }
 

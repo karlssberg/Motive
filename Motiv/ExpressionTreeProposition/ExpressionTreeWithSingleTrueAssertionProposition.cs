@@ -22,6 +22,7 @@ internal sealed class ExpressionTreeWithSingleTrueAssertionProposition<TModel, T
     protected override PolicyResultBase<string> IsPolicySatisfiedBy(TModel model)
     {
         var result = _predicate.Execute(model);
+        BooleanResultBase<string>[] resultAsCollection = [result];
 
         var assertion = new Lazy<string>(() =>
             result.Satisfied switch
@@ -30,15 +31,14 @@ internal sealed class ExpressionTreeWithSingleTrueAssertionProposition<TModel, T
                 false => whenFalse(model, result)
             });
 
-        var explanation = new Lazy<Explanation>(() =>
-            new Explanation(
-                assertion.Value,
-                result.ToEnumerable(),
-                result.ToEnumerable()));
+        var explanation = new Lazy<Explanation>(() => new Explanation(
+            assertion.Value,
+            resultAsCollection,
+            resultAsCollection));
 
         var metadataTier = new Lazy<MetadataNode<string>>(() =>
             new MetadataNode<string>(assertion.Value,
-                result.ToEnumerable()));
+                resultAsCollection));
 
         var resultDescription = new Lazy<ResultDescriptionBase>(() => new ExpressionTreeBooleanResultDescription(
             result,

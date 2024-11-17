@@ -28,7 +28,7 @@ public sealed class Explanation
     /// <param name="results">The results that took part in the evaluation.</param>
     internal Explanation(IEnumerable<string> assertions, IEnumerable<BooleanResultBase>? causes = null, IEnumerable<BooleanResultBase>? results = null)
     {
-        var distinctAssertions = assertions.DistinctWithOrderPreserved().ToArray();
+        var distinctAssertions = assertions.ToArray();
 
         Causes = causes ?? [];
         Results = results ?? [];
@@ -43,7 +43,7 @@ public sealed class Explanation
     /// <param name="cause">The cause.</param>
     internal Explanation(IEnumerable<string> assertions, BooleanResultBase cause)
     {
-        var distinctAssertions = assertions.DistinctWithOrderPreserved().ToArray();
+        var distinctAssertions = assertions.ToArray();
 
         BooleanResultBase[] causes = [cause];
         Causes = causes;
@@ -60,10 +60,10 @@ public sealed class Explanation
     internal Explanation(IEnumerable<BooleanResultBase>? causes = null, IEnumerable<BooleanResultBase>? results = null)
     {
         var causeCollection = causes as ICollection<BooleanResultBase> ?? causes?.ToArray() ?? [];
-        var assertions = causeCollection.GetAssertions().DistinctWithOrderPreserved();
+        var assertions = causeCollection.GetAssertions();
 
         var allResult = results as ICollection<BooleanResultBase> ?? results?.ToArray() ?? [];
-        var allAssertions = allResult.GetAllAssertions().DistinctWithOrderPreserved();
+        var allAssertions = allResult.GetAllAssertions();
         Assertions = assertions;
         AllAssertions = allAssertions;
         Causes = causeCollection;

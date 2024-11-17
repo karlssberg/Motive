@@ -16,14 +16,13 @@ internal sealed class ExplanationProposition<TModel>(
     protected override PolicyResultBase<string> IsPolicySatisfiedBy(TModel model)
     {
         var isSatisfied = predicate(model);
+        var assertionResolver = isSatisfied switch
+        {
+            true => trueBecause,
+            false => falseBecause
+        };
 
-        var assertion = new Lazy<string>(() =>
-            isSatisfied switch
-            {
-                true => trueBecause(model),
-                false => falseBecause(model)
-            });
-
+        var assertion = new Lazy<string>(() => assertionResolver(model));
         return new PropositionPolicyResult<string>(
             isSatisfied,
             assertion,
