@@ -1,147 +1,107 @@
 ﻿using System.Collections.Immutable;
-using System.Text;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.Attributes;
+using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder;
 
 [Generator]
 public class FluentBuilderGenerator : IIncrementalGenerator
 {
-    private readonly FluentModelFactory _fluentModelFactory = new();
+    private static readonly string GenerateFluentBuilderAttributeFullName = typeof(GenerateFluentBuilderAttribute).FullName;
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-// #if DEBUG
-//         if (!Debugger.IsAttached)
-//         {
-//              Debugger.Launch();
-//         }
-// #endif
+        //AttachDebugger();
+
         // Step 1: Find all FluentConstructors
-        var handlerDeclarations = context.SyntaxProvider
-            .ForAttributeWithMetadataName(
-                nameof(GenerateFluentBuilderAttribute),
-                predicate: (node, _) => node is ConstructorDeclarationSyntax,
-                transform: _fluentModelFactory.CreateIntermediateRepresentation)
-            .Where(handler => handler is not null);
+        var constructorDeclarations = context.SyntaxProvider
+            .CreateSyntaxProvider(
+                predicate: (node, _) => node switch
+                {
+                    TypeDeclarationSyntax { ParameterList: not null} type => type.AttributeLists.Count > 0,
+                    ConstructorDeclarationSyntax ctor => ctor.AttributeLists.Count > 0,
+                    _ => false
+                },
+                transform: CreateBuilderModel);
 
         // Step 2: Collect and consolidate all FluentConstructors
-        var consolidated = handlerDeclarations
+        var consolidated = constructorDeclarations
             .Collect()
-            .Select((fluentConstructors, _) => ConsolidateFluentConstructors(fluentConstructors))
-            .WithComparer(new ConsolidatedFluentConstructorsComparer());
+            .SelectMany((builderContextsCollection, _) =>
+                builderContextsCollection
+                    .SelectMany(builderContexts => builderContexts
+                    .GroupBy(builderContext => builderContext.RootTypeFullName)
+                    .Select(group =>
+                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group]))));
 
         // Step 3: Generate based on consolidated view
         context.RegisterSourceOutput(consolidated, GenerateDispatcher);
     }
 
-    private static ConsolidatedFluentConstructors ConsolidateFluentConstructors(
-        ImmutableArray<FluentBuilderContext?> fluentConstructors)
+    private static ImmutableArray<FluentConstructorContext> CreateBuilderModel(
+        GeneratorSyntaxContext context,
+        CancellationToken cancellationToken)
     {
-        var builder = ImmutableDictionary.CreateBuilder<string, ImmutableArray<FluentBuilderContext>>();
+        if (cancellationToken.IsCancellationRequested) return ImmutableArray<FluentConstructorContext>.Empty;
 
-        // Group FluentConstructors by message type
-        var groups = fluentConstructors
-            .OfType<FluentBuilderContext>()
-            .GroupBy(constructor => (constructor.NameSpace));
+        var syntax = context.Node;
+        var semanticModel = context.SemanticModel;
+        var symbol = semanticModel.GetDeclaredSymbol(syntax);
 
-        foreach (var group in groups)
+        var attribute = symbol?.GetAttributes()
+            .FirstOrDefault(a => a.AttributeClass?.ToString() == GenerateFluentBuilderAttributeFullName);
+
+        if (attribute == null) return ImmutableArray<FluentConstructorContext>.Empty;
+        if (attribute.ConstructorArguments.Length == 0) return ImmutableArray<FluentConstructorContext>.Empty;
+
+        var rootTypeFullName = attribute.ConstructorArguments[0].Value?.ToString();
+        if (rootTypeFullName == null) return ImmutableArray<FluentConstructorContext>.Empty;
+
+        var nameSpace = rootTypeFullName.Substring(0, rootTypeFullName.LastIndexOf('.'));
+
+        return symbol switch
         {
-            builder.Add(group.Key, [..group]);
-        }
+            IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, rootTypeFullName)],
+            INamedTypeSymbol type => CreateFluentConstructorContexts(type),
+            _ => ImmutableArray<FluentConstructorContext>.Empty
+        };
 
-        return new ConsolidatedFluentConstructors(builder.ToImmutable());
-    }
-
-    private void GenerateDispatcher(SourceProductionContext context,
-        ConsolidatedFluentConstructors consolidated)
-    {
-        // Generate the dispatcher ref struct that uses the consolidated data
-        var source = $$"""
-
-                       using System;
-
-                       public readonly struct {{}}
-                       {
-                           private readonly object _message;
-
-                           public MessageDispatcher(object message)
-                           {
-                               _message = message;
-                           }
-
-                           public void Dispatch()
-                           {
-                               switch (_message)
-                               {
-                                   {{string.Join("\n", GenerateCases(consolidated))}}
-                                   default:
-                                       throw new ArgumentException("Unknown message type");
-                               }
-                           }
-                       }
-                       """;
-
-        context.AddSource("MessageDispatcher.g.cs", source);
-    }
-
-    private string CreateFluentStep(
-        string stepName,
-        string priorStepName,
-        IEnumerable<FluentMethod> fluentMethods)
-    {
-        var sb = new StringBuilder(
-          $$"""
-            public struct {{stepName}}
-            {
-                private readonly {{priorStepName}} _previousStep;
-
-                public {{stepName}}(ref {{priorStepName}} previousStep)
-                {
-                    _previousStep = previousStep;
-                }
-            """);
-
-        foreach (var fluentMethod in fluentMethods)
+        ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(INamedTypeSymbol type)
         {
-            sb.Append(
-              $$"""
+            var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
+            if (primaryCtor != null)
+                return [new FluentConstructorContext(nameSpace, primaryCtor, rootTypeFullName)];
 
-                """);
+            return
+            [
+                ..type.Constructors
+                    .Where(c => c.Parameters.Length > 0)
+                    .Select(ctor =>
+                        new FluentConstructorContext(nameSpace, ctor, rootTypeFullName))
+            ];
         }
-
-
-        return sb.Append("}").ToString();
     }
 
-//     private string[] GenerateCases(ConsolidatedFluentConstructors consolidated)
-//     {
-//         var cases = new List<string>();
-//         foreach (var (messageType, FluentConstructors) in consolidated.FluentConstructorsByMessageType)
-//         {
-//             cases.Add($"""
-//
-//                                    case {messageType} msg:
-//                                        {string.Join("\n                ",
-//                                            FluentConstructors.Select(h => $"new {h.HandlerTypeName}().{h.MethodName}(msg);"))}
-//                                        break;
-//                        """);
-//         }
-//         return cases.ToArray();
-//     }
-}
-public class ConsolidatedFluentConstructorsComparer : IEqualityComparer<ConsolidatedFluentConstructors>
-{
-    public bool Equals(ConsolidatedFluentConstructors x, ConsolidatedFluentConstructors y)
+    private static void GenerateDispatcher(
+        SourceProductionContext context,
+        FluentBuilderFile builder)
     {
-        return x.FluentBuilderContexts.Equals(y.FluentBuilderContexts);
+        var source = FluentModelToCodeConverter.CreateCompilationUnit(builder).NormalizeWhitespace().ToString();
+
+        context.AddSource($"{builder.NameSpace}.{builder.Name}.g.cs", source);
     }
 
-    public int GetHashCode(ConsolidatedFluentConstructors obj)
+    [Conditional("DEBUG")]
+    private static void AttachDebugger()
     {
-        return obj.FluentBuilderContexts.GetHashCode();
+        if (!Debugger.IsAttached)
+        {
+            Debugger.Launch();
+        }
     }
 }

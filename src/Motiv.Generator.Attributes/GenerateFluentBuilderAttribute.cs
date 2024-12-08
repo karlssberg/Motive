@@ -1,7 +1,7 @@
 ﻿namespace Motiv.Generator.Attributes;
 
-[AttributeUsage(AttributeTargets.Struct)]
-public class GenerateFluentBuilderAttribute(string root) : Attribute
+[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Class | AttributeTargets.Struct)]
+public sealed class GenerateFluentBuilderAttribute(string rootTypeFullName) : Attribute
 {
-    public string Root { get;  } = root;
+    public string RootTypeFullName { get; } = rootTypeFullName;
 }

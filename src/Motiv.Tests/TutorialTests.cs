@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Motiv.Tests;
+﻿namespace Motiv.Tests;
 
 public class TutorialTests
 {
@@ -193,7 +191,7 @@ public class TutorialTests
             .WhenFalse(n => $"{n} is not negative")
             .Create("is negative"));
 
-#if !NETFRAMEWORK
+#if !NETFRAMEWORK && !NETSTANDARD2_0
 
     [Fact]
     public void Should_demonstrate_is_even_spec_as_an_all_satisfied_higher_order_logic()

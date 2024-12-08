@@ -9,9 +9,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <DebugSourceGenerators>true</DebugSourceGenerators>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsRoslynComponent>true</IsRoslynComponent>
     </PropertyGroup>
@@ -20,8 +17,12 @@
         <AnalyzerLanguage>cs</AnalyzerLanguage>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0"  PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0-3.final" PrivateAssets="all" />
+      <ProjectReference Include="..\Motiv.Generator.Attributes\Motiv.Generator.Attributes.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.8.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+      <PackageReference Include="System.Collections.Immutable" Version="9.0.0" />
     </ItemGroup>
 
 </Project>

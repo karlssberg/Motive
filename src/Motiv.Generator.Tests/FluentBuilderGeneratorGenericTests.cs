@@ -1,0 +1,329 @@
+﻿using Motiv.Generator.Attributes;
+using Motiv.Generator.FluentBuilder;
+using VerifyCS =
+    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentBuilderGenerator>;
+
+namespace Motiv.Generator.Tests;
+
+public class FluentBuilderGeneratorGenericTests
+{
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_class_constructor_with_a_single_parameter()
+    {
+        const string code =
+            """
+            public class MyBuildTarget<T>
+            {
+                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                public MyBuildTarget(T value)
+                {
+                    Value = value;
+                }
+
+                public T Value { get; set; }
+            }
+            """;
+
+        const string expected =
+            """
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    public static MyBuildTarget<T> Value<T>(T value)
+                    {
+                        return new MyBuildTarget<T>(value);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_class_constructor_with_two_parameters()
+    {
+        const string code =
+            """
+            public class MyBuildTarget<T1, T2>
+            {
+                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                public MyBuildTarget(
+                    T1 value1,
+                    T2 value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public T1 Value1 { get; set; }
+
+                public T2 Value2 { get; set; }
+            }
+            """;
+
+        const string expected =
+            """
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    {
+                        return new Step_0<T1>(value1);
+                    }
+                }
+
+                public struct Step_0<T1>
+                {
+                    private readonly T1 _value1__parameter;
+                    public Step_0(T1 value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    public MyBuildTarget<T1, T2> Value2<T2>(T2 value2)
+                    {
+                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_class_constructor_with_three_parameters()
+    {
+        const string code =
+            """
+            public class MyBuildTarget<T1, T2, T3>
+            {
+                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                public MyBuildTarget(
+                    T1 value1,
+                    T2 value2,
+                    T3 value3)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                    Value3 = value3;
+                }
+
+                public T1 Value1 { get; set; }
+
+                public T2 Value2 { get; set; }
+
+                public T3 Value3 { get; set; }
+            }
+            """;
+
+        const string expected =
+            """
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    {
+                        return new Step_0<T1>(value1);
+                    }
+                }
+
+                public struct Step_0<T1>
+                {
+                    private readonly T1 _value1__parameter;
+                    public Step_0(T1 value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    public Step_1<T1, T2> Value2<T2>(T2 value2)
+                    {
+                        return new Step_1<T1, T2>(_value1__parameter, value2);
+                    }
+                }
+
+                public struct Step_1<T1, T2>
+                {
+                    private readonly T1 _value1__parameter;
+                    private readonly T2 _value2__parameter;
+                    public Step_1(T1 value1, T2 value2)
+                    {
+                        _value1__parameter = value1;
+                        _value2__parameter = value2;
+                    }
+
+                    public MyBuildTarget<T1, T2, T3> Value3<T3>(T3 value3)
+                    {
+                        return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_class_constructor_with_four_parameters()
+    {
+        const string code =
+            """
+            public class MyBuildTarget<T1, T2, T3, T4>
+            {
+                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                public MyBuildTarget(
+                    T1 value1,
+                    T2 value2,
+                    T3 value3,
+                    T4 value4)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                    Value3 = value3;
+                    Value4 = value4;
+                }
+
+                public T1 Value1 { get; set; }
+
+                public T2 Value2 { get; set; }
+
+                public T3 Value3 { get; set; }
+
+                public T4 Value4 { get; set; }
+            }
+            """;
+
+        const string expected =
+            """
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    {
+                        return new Step_0<T1>(value1);
+                    }
+                }
+
+                public struct Step_0<T1>
+                {
+                    private readonly T1 _value1__parameter;
+                    public Step_0(T1 value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    public Step_1<T1, T2> Value2<T2>(T2 value2)
+                    {
+                        return new Step_1<T1, T2>(_value1__parameter, value2);
+                    }
+                }
+
+                public struct Step_1<T1, T2>
+                {
+                    private readonly T1 _value1__parameter;
+                    private readonly T2 _value2__parameter;
+                    public Step_1(T1 value1, T2 value2)
+                    {
+                        _value1__parameter = value1;
+                        _value2__parameter = value2;
+                    }
+
+                    public Step_2<T1, T2, T3> Value3<T3>(T3 value3)
+                    {
+                        return new Step_2<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                    }
+                }
+
+                public struct Step_2<T1, T2, T3>
+                {
+                    private readonly T1 _value1__parameter;
+                    private readonly T2 _value2__parameter;
+                    private readonly T3 _value3__parameter;
+                    public Step_2(T1 value1, T2 value2, T3 value3)
+                    {
+                        _value1__parameter = value1;
+                        _value2__parameter = value2;
+                        _value3__parameter = value3;
+                    }
+
+                    public MyBuildTarget<T1, T2, T3, T4> Value4<T4>(T4 value4)
+                    {
+                        return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+}
+
+[GenerateFluentBuilder("Motiv.Generator.Tests.Proposition")]
+public readonly struct PropositionStructFactory<TModel>(
+    [FluentMethod("Build")] Func<TModel, bool> predicate,
+    [FluentMethod("WhenTrue")] string trueBecause,
+    [FluentMethod("WhenFalse")] string falseBecause)
+{
+    public PropositionClass<TModel, string> Create()
+    {
+        return new PropositionClass<TModel, string>(predicate, trueBecause, falseBecause, trueBecause);
+    }
+}
+
+[GenerateFluentBuilder("Motiv.Generator.Tests.Proposition")]
+public class PropositionClass<TModel, TMetadata>(
+    [FluentMethod("Build")] Func<TModel, bool> predicate,
+    TMetadata whenTrue,
+    TMetadata whenFalse,
+    [FluentMethod("Create")] string name)
+{
+    public Func<TModel, bool> Predicate { get; } = predicate;
+    public TMetadata WhenTrue { get; } = whenTrue;
+    public TMetadata WhenFalse { get; } = whenFalse;
+    public string Name { get; } = name;
+}
