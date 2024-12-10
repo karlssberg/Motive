@@ -4,17 +4,17 @@ using VerifyCS =
 
 namespace Motiv.Generator.Tests;
 
-public class FluentBuilderGeneratorGenericTests
+public class FluentBuilderStepCustomization
 {
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_a_single_parameter()
+    public async Task Should_generate_custom_step_when_applied_to_a_class_constructor_with_a_single_parameter()
     {
         const string code =
             """
             public class MyBuildTarget<T>
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(T value)
+                public MyBuildTarget([FluentMethod("SetValue")]T value)
                 {
                     Value = value;
                 }
@@ -29,7 +29,7 @@ public class FluentBuilderGeneratorGenericTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget<T> Value<T>(T value)
+                    public static MyBuildTarget<T> SetValue<T>(T value)
                     {
                         return new MyBuildTarget<T>(value);
                     }
@@ -51,7 +51,7 @@ public class FluentBuilderGeneratorGenericTests
     }
 
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_two_parameters()
+    public async Task Should_generate_custom_step_when_applied_to_a_class_constructor_with_two_parameters()
     {
         const string code =
             """
@@ -59,8 +59,8 @@ public class FluentBuilderGeneratorGenericTests
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
                 public MyBuildTarget(
-                    T1 value1,
-                    T2 value2)
+                    [FluentMethod("SetValue1")]T1 value1,
+                    [FluentMethod("SetValue2")]T2 value2)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -78,7 +78,7 @@ public class FluentBuilderGeneratorGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -92,7 +92,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget<T1, T2> Value2<T2>(T2 value2)
+                    public MyBuildTarget<T1, T2> SetValue2<T2>(T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -114,7 +114,7 @@ public class FluentBuilderGeneratorGenericTests
     }
 
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_three_parameters()
+    public async Task Should_generate_custom_step_when_applied_to_a_class_constructor_with_three_parameters()
     {
         const string code =
             """
@@ -122,9 +122,9 @@ public class FluentBuilderGeneratorGenericTests
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
                 public MyBuildTarget(
-                    T1 value1,
-                    T2 value2,
-                    T3 value3)
+                    [FluentMethod("SetValue1")]T1 value1,
+                    [FluentMethod("SetValue2")]T2 value2,
+                    [FluentMethod("SetValue3")]T3 value3)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -145,7 +145,7 @@ public class FluentBuilderGeneratorGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -159,7 +159,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2> Value2<T2>(T2 value2)
+                    public Step_1<T1, T2> SetValue2<T2>(T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
@@ -175,7 +175,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2, T3> Value3<T3>(T3 value3)
+                    public MyBuildTarget<T1, T2, T3> SetValue3<T3>(T3 value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -197,7 +197,7 @@ public class FluentBuilderGeneratorGenericTests
     }
 
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_four_parameters()
+    public async Task Should_generate_custom_step_when_applied_to_a_class_constructor_with_four_parameters()
     {
         const string code =
             """
@@ -205,10 +205,10 @@ public class FluentBuilderGeneratorGenericTests
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
                 public MyBuildTarget(
-                    T1 value1,
-                    T2 value2,
-                    T3 value3,
-                    T4 value4)
+                    [FluentMethod("SetValue1")]T1 value1,
+                    [FluentMethod("SetValue2")]T2 value2,
+                    [FluentMethod("SetValue3")]T3 value3,
+                    [FluentMethod("SetValue4")]T4 value4)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -232,7 +232,7 @@ public class FluentBuilderGeneratorGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -246,7 +246,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2> Value2<T2>(T2 value2)
+                    public Step_1<T1, T2> SetValue2<T2>(T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
@@ -262,7 +262,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value2__parameter = value2;
                     }
 
-                    public Step_2<T1, T2, T3> Value3<T3>(T3 value3)
+                    public Step_2<T1, T2, T3> SetValue3<T3>(T3 value3)
                     {
                         return new Step_2<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -280,7 +280,7 @@ public class FluentBuilderGeneratorGenericTests
                         _value3__parameter = value3;
                     }
 
-                    public MyBuildTarget<T1, T2, T3, T4> Value4<T4>(T4 value4)
+                    public MyBuildTarget<T1, T2, T3, T4> SetValue4<T4>(T4 value4)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
                     }

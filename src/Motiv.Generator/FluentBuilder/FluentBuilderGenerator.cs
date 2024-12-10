@@ -12,7 +12,7 @@ namespace Motiv.Generator.FluentBuilder;
 [Generator]
 public class FluentBuilderGenerator : IIncrementalGenerator
 {
-    private static readonly string GenerateFluentBuilderAttributeFullName = typeof(GenerateFluentBuilderAttribute).FullName;
+    private static readonly string GenerateFluentBuilderAttributeFullName = typeof(GenerateFluentBuilderAttribute).FullName!;
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -34,10 +34,10 @@ public class FluentBuilderGenerator : IIncrementalGenerator
             .Collect()
             .SelectMany((builderContextsCollection, _) =>
                 builderContextsCollection
-                    .SelectMany(builderContexts => builderContexts
+                    .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group]))));
+                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group])));
 
         // Step 3: Generate based on consolidated view
         context.RegisterSourceOutput(consolidated, GenerateDispatcher);

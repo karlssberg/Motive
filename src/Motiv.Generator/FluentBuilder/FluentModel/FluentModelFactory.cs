@@ -78,7 +78,7 @@ public static class FluentModelFactory
 
                         var fluentBuilderStep = new FluentBuilderStep
                         {
-                            ConstructorParameters = [..constructorParameters],
+                            KnownConstructorParameters = [..constructorParameters],
                             FluentMethods =
                             [
                                 new FluentBuilderMethod(fluentMethodName, method.SourceParameter, previousStep)
@@ -100,12 +100,11 @@ public static class FluentModelFactory
         ];
     }
 
-    private static ImmutableArray<FluentBuilderStep> MergedFluentBuilderSteps(ImmutableArray<FluentBuilderStep> fluentBuilderSteps)
+    private static IEnumerable<FluentBuilderStep> MergedFluentBuilderSteps(IEnumerable<FluentBuilderStep> fluentBuilderSteps)
     {
-        return
-        [
-            ..fluentBuilderSteps
-                .GroupBy(step => step, FluentBuilderStep.ConstructorParametersComparer)
+        var groupedSteps = fluentBuilderSteps
+            .GroupBy(step => step, FluentBuilderStep.ConstructorParametersComparer);
+        return groupedSteps
                 .Select(group =>
                 {
                     var mergedStep = group
@@ -114,31 +113,34 @@ public static class FluentModelFactory
                             prev.FluentMethods = prev.FluentMethods.AddRange(next.FluentMethods);
                             return prev;
                         });
-                    mergedStep.FluentMethods = MergeFluentMethods(mergedStep.FluentMethods);
+                    mergedStep.FluentMethods = [..MergeFluentMethods(mergedStep.FluentMethods)];
 
                     return mergedStep;
-                })
-        ];
+                });
     }
 
-    private static ImmutableArray<FluentBuilderMethod> MergeFluentMethods(ImmutableArray<FluentBuilderMethod> fluentMethods)
+    private static IEnumerable<FluentBuilderMethod> MergeFluentMethods(IEnumerable<FluentBuilderMethod> fluentMethods)
     {
         return
         [
             ..fluentMethods
-                .GroupBy(method => method, FluentBuilderMethod.ConstructorParametersComparer)
+                .GroupBy(method => method, FluentBuilderMethod.FluentBuilderMethodComparer)
                 .Select(group =>
                 {
                     var method = group
                         .Aggregate((prev, next) =>
                         {
-                            prev.ReturnStep!.FluentMethods = prev.ReturnStep.FluentMethods.AddRange(next.ReturnStep!.FluentMethods);
-                            prev.ReturnStep = next.ReturnStep;
+                            if (prev.ReturnStep is not null && next.ReturnStep is not null)
+                            {
+                                prev.ReturnStep!.FluentMethods =
+                                    prev.ReturnStep.FluentMethods.AddRange(next.ReturnStep!.FluentMethods);
+                            }
+
                             return prev;
                         });
                     if (method.ReturnStep is not null)
                     {
-                        method.ReturnStep.FluentMethods = MergeFluentMethods(method.ReturnStep.FluentMethods);
+                        method.ReturnStep.FluentMethods = [..MergeFluentMethods(method.ReturnStep.FluentMethods)];
                     }
 
                     return method;

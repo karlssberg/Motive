@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -162,7 +160,7 @@ public static class FluentModelToCodeConverter
      {
          var methodDeclarationSyntaxes = step.FluentMethods
              .Select(method => method.Constructor is not null && method.ReturnStep is null
-                ? CreateFactoryMethod(method, method.Constructor)
+                ? CreateFluentFactoryMethod(method, method.Constructor)
                 : CreateStepMethod(method, step));
 
          var propertyDeclaration = CreateStepFieldDeclarations(step);
@@ -174,7 +172,7 @@ public static class FluentModelToCodeConverter
                  Token(PublicKeyword)))
              .WithParameterList(ParameterList(SeparatedList<ParameterSyntax>(constructorParameters)))
              .WithBody(Block(
-                 step.ConstructorParameters
+                 step.KnownConstructorParameters
                      .Select(p =>
                           ExpressionStatement(
                              AssignmentExpression(
@@ -215,7 +213,7 @@ public static class FluentModelToCodeConverter
 
     private static IEnumerable<SyntaxNodeOrToken> CreateFluentStepConstructorParameters(FluentBuilderStep step)
     {
-        return step.ConstructorParameters
+        return step.KnownConstructorParameters
             .Select(parameter =>
                 Parameter(Identifier(parameter.Name))
                     .WithType(IdentifierName(parameter.Type.Name)))
@@ -224,7 +222,7 @@ public static class FluentModelToCodeConverter
 
     private static IEnumerable<FieldDeclarationSyntax> CreateStepFieldDeclarations(FluentBuilderStep step)
     {
-        return step.ConstructorParameters
+        return step.KnownConstructorParameters
             .Select(parameter =>
                 FieldDeclaration(
                         VariableDeclaration(ParseTypeName(parameter.Type.Name))
@@ -274,14 +272,14 @@ public static class FluentModelToCodeConverter
     private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(FluentBuilderMethod method,
         FluentBuilderStep step)
     {
-        return step.ConstructorParameters
+        return step.KnownConstructorParameters
             .Select(parameter =>
                 Argument(IdentifierName(ToParameterFieldName(parameter.Name))))
             .Append(
                 Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())));
     }
 
-    private static MethodDeclarationSyntax CreateFactoryMethod(
+    private static MethodDeclarationSyntax CreateFluentFactoryMethod(
         FluentBuilderMethod method,
         IMethodSymbol constructor)
     {

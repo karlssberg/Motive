@@ -15,7 +15,11 @@ public record FluentBuilderStep
 
     public bool IsRoot => Parent is null;
 
-    public ImmutableArray<IParameterSymbol> ConstructorParameters { get; set; } = [];
+    /// <summary>
+    /// The known constructor parameters up until this step.
+    /// Potentially more parameters are required to satisfy a constructor signature.
+    /// </summary>
+    public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = [];
 
     public static IEqualityComparer<FluentBuilderStep> ConstructorParametersComparer { get; } =
         new ConstructorParametersEqualityComparer();
@@ -23,7 +27,7 @@ public record FluentBuilderStep
     public ImmutableArray<FluentBuilderMethod> FluentMethods { get; set; } = [];
 
     public ImmutableArray<IParameterSymbol> GenericConstructorParameters => [
-        ..ConstructorParameters
+        ..KnownConstructorParameters
             .Where(parameter => parameter.IsOpenGenericType())
     ];
 
@@ -35,12 +39,12 @@ public record FluentBuilderStep
             if (x is null) return false;
             if (y is null) return false;
             if (x.GetType() != y.GetType()) return false;
-            return x.ConstructorParameters.SequenceEqual(y.ConstructorParameters);
+            return x.KnownConstructorParameters.SequenceEqual(y.KnownConstructorParameters);
         }
 
         public int GetHashCode(FluentBuilderStep obj)
         {
-            return obj.ConstructorParameters.GetHashCode();
+            return obj.KnownConstructorParameters.GetHashCode();
         }
     }
 }
