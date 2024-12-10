@@ -11,6 +11,8 @@ public class FluentBuilderStepCustomization
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
             public class MyBuildTarget<T>
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
@@ -55,6 +57,8 @@ public class FluentBuilderStepCustomization
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
             public class MyBuildTarget<T1, T2>
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
@@ -118,6 +122,8 @@ public class FluentBuilderStepCustomization
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
             public class MyBuildTarget<T1, T2, T3>
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
@@ -201,6 +207,8 @@ public class FluentBuilderStepCustomization
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
             public class MyBuildTarget<T1, T2, T3, T4>
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
