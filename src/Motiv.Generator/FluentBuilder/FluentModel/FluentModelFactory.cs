@@ -21,7 +21,8 @@ public static class FluentModelFactory
 
         var initialFluentBuilderSteps = GetStartingFluentBuilderSteps(fluentConstructorContexts);
 
-        var mergedFluentBuilderSteps = MergedFluentBuilderSteps(initialFluentBuilderSteps);
+        var mergedFluentBuilderSteps = MergedFluentBuilderSteps(initialFluentBuilderSteps)
+            .ToImmutableArray();
 
         var builderSteps = mergedFluentBuilderSteps
             .SelectMany(step => step.FluentMethods.Select(method => method.ReturnStep))
@@ -39,11 +40,18 @@ public static class FluentModelFactory
             .SelectMany(step => step.FluentMethods)
             .ToImmutableArray();
 
+        var sampleConstructorContext = fluentConstructorContexts.First();
         return new FluentBuilderFile(
             fullname,
             [..fluentBuilderMethods],
             fluentBuilderSteps,
-            usings);
+            usings)
+        {
+            IsStatic = sampleConstructorContext.IsStatic,
+            TypeKind = sampleConstructorContext.TypeKind,
+            Accessibility = sampleConstructorContext.Accessibility,
+            IsRecord = sampleConstructorContext.IsRecord
+        };
     }
 
     private static ImmutableArray<FluentBuilderStep> GetAllFluentSteps(ImmutableArray<FluentBuilderStep?> mergedFluentBuilderSteps)

@@ -17,4 +17,9 @@ public record FluentBuilderFile(
     public string FullName { get; } = FullName;
 
     public ImmutableArray<INamespaceSymbol> Usings { get; set; } = Usings;
+
+    public TypeKind TypeKind { get; set; }
+    public Accessibility Accessibility { get; set; }
+    public bool IsStatic { get; set; } = true;
+    public bool IsRecord { get; set; }
 }

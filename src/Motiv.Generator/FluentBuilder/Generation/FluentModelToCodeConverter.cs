@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -11,29 +12,10 @@ public static class FluentModelToCodeConverter
     public static SyntaxNode CreateCompilationUnit(
         FluentBuilderFile file)
     {
-        var rootMethodExpressions = file.FluentMethods
-            .Select(method => method.Constructor is not null && method.ReturnStep is null
-                ? CreateRootFactoryMethod(method, method.Constructor)
-                : CreateRootStepMethod(method))
+        var rootType = CreateRootTypeDeclaration(file);
+        var fluentSteps = file.FluentSteps.Select(CreateFluentStepDeclaration);
 
-            .Select(method =>
-                method.WithModifiers(TokenList(
-                    Token(PublicKeyword),
-                    Token(StaticKeyword))));
-
-        var rootClass = ClassDeclaration(file.Name)
-            .WithModifiers(
-                TokenList(
-                    Token(PublicKeyword),
-                    Token(StaticKeyword),
-                    Token(PartialKeyword)))
-            .WithMembers(
-                List(rootMethodExpressions.OfType<MemberDeclarationSyntax>()));
-
-        IEnumerable<MemberDeclarationSyntax> memberDeclarationSyntaxes = [
-            rootClass,
-            ..file.FluentSteps.Select(CreateFluentStepDeclaration)
-        ];
+        IEnumerable<MemberDeclarationSyntax> memberDeclarationSyntaxes = [rootType, ..fluentSteps];
 
         var usingDirectiveSyntaxes = file.Usings
             .Where(namespaceSymbol => !namespaceSymbol.IsGlobalNamespace)
@@ -46,6 +28,89 @@ public static class FluentModelToCodeConverter
             .WithMembers(List(Enumerable.Empty<MemberDeclarationSyntax>()
                 .Append(NamespaceDeclaration(ParseName(file.NameSpace))
                     .WithMembers(List(memberDeclarationSyntaxes)))));
+    }
+
+    private static TypeDeclarationSyntax CreateRootTypeDeclaration(FluentBuilderFile file)
+    {
+        var rootMethodDeclarations = GetRootMethodDeclarations(file);
+
+       TypeDeclarationSyntax typeDeclaration = file.TypeKind switch
+        {
+            TypeKind.Class when file.IsRecord =>
+                RecordDeclaration(SyntaxKind.RecordDeclaration, Token(RecordKeyword),file.Name)
+                    .WithOpenBraceToken(Token(OpenBraceToken))
+                    .WithCloseBraceToken(Token(CloseBraceToken))
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file)))
+                    .WithMembers(
+                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
+
+            TypeKind.Class =>
+                ClassDeclaration(file.Name)
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file)))
+                    .WithMembers(
+                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
+
+            TypeKind.Struct when file.IsRecord  =>
+                RecordDeclaration(SyntaxKind.RecordStructDeclaration, Token(StructKeyword), Identifier(file.Name))
+                    .WithOpenBraceToken(Token(OpenBraceToken))
+                    .WithCloseBraceToken(Token(CloseBraceToken))
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file).Append(Token(RecordKeyword))))
+                    .WithMembers(
+                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
+
+            TypeKind.Struct =>
+                StructDeclaration(file.Name)
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file)))
+                    .WithMembers(
+                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
+
+            _ => ClassDeclaration(file.Name)
+        };
+
+        return typeDeclaration;
+    }
+
+    private static IEnumerable<SyntaxToken> GetRootTypeModifiers(FluentBuilderFile file)
+    {
+        yield return Token(file.Accessibility switch
+        {
+            Accessibility.Public => PublicKeyword,
+            Accessibility.Protected => ProtectedKeyword,
+            Accessibility.Internal => InternalKeyword,
+            Accessibility.Private => PrivateKeyword,
+            _ => PublicKeyword
+        });
+        if (file.IsStatic)
+        {
+            yield return Token(StaticKeyword);
+        }
+        yield return Token(PartialKeyword);
+    }
+
+    private static IEnumerable<MethodDeclarationSyntax> GetRootMethodDeclarations(FluentBuilderFile file)
+    {
+        return file.FluentMethods
+            .Select(method => method.Constructor is not null && method.ReturnStep is null
+                ? CreateRootFactoryMethod(method, method.Constructor)
+                : CreateRootStepMethod(method))
+
+            .Select(method =>
+            {
+                return method
+                    .WithModifiers(
+                        TokenList(GetSyntaxTokens()));
+
+                IEnumerable<SyntaxToken> GetSyntaxTokens()
+                {
+                    yield return Token(PublicKeyword);
+                    if (file.IsStatic)
+                        yield return Token(StaticKeyword);
+                }
+            });
     }
 
     private static MethodDeclarationSyntax CreateRootFactoryMethod(

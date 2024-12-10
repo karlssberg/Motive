@@ -29,7 +29,7 @@ public class FluentBuilderGenerator : IIncrementalGenerator
                 },
                 transform: CreateBuilderModel);
 
-        // Step 2: Collect and consolidate all FluentConstructors
+        // Step 2: Collect and consolidate all FluentConstructors and transform to FluentBuilderFiles
         var consolidated = constructorDeclarations
             .Collect()
             .SelectMany((builderContextsCollection, _) =>
@@ -62,11 +62,16 @@ public class FluentBuilderGenerator : IIncrementalGenerator
         var rootTypeFullName = attribute.ConstructorArguments[0].Value?.ToString();
         if (rootTypeFullName == null) return ImmutableArray<FluentConstructorContext>.Empty;
 
-        var nameSpace = rootTypeFullName.Substring(0, rootTypeFullName.LastIndexOf('.'));
+        var lastIndexOf = rootTypeFullName.LastIndexOf('.');
+        var nameSpace = lastIndexOf == -1
+            ? rootTypeFullName
+            : rootTypeFullName.Substring(0, lastIndexOf);
+
+        var alreadyDeclaredRootType = semanticModel.Compilation.GetTypeByMetadataName(rootTypeFullName);
 
         return symbol switch
         {
-            IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, rootTypeFullName)],
+            IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, rootTypeFullName, alreadyDeclaredRootType)],
             INamedTypeSymbol type => CreateFluentConstructorContexts(type),
             _ => ImmutableArray<FluentConstructorContext>.Empty
         };
@@ -75,14 +80,14 @@ public class FluentBuilderGenerator : IIncrementalGenerator
         {
             var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
             if (primaryCtor != null)
-                return [new FluentConstructorContext(nameSpace, primaryCtor, rootTypeFullName)];
+                return [new FluentConstructorContext(nameSpace, primaryCtor, rootTypeFullName, alreadyDeclaredRootType)];
 
             return
             [
                 ..type.Constructors
                     .Where(c => c.Parameters.Length > 0)
                     .Select(ctor =>
-                        new FluentConstructorContext(nameSpace, ctor, rootTypeFullName))
+                        new FluentConstructorContext(nameSpace, ctor, rootTypeFullName, alreadyDeclaredRootType))
             ];
         }
     }

@@ -7,7 +7,7 @@
         <IsPackable>false</IsPackable>
         <RootNamespace>Motiv.Generator.Tests</RootNamespace>
         <OutputType>Library</OutputType>
-        <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
