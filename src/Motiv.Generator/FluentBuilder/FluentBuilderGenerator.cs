@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.Attributes;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation;
@@ -12,7 +11,7 @@ namespace Motiv.Generator.FluentBuilder;
 [Generator]
 public class FluentBuilderGenerator : IIncrementalGenerator
 {
-    private static readonly string GenerateFluentBuilderAttributeFullName = typeof(GenerateFluentBuilderAttribute).FullName!;
+    private const string GenerateFluentBuilderAttributeFullName = "Motiv.Generator.Attributes.GenerateFluentBuilderAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {

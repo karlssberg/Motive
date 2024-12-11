@@ -12,4 +12,9 @@ public static class StringExtensions
             ? input
             : $"{char.ToLower(input[0])}{input.Substring(1)}";
 
+    public static string ToParameterFieldName(this string name)
+    {
+        return $"_{name.ToCamelCase()}__parameter";
+    }
+
 }

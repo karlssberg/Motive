@@ -16,13 +16,19 @@ public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
     {
         public Test()
         {
-            var motivAssembly = typeof(Spec).Assembly.GetName();
-            ReferenceAssemblies = ReferenceAssemblies.Default.AddPackages([
-                new PackageIdentity(motivAssembly.Name!, motivAssembly.Version!.ToString())
-            ]);
-
             TestState.AdditionalReferences.Add(typeof(FluentBuilderGenerator).Assembly);
             TestState.AdditionalReferences.Add(typeof(GenerateFluentBuilderAttribute).Assembly);
+
+            // Add the source for required types
+            TestState.Sources.Add(
+                """
+
+                namespace System.Runtime.CompilerServices
+                {
+                    internal static class IsExternalInit {}
+                }
+
+                """);
         }
 
         protected override CompilationOptions CreateCompilationOptions()

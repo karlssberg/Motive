@@ -32,7 +32,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -76,7 +76,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -124,7 +124,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -167,7 +167,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -215,7 +215,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -258,7 +258,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }

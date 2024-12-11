@@ -39,7 +39,7 @@ public class FluentBuilderRootTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(Int32 value)
+                    public static MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -93,7 +93,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial record Factory
                 {
-                    public MyBuildTarget Value(Int32 value)
+                    public MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -147,7 +147,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial struct Factory
                 {
-                    public MyBuildTarget Value(Int32 value)
+                    public MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -203,7 +203,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial record struct Factory
                 {
-                    public MyBuildTarget Value(Int32 value)
+                    public MyBuildTarget Value(int value)
                     {
                         return new MyBuildTarget(value);
                     }

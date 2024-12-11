@@ -5,24 +5,19 @@ using VerifyCS =
 
 namespace Motiv.Generator.Tests;
 
-public class FluentBuilderGeneratorNonGenericTests
+public class FluentBuilderGeneratorPrimaryConstructorTests
 {
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_a_single_parameter()
+    public async Task Should_generate_when_applied_to_a_class_primary_constructor_with_a_single_parameter()
     {
         const string code =
             """
             using System;
 
-            public class MyBuildTarget
+            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            public class MyBuildTarget(int value)
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(int value)
-                {
-                    Value = value;
-                }
-
-                public int Value { get; set; }
+                public int Value { get; set; } = value;
             }
             """;
 
@@ -55,27 +50,75 @@ public class FluentBuilderGeneratorNonGenericTests
         }.RunAsync();
     }
 
+#if NET6_0_OR_GREATER
+
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_two_parameters()
+    public async Task Should_generate_when_applied_to_a_positional_record_primary_constructor_with_two_parameters()
     {
         const string code =
             """
             using System;
 
-            public class MyBuildTarget
+            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            public record MyBuildTarget(int Number, string text);
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            namespace Test
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(
-                    int number,
-                    string text)
+                public static partial class Factory
                 {
-                    Number = number;
-                    Text = text;
+                    public static Step_0 Number(int number)
+                    {
+                        return new Step_0(number);
+                    }
                 }
 
-                public int Number { get; set; }
+                public struct Step_0
+                {
+                    private readonly int _number__parameter;
+                    public Step_0(int number)
+                    {
+                        _number__parameter = number;
+                    }
 
-                public string Text { get; set; }
+                    public MyBuildTarget Text(string text)
+                    {
+                        return new MyBuildTarget(_number__parameter, text);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+#endif
+
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_record_primary_constructor_with_two_parameters()
+    {
+        const string code =
+            """
+            using System;
+
+            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            public record MyBuildTarget(
+                int Number,
+                string text)
+            {
             }
             """;
 
@@ -123,30 +166,23 @@ public class FluentBuilderGeneratorNonGenericTests
     }
 
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_three_parameters()
+    public async Task Should_generate_when_applied_to_a_struct_primary_constructor_with_three_parameters()
     {
         const string code =
             """
             using System;
 
-            public class MyBuildTarget
+            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            public struct MyBuildTarget(
+                int number,
+                string text,
+                Guid id)
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(
-                    int number,
-                    string text,
-                    Guid id)
-                {
-                    Number = number;
-                    Text = text;
-                    Id = id;
-                }
+                public int Number { get; set; } = number;
 
-                public int Number { get; set; }
+                public string Text { get; set; } = text;
 
-                public string Text { get; set; }
-
-                public Guid Id { get; set; }
+                public Guid Id { get; set; } = id;
             }
             """;
 
@@ -210,28 +246,20 @@ public class FluentBuilderGeneratorNonGenericTests
     }
 
     [Fact]
-    public async Task Should_generate_when_applied_to_a_class_constructor_with_four_parameters()
+    public async Task Should_generate_when_applied_to_a_ref_struct_primary_constructor_with_four_parameters()
     {
         const string code =
             """
             using System;
             using System.Text.RegularExpressions;
 
-            public class MyBuildTarget
+            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            public ref struct MyBuildTarget(
+                int number,
+                string text,
+                Guid id,
+                Regex regex)
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(
-                    int number,
-                    string text,
-                    Guid id,
-                    Regex regex)
-                {
-                    Number = number;
-                    Text = text;
-                    Id = id;
-                    Regex = regex;
-                }
-
                 public int Number { get; set; }
 
                 public string Text { get; set; }

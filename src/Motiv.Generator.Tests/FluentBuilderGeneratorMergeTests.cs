@@ -49,7 +49,7 @@ public class FluentBuilderGeneratorMergeTests
                         return new MyBuildTarget<T>(value);
                     }
 
-                    public static MyBuildTarget Value(String value)
+                    public static MyBuildTarget Value(string value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -123,7 +123,7 @@ public class FluentBuilderGeneratorMergeTests
                         return new Step_0<T1>(value1);
                     }
 
-                    public static Step_1 Value1(String value1)
+                    public static Step_1 Value1(string value1)
                     {
                         return new Step_1(value1);
                     }
@@ -145,13 +145,13 @@ public class FluentBuilderGeneratorMergeTests
 
                 public struct Step_1
                 {
-                    private readonly String _value1__parameter;
-                    public Step_1(String value1)
+                    private readonly string _value1__parameter;
+                    public Step_1(string value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget Value2(String value2)
+                    public MyBuildTarget Value2(string value2)
                     {
                         return new MyBuildTarget(_value1__parameter, value2);
                     }
@@ -239,7 +239,7 @@ public class FluentBuilderGeneratorMergeTests
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
 
-                    public MyBuildTarget<T1> Value2(String value2)
+                    public MyBuildTarget<T1> Value2(string value2)
                     {
                         return new MyBuildTarget<T1>(_value1__parameter, value2);
                     }
@@ -321,7 +321,7 @@ public class FluentBuilderGeneratorMergeTests
                         return new Step_0<T1>(value1);
                     }
 
-                    public static Step_1 Value1(String value1)
+                    public static Step_1 Value1(string value1)
                     {
                         return new Step_1(value1);
                     }
@@ -343,13 +343,13 @@ public class FluentBuilderGeneratorMergeTests
 
                 public struct Step_1
                 {
-                    private readonly String _value1__parameter;
-                    public Step_1(String value1)
+                    private readonly string _value1__parameter;
+                    public Step_1(string value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_3 Value2(String value2)
+                    public Step_3 Value2(string value2)
                     {
                         return new Step_3(_value1__parameter, value2);
                     }
@@ -373,15 +373,15 @@ public class FluentBuilderGeneratorMergeTests
 
                 public struct Step_3
                 {
-                    private readonly String _value1__parameter;
-                    private readonly String _value2__parameter;
-                    public Step_3(String value1, String value2)
+                    private readonly string _value1__parameter;
+                    private readonly string _value2__parameter;
+                    public Step_3(string value1, string value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget Value3(String value3)
+                    public MyBuildTarget Value3(string value3)
                     {
                         return new MyBuildTarget(_value1__parameter, _value2__parameter, value3);
                     }
@@ -485,7 +485,7 @@ public class FluentBuilderGeneratorMergeTests
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
 
-                    public Step_2<T1> Value2(String value2)
+                    public Step_2<T1> Value2(string value2)
                     {
                         return new Step_2<T1>(_value1__parameter, value2);
                     }
@@ -510,14 +510,14 @@ public class FluentBuilderGeneratorMergeTests
                 public struct Step_2<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    private readonly String _value2__parameter;
-                    public Step_2(T1 value1, String value2)
+                    private readonly string _value2__parameter;
+                    public Step_2(T1 value1, string value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public Step_4<T1> Value3(String value3)
+                    public Step_4<T1> Value3(string value3)
                     {
                         return new Step_4<T1>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -544,16 +544,16 @@ public class FluentBuilderGeneratorMergeTests
                 public struct Step_4<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    private readonly String _value2__parameter;
-                    private readonly String _value3__parameter;
-                    public Step_4(T1 value1, String value2, String value3)
+                    private readonly string _value2__parameter;
+                    private readonly string _value3__parameter;
+                    public Step_4(T1 value1, string value2, string value3)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                         _value3__parameter = value3;
                     }
 
-                    public MyBuildTarget<T1> Value4(String value4)
+                    public MyBuildTarget<T1> Value4(string value4)
                     {
                         return new MyBuildTarget<T1>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
                     }

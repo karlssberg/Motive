@@ -91,7 +91,7 @@ public class Spec<TModel> : SpecBase<TModel, string>
 }
 
 /// <summary>Creates propositions using a fluent API.</summary>
-public static class Spec
+public static partial class Spec
 {
     /// <summary>Starts the construction of a proposition using a predicate function.</summary>
     /// <param name="predicate">The predicate function to be used in the proposition.</param>

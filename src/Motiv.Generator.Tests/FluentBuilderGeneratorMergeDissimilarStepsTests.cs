@@ -52,7 +52,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                         return new MyBuildTarget<T>(value1);
                     }
 
-                    public static Step_0 Value1(String value1)
+                    public static Step_0 Value1(string value1)
                     {
                         return new Step_0(value1);
                     }
@@ -60,13 +60,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
                 public struct Step_0
                 {
-                    private readonly String _value1__parameter;
-                    public Step_0(String value1)
+                    private readonly string _value1__parameter;
+                    public Step_0(string value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget Value2(String value2)
+                    public MyBuildTarget Value2(string value2)
                     {
                         return new MyBuildTarget(_value1__parameter, value2);
                     }
@@ -144,7 +144,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                         return new Step_0<T1>(value1);
                     }
 
-                    public static Step_1 String1(String string1)
+                    public static Step_1 String1(string string1)
                     {
                         return new Step_1(string1);
                     }
@@ -166,13 +166,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
                 public struct Step_1
                 {
-                    private readonly String _string1__parameter;
-                    public Step_1(String string1)
+                    private readonly string _string1__parameter;
+                    public Step_1(string string1)
                     {
                         _string1__parameter = string1;
                     }
 
-                    public Step_2 String2(String string2)
+                    public Step_2 String2(string string2)
                     {
                         return new Step_2(_string1__parameter, string2);
                     }
@@ -180,15 +180,15 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
                 public struct Step_2
                 {
-                    private readonly String _string1__parameter;
-                    private readonly String _string2__parameter;
-                    public Step_2(String string1, String string2)
+                    private readonly string _string1__parameter;
+                    private readonly string _string2__parameter;
+                    public Step_2(string string1, string string2)
                     {
                         _string1__parameter = string1;
                         _string2__parameter = string2;
                     }
 
-                    public MyBuildTarget String3(String string3)
+                    public MyBuildTarget String3(string string3)
                     {
                         return new MyBuildTarget(_string1__parameter, _string2__parameter, string3);
                     }
@@ -268,7 +268,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1> Value2(String value2)
+                    public Step_1<T1> Value2(string value2)
                     {
                         return new Step_1<T1>(_value1__parameter, value2);
                     }
@@ -282,8 +282,8 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_1<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    private readonly String _value2__parameter;
-                    public Step_1(T1 value1, String value2)
+                    private readonly string _value2__parameter;
+                    public Step_1(T1 value1, string value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;

@@ -44,7 +44,7 @@ public record FluentBuilderMethod(string MethodName, IParameterSymbol SourcePara
                                     ^ obj.MethodName.GetHashCode() * 397;
 
             return obj.SourceParameterSymbol.Type.IsOpenGenericType()
-                ? hash ^ obj.SourceParameterSymbol.Type.Name.GetHashCode()
+                ? hash ^ obj.SourceParameterSymbol.Type.ToString().GetHashCode()
                 : hash ^ SymbolEqualityComparer.Default.GetHashCode(obj.SourceParameterSymbol.Type);
         }
     }
