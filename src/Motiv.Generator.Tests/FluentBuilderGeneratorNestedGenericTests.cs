@@ -1,6 +1,6 @@
 ﻿using Motiv.Generator.FluentBuilder;
 using VerifyCS =
-    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentBuilderGenerator>;
+    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentFactoryGenerator>;
 
 namespace Motiv.Generator.Tests;
 
@@ -12,10 +12,11 @@ public class FluentBuilderGeneratorNestedGenericTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
             public class MyBuildTarget<T>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(Func<T, bool> value)
                 {
                     Value = value;
@@ -33,6 +34,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T> Value<T>(in System.Func<T, bool> value)
                     {
                         return new MyBuildTarget<T>(value);
@@ -48,7 +50,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -61,10 +63,11 @@ public class FluentBuilderGeneratorNestedGenericTests
             """
             using System;
             using System.Collections.Generic;
+            using Motiv.Generator.Attributes;
 
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, bool> value1,
                     IEnumerable<T2> value2)
@@ -88,6 +91,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0<T1>(value1);
@@ -102,6 +106,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
@@ -117,7 +122,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -130,10 +135,11 @@ public class FluentBuilderGeneratorNestedGenericTests
             """
             using System;
             using System.Collections.Generic;
+            using Motiv.Generator.Attributes;
 
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, bool> value1,
                     IEnumerable<T2> value2,
@@ -161,6 +167,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0<T1>(value1);
@@ -175,6 +182,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
@@ -191,6 +199,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                         _value2__parameter = value2;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3> Value3<T3>(in System.Func<System.Func<T1, bool>, T3> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
@@ -206,7 +215,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -218,10 +227,11 @@ public class FluentBuilderGeneratorNestedGenericTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
             public class MyBuildTarget<T1, T2, T3, T4, T5, T6>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, T2> value1,
                     Func<T3, T4> value2,
@@ -248,6 +258,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value1)
                     {
                         return new Step_0<T1, T2>(value1);
@@ -262,6 +273,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1<T1, T2, T3, T4> Value2<T3, T4>(in System.Func<T3, T4> value2)
                     {
                         return new Step_1<T1, T2, T3, T4>(_value1__parameter, value2);
@@ -278,6 +290,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                         _value2__parameter = value2;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3, T4, T5, T6> Value3<T5, T6>(in System.Func<T5, T6> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4, T5, T6>(_value1__parameter, _value2__parameter, value3);
@@ -293,7 +306,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();

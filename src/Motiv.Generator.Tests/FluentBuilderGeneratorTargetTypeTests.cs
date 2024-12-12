@@ -1,7 +1,7 @@
 ﻿using Motiv.Generator.FluentBuilder;
 
 namespace Motiv.Generator.Tests;
-using VerifyCS = CSharpSourceGeneratorVerifier<FluentBuilderGenerator>;
+using VerifyCS = CSharpSourceGeneratorVerifier<FluentFactoryGenerator>;
 
 public class FluentBuilderGeneratorTargetTypeTests
 {
@@ -11,10 +11,11 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(in int value)
                 {
                     Value = value;
@@ -32,6 +33,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -47,7 +49,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -60,8 +62,9 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -76,6 +79,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -91,7 +95,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -103,10 +107,11 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
             public struct MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -124,6 +129,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -139,7 +145,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -151,8 +157,9 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public struct MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -167,6 +174,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -182,7 +190,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -194,10 +202,11 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
             public record MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -215,6 +224,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -230,7 +240,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -242,8 +252,9 @@ public class FluentBuilderGeneratorTargetTypeTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public record MyBuildTarget(int Value)
             {
                 public int Value { get; set; } = Value;
@@ -258,6 +269,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -272,7 +284,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();

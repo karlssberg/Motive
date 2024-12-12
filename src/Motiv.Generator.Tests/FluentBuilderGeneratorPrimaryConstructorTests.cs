@@ -1,7 +1,7 @@
 ﻿using Motiv.Generator.Attributes;
 using Motiv.Generator.FluentBuilder;
 using VerifyCS =
-    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentBuilderGenerator>;
+    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentFactoryGenerator>;
 
 namespace Motiv.Generator.Tests;
 
@@ -13,8 +13,9 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -29,6 +30,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
@@ -44,7 +46,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -58,8 +60,9 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public record MyBuildTarget(int Number, string text);
             """;
 
@@ -71,6 +74,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
@@ -85,6 +89,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _number__parameter = number;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Text(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
@@ -100,7 +105,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -113,8 +118,9 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public record MyBuildTarget(
                 int Number,
                 string text)
@@ -130,6 +136,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
@@ -144,6 +151,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _number__parameter = number;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Text(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
@@ -159,7 +167,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -171,8 +179,9 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public struct MyBuildTarget(
                 int number,
                 string text,
@@ -194,6 +203,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
@@ -208,6 +218,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _number__parameter = number;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1 Text(in string text)
                     {
                         return new Step_1(_number__parameter, text);
@@ -224,6 +235,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _text__parameter = text;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Id(in System.Guid id)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, id);
@@ -239,7 +251,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -252,8 +264,9 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             """
             using System;
             using System.Text.RegularExpressions;
+            using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
             public ref struct MyBuildTarget(
                 int number,
                 string text,
@@ -279,6 +292,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
@@ -293,6 +307,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _number__parameter = number;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1 Text(in string text)
                     {
                         return new Step_1(_number__parameter, text);
@@ -309,6 +324,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _text__parameter = text;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2 Id(in System.Guid id)
                     {
                         return new Step_2(_number__parameter, _text__parameter, id);
@@ -327,6 +343,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                         _id__parameter = id;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Regex(in System.Text.RegularExpressions.Regex regex)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, _id__parameter, regex);
@@ -342,7 +359,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();

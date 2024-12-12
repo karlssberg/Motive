@@ -20,4 +20,12 @@ public static class EnumerableExtensions
             yield return enumerator.Current;
         }
     }
+
+    public static IEnumerable<T> AppendIfNotNull<T>(this IEnumerable<T> source, T? value)
+        where T : class
+    {
+        return value is null
+            ? source
+            : source.Append(value);
+    }
 }

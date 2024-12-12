@@ -1,29 +1,30 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 
-public static class ObjectCreationExpression
+public static class TargetTypeObjectCreationExpression
 {
-    public static ObjectCreationExpressionSyntax CreateTargetTypeActivationExpression(
+    public static ObjectCreationExpressionSyntax Create(
         INamedTypeSymbol constructorType,
         IEnumerable<IdentifierNameSyntax> constructorArguments)
     {
         var arguments = constructorArguments
-            .Select(SyntaxFactory.Argument)
-            .InterleaveWith(SyntaxFactory.Token(SyntaxKind.CommaToken));
+            .Select(Argument)
+            .InterleaveWith(Token(SyntaxKind.CommaToken));
 
         TypeSyntax name = constructorType.TypeArguments.Length == 0
-            ? SyntaxFactory.IdentifierName(constructorType.Name)
-            : SyntaxFactory.GenericName(SyntaxFactory.Identifier(constructorType.Name))
+            ? IdentifierName(constructorType.Name)
+            : GenericName(Identifier(constructorType.Name))
                 .WithTypeArgumentList(
-                    SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList<TypeSyntax>(
+                    TypeArgumentList(SeparatedList<TypeSyntax>(
                         constructorType.TypeArguments
-                            .Select(t => SyntaxFactory.IdentifierName(t.Name)))));
+                            .Select(t => IdentifierName(t.Name)))));
 
-        return SyntaxFactory.ObjectCreationExpression(name)
-            .WithNewKeyword(SyntaxFactory.Token(SyntaxKind.NewKeyword))
-            .WithArgumentList(SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments)));
+        return ObjectCreationExpression(name)
+            .WithNewKeyword(Token(SyntaxKind.NewKeyword))
+            .WithArgumentList(ArgumentList(SeparatedList<ArgumentSyntax>(arguments)));
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
 
@@ -11,19 +12,19 @@ public static class FluentStepConstructorDeclaration
     {
         var constructorParameters = CreateFluentStepConstructorParameters(step);
 
-        var constructor = SyntaxFactory.ConstructorDeclaration(SyntaxFactory.Identifier(step.Name))
-            .WithModifiers(SyntaxFactory.TokenList(
-                SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
+        var constructor = ConstructorDeclaration(Identifier(step.Name))
+            .WithModifiers(TokenList(
+                Token(SyntaxKind.PublicKeyword)))
             .WithParameterList(
-                SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(constructorParameters)))
-            .WithBody(SyntaxFactory.Block(
+                ParameterList(SeparatedList<ParameterSyntax>(constructorParameters)))
+            .WithBody(Block(
                 step.KnownConstructorParameters
                     .Select(p =>
-                        SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.AssignmentExpression(
+                        ExpressionStatement(
+                            AssignmentExpression(
                                 SyntaxKind.SimpleAssignmentExpression,
-                                SyntaxFactory.IdentifierName(p.Name.ToParameterFieldName()),
-                                SyntaxFactory.IdentifierName(p.Name.ToCamelCase()))))
+                                IdentifierName(p.Name.ToParameterFieldName()),
+                                IdentifierName(p.Name.ToCamelCase()))))
                     .ToArray<StatementSyntax>()  // Convert IEnumerable to array of statements
             ));
         return constructor;
@@ -33,9 +34,9 @@ public static class FluentStepConstructorDeclaration
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
-                SyntaxFactory.Parameter(SyntaxFactory.Identifier(parameter.Name.ToCamelCase()))
-                    .WithType(SyntaxFactory.IdentifierName(parameter.Type.ToString()))
-                    .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InKeyword))))
-            .InterleaveWith(SyntaxFactory.Token(SyntaxKind.CommaToken));
+                Parameter(Identifier(parameter.Name.ToCamelCase()))
+                    .WithType(IdentifierName(parameter.Type.ToString()))
+                    .WithModifiers(TokenList(Token(SyntaxKind.InKeyword))))
+            .InterleaveWith(Token(SyntaxKind.CommaToken));
     }
 }

@@ -2,8 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
-using ObjectCreationExpression = Motiv.Generator.FluentBuilder.Generation.Shared.ObjectCreationExpression;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Factories;
 
@@ -13,27 +13,42 @@ public static class FluentRootFactoryMethodDeclaration
         FluentBuilderMethod method,
         IMethodSymbol constructor)
     {
-        var returnObjectExpression = ObjectCreationExpression.CreateTargetTypeActivationExpression(
+        var identifierNameSyntaxes = method.ConstructorParameters
+            .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
+            .AppendIfNotNull(
+                method.SourceParameterSymbol is not null
+                ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
+                : null);
+
+        var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
             constructor.ContainingType,
-            method.ConstructorParameters.Select(p => IdentifierName(p.Name.ToParameterFieldName()))
-                .Append(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())));
+            identifierNameSyntaxes);
 
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
                 Identifier(method.MethodName))
+            .WithAttributeLists(
+                SingletonList(
+                    AttributeList(
+                        SingletonSeparatedList(AggressiveInliningAttributeSyntax.Create()))))
             .WithModifiers(
                 TokenList(
                     Token(SyntaxKind.PublicKeyword)))
-            .WithParameterList(
-                ParameterList(SingletonSeparatedList(
-                    Parameter(
-                            Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                        .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                        .WithType(
-                            IdentifierName(method.SourceParameterSymbol.Type.ToString())))))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (!method.SourceParameterSymbol.Type.ContainsGenericTypeParameter())
+        if (method.SourceParameterSymbol is not null)
+        {
+            methodDeclaration = methodDeclaration
+                .WithParameterList(
+                    ParameterList(SingletonSeparatedList(
+                        Parameter(
+                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
+                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                            .WithType(
+                                IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+        }
+
+        if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.SourceParameterSymbol.Type.GetGenericTypeParameters();

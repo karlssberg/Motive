@@ -12,7 +12,7 @@ public static class FluentModelToCodeConverter
     public static SyntaxNode CreateCompilationUnit(
         FluentBuilderFile file)
     {
-        var rootType = RootTypeDeclaration.CreateRootTypeDeclaration(file);
+        var rootType = RootTypeDeclaration.Create(file);
         var fluentSteps = file.FluentSteps.Select(FluentStepDeclaration.Create);
 
         IEnumerable<MemberDeclarationSyntax> memberDeclarationSyntaxes = [rootType, ..fluentSteps];

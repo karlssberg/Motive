@@ -9,11 +9,7 @@ public record FluentBuilderStep
 {
     public string Name { get; set; } = "Step";
 
-    public IMethodSymbol? Constructor { get; set; }
-
     public FluentBuilderStep? Parent { get; set; }
-
-    public bool IsRoot => Parent is null;
 
     /// <summary>
     /// The known constructor parameters up until this step.

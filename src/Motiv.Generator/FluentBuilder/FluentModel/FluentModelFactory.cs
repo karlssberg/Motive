@@ -73,48 +73,72 @@ public static class FluentModelFactory
         return
         [
             ..fluentConstructorContexts
-                .Select(constructorContext =>
-                {
-                    return constructorContext.FluentMethodContexts
-                        .Reverse()
-                        .Aggregate(default(FluentBuilderStep?), (previousStep, method) =>
-                        {
-                            var fluentMethodName = method.SourceParameter.GetFluentMethodName();
-
-                            var constructorParameters =
-                                method.PriorSourceParameters
-                                    .Select(methodContext => methodContext.SourceParameter)
-                                    .ToImmutableArray();
-
-                            var fluentBuilderStep = new FluentBuilderStep
-                            {
-                                KnownConstructorParameters = [..constructorParameters],
-                                FluentMethods =
-                                [
-                                    new FluentBuilderMethod(fluentMethodName, method.SourceParameter, previousStep)
-                                    {
-                                        Constructor = constructorContext.Constructor,
-                                        ConstructorParameters = constructorParameters,
-                                    }
-                                ]
-                            };
-
-                            if (previousStep is not null)
-                            {
-                                previousStep.Parent = fluentBuilderStep;
-                            }
-
-                            return fluentBuilderStep;
-                        });
-                })
+                .Select(constructorContext => constructorContext.FluentMethodContexts
+                    .Reverse()
+                    .Aggregate(default(FluentBuilderStep?), (previousStep, method) =>
+                        CreateFluentBuilderStep(method, previousStep, constructorContext)))
                 .Where(step => step is not null)
         ];
+    }
+
+    private static FluentBuilderStep? CreateFluentBuilderStep(
+        FluentMethodContext method,
+        FluentBuilderStep? nextStep,
+        FluentConstructorContext constructorContext)
+    {
+        var fluentMethodName = method.SourceParameter.GetFluentMethodName();
+
+        var constructorParameters =
+            method.PriorSourceParameters
+                .Select(methodContext => methodContext.SourceParameter)
+                .ToImmutableArray();
+
+        var fluentBuilderMethod =
+            new FluentBuilderMethod(
+                fluentMethodName,
+                nextStep ?? MaybeCreateCreationMethodStep(nextStep, constructorContext))
+            {
+                SourceParameterSymbol = method.SourceParameter,
+                Constructor = constructorContext.Constructor,
+                ConstructorParameters = constructorParameters,
+            };
+
+        var fluentBuilderStep = new FluentBuilderStep
+        {
+            KnownConstructorParameters = [..constructorParameters],
+            FluentMethods = [fluentBuilderMethod]
+        };
+
+        if (fluentBuilderMethod.ReturnStep is not null)
+            fluentBuilderMethod.ReturnStep.Parent = fluentBuilderStep;
+
+        return fluentBuilderStep;
+    }
+
+    private static FluentBuilderStep? MaybeCreateCreationMethodStep(FluentBuilderStep? nextStep, FluentConstructorContext constructorContext)
+    {
+        if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
+            return default;
+
+        return new FluentBuilderStep
+        {
+            KnownConstructorParameters = [..constructorContext.Constructor.Parameters],
+            FluentMethods =
+            [
+                new FluentBuilderMethod("Create", nextStep)
+                {
+                    Constructor = constructorContext.Constructor,
+                    ConstructorParameters = constructorContext.Constructor.Parameters,
+                }
+            ]
+        };
     }
 
     private static IEnumerable<FluentBuilderStep> MergedFluentBuilderSteps(IEnumerable<FluentBuilderStep> fluentBuilderSteps)
     {
         var groupedSteps = fluentBuilderSteps
             .GroupBy(step => step, FluentBuilderStep.ConstructorParametersComparer);
+
         return groupedSteps
                 .Select(group =>
                 {

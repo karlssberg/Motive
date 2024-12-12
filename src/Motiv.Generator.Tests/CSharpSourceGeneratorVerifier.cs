@@ -16,8 +16,8 @@ public static class CSharpSourceGeneratorVerifier<TSourceGenerator>
     {
         public Test()
         {
-            TestState.AdditionalReferences.Add(typeof(FluentBuilderGenerator).Assembly);
-            TestState.AdditionalReferences.Add(typeof(GenerateFluentBuilderAttribute).Assembly);
+            TestState.AdditionalReferences.Add(typeof(FluentFactoryGenerator).Assembly);
+            TestState.AdditionalReferences.Add(typeof(GenerateFluentFactoryAttribute).Assembly);
 
             // Add the source for required types
             TestState.Sources.Add(

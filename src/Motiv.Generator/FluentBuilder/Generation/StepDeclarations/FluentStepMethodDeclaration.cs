@@ -3,35 +3,45 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
 
 public static class FluentStepMethodDeclaration
 {
-    public static MethodDeclarationSyntax CreateStepMethod(
+    public static MethodDeclarationSyntax Create(
         FluentBuilderMethod method,
         FluentBuilderStep step)
     {
-        var stepActivationArgs = SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(CreateStepConstructorArguments(method, step)));
+        var stepActivationArgs = ArgumentList(SeparatedList(CreateStepConstructorArguments(method, step)));
 
         var returnObjectExpression = FluentStepCreationExpression.Create(method, stepActivationArgs);
 
-        var methodDeclaration = SyntaxFactory.MethodDeclaration(
+        var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
-                SyntaxFactory.Identifier(method.MethodName))
+                Identifier(method.MethodName))
+            .WithAttributeLists(
+                SingletonList(
+                    AttributeList(
+                        SingletonSeparatedList(AggressiveInliningAttributeSyntax.Create()))))
             .WithModifiers(
-                SyntaxFactory.TokenList(
-                    SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(SyntaxFactory.SingletonSeparatedList(
-                    SyntaxFactory.Parameter(
-                            SyntaxFactory.Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                        .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InKeyword)))
-                        .WithType(
-                            SyntaxFactory.IdentifierName(method.SourceParameterSymbol.Type.ToString())))))
-            .WithBody(SyntaxFactory.Block(SyntaxFactory.ReturnStatement(returnObjectExpression)));
+                TokenList(
+                    Token(SyntaxKind.PublicKeyword)))
+            .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (!method.SourceParameterSymbol.Type.ContainsGenericTypeParameter())
+        if (method.SourceParameterSymbol is not null)
+        {
+            methodDeclaration = methodDeclaration
+                .WithParameterList(
+                    ParameterList(SingletonSeparatedList(
+                        Parameter(
+                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
+                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                            .WithType(
+                                IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+        }
+
+        if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
         var existingTypeParameters = step.GenericConstructorParameters
@@ -45,7 +55,7 @@ public static class FluentStepMethodDeclaration
 
         return methodDeclaration
             .WithTypeParameterList(
-                SyntaxFactory.TypeParameterList(SyntaxFactory.SeparatedList([..typeParameterSyntaxes])));
+                TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
     }
 
     private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(FluentBuilderMethod method,
@@ -53,8 +63,10 @@ public static class FluentStepMethodDeclaration
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
-                SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameter.Name.ToParameterFieldName())))
-            .Append(
-                SyntaxFactory.Argument(SyntaxFactory.IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())));
+                Argument(IdentifierName(parameter.Name.ToParameterFieldName())))
+            .AppendIfNotNull(
+                method.SourceParameterSymbol is not null
+                    ? Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))
+                    : null);
     }
 }

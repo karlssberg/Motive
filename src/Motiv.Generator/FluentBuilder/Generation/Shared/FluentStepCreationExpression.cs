@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 
@@ -11,9 +12,9 @@ public static class FluentStepCreationExpression
         ArgumentListSyntax argumentList)
     {
         var name = StepNameSyntax.Create(method.ReturnStep!);
-        return SyntaxFactory.ObjectCreationExpression(name)
+        return ObjectCreationExpression(name)
             .WithNewKeyword(
-                SyntaxFactory.Token(SyntaxKind.NewKeyword))
+                Token(SyntaxKind.NewKeyword))
             .WithArgumentList(argumentList);
     }
 }

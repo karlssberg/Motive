@@ -7,12 +7,12 @@ public record FluentConstructorContext
 {
     private readonly Lazy<ImmutableArray<FluentMethodContext>> _lazyFluentMethods;
 
-    public FluentConstructorContext(string @namespace, IMethodSymbol constructor, string rootTypeFullName,
-        ISymbol? symbol)
+    public FluentConstructorContext(string @namespace, IMethodSymbol constructor, ISymbol? symbol, FluentFactoryMetadata metadata)
     {
         NameSpace = @namespace;
         Constructor = constructor;
-        RootTypeFullName = rootTypeFullName;
+        Options = metadata.Options;
+        RootTypeFullName = metadata.RootTypeFullName;
         _lazyFluentMethods =  new Lazy<ImmutableArray<FluentMethodContext>>(() =>
         [
             ..Constructor?.Parameters
@@ -45,6 +45,8 @@ public record FluentConstructorContext
 
         Accessibility = symbol?.DeclaredAccessibility ?? Accessibility.Public;
     }
+
+    public FluentFactoryGeneratorOptions Options { get; set; }
 
     public bool IsRecord { get; set; }
 

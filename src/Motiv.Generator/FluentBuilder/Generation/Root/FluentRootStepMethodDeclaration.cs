@@ -13,28 +13,37 @@ public static class FluentRootStepMethodDeclaration
     {
         var returnObjectExpression = FluentStepCreationExpression.Create(
             method,
-            ArgumentList(SeparatedList<ArgumentSyntax>(
-            [
-                Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))
-            ])));
+            ArgumentList(SeparatedList(
+                method.SourceParameterSymbol is null
+                    ? Array.Empty<ArgumentSyntax>()
+                    : [Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))]
+                )));
 
         var methodDeclaration =  MethodDeclaration(
                 returnObjectExpression.Type,
                 Identifier(method.MethodName))
+            .WithAttributeLists(
+                SingletonList(
+                    AttributeList(
+                        SingletonSeparatedList(AggressiveInliningAttributeSyntax.Create()))))
             .WithModifiers(
                 TokenList(
                     Token(SyntaxKind.PublicKeyword)))
-            .WithParameterList(
-                ParameterList(SingletonSeparatedList(
-                    Parameter(
-                            Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                        .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                        .WithType(
-                            IdentifierName(method.SourceParameterSymbol.Type.ToString()))))
-            )
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (!method.SourceParameterSymbol.Type.ContainsGenericTypeParameter())
+        if (method.SourceParameterSymbol is not null)
+        {
+            methodDeclaration = methodDeclaration
+                .WithParameterList(
+                    ParameterList(SingletonSeparatedList(
+                        Parameter(
+                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
+                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                            .WithType(
+                                IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+        }
+
+        if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.SourceParameterSymbol.Type.GetGenericTypeParameters();

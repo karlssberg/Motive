@@ -4,11 +4,11 @@ using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentBuilderMethod(string MethodName, IParameterSymbol SourceParameterSymbol, FluentBuilderStep? ReturnStep)
+public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnStep)
 {
     public string MethodName { get; } = MethodName;
 
-    public IParameterSymbol SourceParameterSymbol { get; set; } = SourceParameterSymbol;
+    public IParameterSymbol? SourceParameterSymbol { get; set; }
 
     public FluentBuilderStep? ReturnStep { get; set; } = ReturnStep;
 
@@ -25,8 +25,15 @@ public record FluentBuilderMethod(string MethodName, IParameterSymbol SourcePara
             if (y is null) return false;
             if (x.GetType() != y.GetType()) return false;
             if (x.MethodName != y.MethodName) return false;
-            return x.ConstructorParameters.SequenceEqual(y.ConstructorParameters)
-                   && Equals(x.SourceParameterSymbol.Type, y.SourceParameterSymbol.Type);
+            if (!x.ConstructorParameters.SequenceEqual(y.ConstructorParameters)) return false;
+
+
+            if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
+            if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
+
+            if (x.SourceParameterSymbol.Type.IsOpenGenericType() || y.SourceParameterSymbol.Type.IsOpenGenericType())
+                return x.SourceParameterSymbol.Type.ToString() == y.SourceParameterSymbol.Type.ToString();
+            return SymbolEqualityComparer.Default.Equals(x.SourceParameterSymbol?.Type, y.SourceParameterSymbol?.Type);
         }
 
         private static bool Equals(ITypeSymbol x, ITypeSymbol y)
@@ -42,6 +49,9 @@ public record FluentBuilderMethod(string MethodName, IParameterSymbol SourcePara
         {
             var hash = obj.ConstructorParameters.GetHashCode() * 397
                                     ^ obj.MethodName.GetHashCode() * 397;
+
+            if (obj.SourceParameterSymbol is null)
+                return hash;
 
             return obj.SourceParameterSymbol.Type.IsOpenGenericType()
                 ? hash ^ obj.SourceParameterSymbol.Type.ToString().GetHashCode()

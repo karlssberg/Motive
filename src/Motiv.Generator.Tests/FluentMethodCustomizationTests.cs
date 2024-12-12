@@ -1,6 +1,6 @@
 ﻿using Motiv.Generator.FluentBuilder;
 using VerifyCS =
-    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentBuilderGenerator>;
+    Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentFactoryGenerator>;
 
 namespace Motiv.Generator.Tests;
 
@@ -15,7 +15,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget([FluentMethod("SetValue")]T value)
                 {
                     Value = value;
@@ -31,6 +31,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T> SetValue<T>(in T value)
                     {
                         return new MyBuildTarget<T>(value);
@@ -46,7 +47,7 @@ public class FluentMethodCustomizationTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -61,7 +62,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2)
@@ -82,6 +83,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
@@ -96,6 +98,7 @@ public class FluentMethodCustomizationTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
@@ -111,7 +114,7 @@ public class FluentMethodCustomizationTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -126,7 +129,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,
@@ -151,6 +154,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
@@ -165,6 +169,7 @@ public class FluentMethodCustomizationTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
@@ -181,6 +186,7 @@ public class FluentMethodCustomizationTests
                         _value2__parameter = value2;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3> SetValue3<T3>(in T3 value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
@@ -196,7 +202,7 @@ public class FluentMethodCustomizationTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -211,7 +217,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
+                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,
@@ -240,6 +246,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
@@ -254,6 +261,7 @@ public class FluentMethodCustomizationTests
                         _value1__parameter = value1;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
@@ -270,6 +278,7 @@ public class FluentMethodCustomizationTests
                         _value2__parameter = value2;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2<T1, T2, T3> SetValue3<T3>(in T3 value3)
                     {
                         return new Step_2<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
@@ -288,6 +297,7 @@ public class FluentMethodCustomizationTests
                         _value3__parameter = value3;
                     }
 
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3, T4> SetValue4<T4>(in T4 value4)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
@@ -303,7 +313,7 @@ public class FluentMethodCustomizationTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentBuilderGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();

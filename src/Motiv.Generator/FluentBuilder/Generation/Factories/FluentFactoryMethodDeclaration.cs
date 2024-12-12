@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Factories;
 
@@ -14,29 +15,41 @@ public static class FluentFactoryMethodDeclaration
         FluentBuilderStep step,
         IMethodSymbol constructor)
     {
-        var returnObjectExpression = ObjectCreationExpression.CreateTargetTypeActivationExpression(
+        var identifierNameSyntaxes = method.ConstructorParameters
+            .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
+            .AppendIfNotNull(
+                method.SourceParameterSymbol is not null
+                ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
+                : null);
+
+        var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
             constructor.ContainingType,
-            method.ConstructorParameters
-                .Select(p => SyntaxFactory.IdentifierName(p.Name.ToParameterFieldName()))
-                .Append(SyntaxFactory.IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())));
+            identifierNameSyntaxes);
 
-        var methodDeclaration = SyntaxFactory.MethodDeclaration(
+        var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
-                SyntaxFactory.Identifier(method.MethodName))
+                Identifier(method.MethodName))
+            .WithAttributeLists(
+                SingletonList(
+                    AttributeList(
+                        SingletonSeparatedList(AggressiveInliningAttributeSyntax.Create()))))
             .WithModifiers(
-                SyntaxFactory.TokenList(
-                    SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
-            .WithParameterList(
-                SyntaxFactory.ParameterList(SyntaxFactory.SingletonSeparatedList(
-                    SyntaxFactory.Parameter(
-                            SyntaxFactory.Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                        .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InKeyword)))
+                TokenList(
+                    Token(SyntaxKind.PublicKeyword)))
+            .WithBody(Block(ReturnStatement(returnObjectExpression)));
+
+        if (method.SourceParameterSymbol is not null)
+        {
+            methodDeclaration = methodDeclaration.WithParameterList(
+                ParameterList(SingletonSeparatedList(
+                    Parameter(
+                            Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
+                        .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
                         .WithType(
-                            SyntaxFactory.IdentifierName(method.SourceParameterSymbol.Type.ToString())))))
-            .WithBody(SyntaxFactory.Block(SyntaxFactory.ReturnStatement(returnObjectExpression)));
+                            IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+        }
 
-
-        if (!method.SourceParameterSymbol.Type.ContainsGenericTypeParameter())
+        if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
         var existingTypeParameters = step.KnownConstructorParameters
@@ -50,6 +63,6 @@ public static class FluentFactoryMethodDeclaration
 
         return methodDeclaration
             .WithTypeParameterList(
-                SyntaxFactory.TypeParameterList(SyntaxFactory.SeparatedList([..typeParameterSyntaxes])));
+                TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
     }
 }

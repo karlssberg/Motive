@@ -9,7 +9,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.Root;
 
 public static class RootTypeDeclaration
 {
-    public static TypeDeclarationSyntax CreateRootTypeDeclaration(FluentBuilderFile file)
+    public static TypeDeclarationSyntax Create(FluentBuilderFile file)
     {
         var rootMethodDeclarations = GetRootMethodDeclarations(file);
 
