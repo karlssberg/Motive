@@ -84,7 +84,6 @@ public class FluentBuilderGenerator : IIncrementalGenerator
             return
             [
                 ..type.Constructors
-                    .Where(c => c.Parameters.Length > 0)
                     .Select(ctor =>
                         new FluentConstructorContext(nameSpace, ctor, rootTypeFullName, alreadyDeclaredRootType))
             ];

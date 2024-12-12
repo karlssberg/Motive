@@ -187,7 +187,7 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
         Expression VisitDefaultBinaryExpression()
         {
 
-            VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Left, true);
+            VisitAndMaybeApplyParentheses(binaryExpression, binaryExpression.Left);
 
             OutputText.Append(' ');
             OutputText.Append(GetBinaryOperatorSymbol(binaryExpression.NodeType));
@@ -382,7 +382,7 @@ internal class CSharpExpressionSerializer : ExpressionVisitor, IExpressionSerial
                 return VisitObjectIndex(node);
             case { DeclaringType.FullName: "System.String", Name: nameof(string.Format) }:
                 return VisitStringInterpolation(node);
-            case { DeclaringType.FullName: $"Motiv.Display", Name: nameof(Display.AsValue) }:
+            case { DeclaringType.FullName: "Motiv.Display", Name: nameof(Display.AsValue) }:
                 return VisitSerializeAsValue(ResolveMethodArguments(node).First());
             case { DeclaringType.FullName: "System.Reflection.MethodInfo", Name: nameof(Delegate.CreateDelegate) }:
                 // ignore

@@ -15,7 +15,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             public class MyBuildTarget
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(int value)
+                public MyBuildTarget(in int value)
                 {
                     Value = value;
                 }
@@ -32,7 +32,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -76,7 +76,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -124,7 +124,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -167,7 +167,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -215,7 +215,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -258,14 +258,13 @@ public class FluentBuilderGeneratorTargetTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
                 }
             }
             """;
-
         await new VerifyCS.Test
         {
             TestState =

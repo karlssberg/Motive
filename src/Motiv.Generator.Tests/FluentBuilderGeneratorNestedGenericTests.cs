@@ -33,7 +33,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget<T> Value<T>(System.Func<T, bool> value)
+                    public static MyBuildTarget<T> Value<T>(in System.Func<T, bool> value)
                     {
                         return new MyBuildTarget<T>(value);
                     }
@@ -88,7 +88,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(System.Func<T1, bool> value1)
+                    public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -97,12 +97,12 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public struct Step_0<T1>
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
-                    public Step_0(System.Func<T1, bool> value1)
+                    public Step_0(in System.Func<T1, bool> value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget<T1, T2> Value2<T2>(System.Collections.Generic.IEnumerable<T2> value2)
+                    public MyBuildTarget<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -161,7 +161,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(System.Func<T1, bool> value1)
+                    public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -170,12 +170,12 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public struct Step_0<T1>
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
-                    public Step_0(System.Func<T1, bool> value1)
+                    public Step_0(in System.Func<T1, bool> value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2> Value2<T2>(System.Collections.Generic.IEnumerable<T2> value2)
+                    public Step_1<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
@@ -185,13 +185,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
                     private readonly System.Collections.Generic.IEnumerable<T2> _value2__parameter;
-                    public Step_1(System.Func<T1, bool> value1, System.Collections.Generic.IEnumerable<T2> value2)
+                    public Step_1(in System.Func<T1, bool> value1, in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2, T3> Value3<T3>(System.Func<System.Func<T1, bool>, T3> value3)
+                    public MyBuildTarget<T1, T2, T3> Value3<T3>(in System.Func<System.Func<T1, bool>, T3> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -248,7 +248,7 @@ public class FluentBuilderGeneratorNestedGenericTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1, T2> Value1<T1, T2>(System.Func<T1, T2> value1)
+                    public static Step_0<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value1)
                     {
                         return new Step_0<T1, T2>(value1);
                     }
@@ -257,12 +257,12 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public struct Step_0<T1, T2>
                 {
                     private readonly System.Func<T1, T2> _value1__parameter;
-                    public Step_0(System.Func<T1, T2> value1)
+                    public Step_0(in System.Func<T1, T2> value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2, T3, T4> Value2<T3, T4>(System.Func<T3, T4> value2)
+                    public Step_1<T1, T2, T3, T4> Value2<T3, T4>(in System.Func<T3, T4> value2)
                     {
                         return new Step_1<T1, T2, T3, T4>(_value1__parameter, value2);
                     }
@@ -272,13 +272,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                 {
                     private readonly System.Func<T1, T2> _value1__parameter;
                     private readonly System.Func<T3, T4> _value2__parameter;
-                    public Step_1(System.Func<T1, T2> value1, System.Func<T3, T4> value2)
+                    public Step_1(in System.Func<T1, T2> value1, in System.Func<T3, T4> value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2, T3, T4, T5, T6> Value3<T5, T6>(System.Func<T5, T6> value3)
+                    public MyBuildTarget<T1, T2, T3, T4, T5, T6> Value3<T5, T6>(in System.Func<T5, T6> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4, T5, T6>(_value1__parameter, _value2__parameter, value3);
                     }

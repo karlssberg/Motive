@@ -31,7 +31,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget<T> SetValue<T>(T value)
+                    public static MyBuildTarget<T> SetValue<T>(in T value)
                     {
                         return new MyBuildTarget<T>(value);
                     }
@@ -82,7 +82,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> SetValue1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -91,12 +91,12 @@ public class FluentMethodCustomizationTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget<T1, T2> SetValue2<T2>(T2 value2)
+                    public MyBuildTarget<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -151,7 +151,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> SetValue1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -160,12 +160,12 @@ public class FluentMethodCustomizationTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2> SetValue2<T2>(T2 value2)
+                    public Step_1<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
@@ -175,13 +175,13 @@ public class FluentMethodCustomizationTests
                 {
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value2__parameter;
-                    public Step_1(T1 value1, T2 value2)
+                    public Step_1(in T1 value1, in T2 value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2, T3> SetValue3<T3>(T3 value3)
+                    public MyBuildTarget<T1, T2, T3> SetValue3<T3>(in T3 value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -240,7 +240,7 @@ public class FluentMethodCustomizationTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> SetValue1<T1>(T1 value1)
+                    public static Step_0<T1> SetValue1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -249,12 +249,12 @@ public class FluentMethodCustomizationTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1, T2> SetValue2<T2>(T2 value2)
+                    public Step_1<T1, T2> SetValue2<T2>(in T2 value2)
                     {
                         return new Step_1<T1, T2>(_value1__parameter, value2);
                     }
@@ -264,13 +264,13 @@ public class FluentMethodCustomizationTests
                 {
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value2__parameter;
-                    public Step_1(T1 value1, T2 value2)
+                    public Step_1(in T1 value1, in T2 value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public Step_2<T1, T2, T3> SetValue3<T3>(T3 value3)
+                    public Step_2<T1, T2, T3> SetValue3<T3>(in T3 value3)
                     {
                         return new Step_2<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -281,14 +281,14 @@ public class FluentMethodCustomizationTests
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value2__parameter;
                     private readonly T3 _value3__parameter;
-                    public Step_2(T1 value1, T2 value2, T3 value3)
+                    public Step_2(in T1 value1, in T2 value2, in T3 value3)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                         _value3__parameter = value3;
                     }
 
-                    public MyBuildTarget<T1, T2, T3, T4> SetValue4<T4>(T4 value4)
+                    public MyBuildTarget<T1, T2, T3, T4> SetValue4<T4>(in T4 value4)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
                     }

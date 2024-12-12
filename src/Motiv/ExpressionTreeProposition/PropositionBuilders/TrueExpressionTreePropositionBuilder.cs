@@ -83,7 +83,7 @@ public readonly ref struct TrueExpressionTreePropositionBuilder<TModel, TPredica
 
     /// <summary>Specifies a higher order predicate for the proposition.</summary>
     /// <param name="higherOrderPredicate">A function that takes a collection of boolean results and returns a boolean.</param>
-    /// <returns>An instance of <see cref="TrueHigherOrderFromSpecPropositionBuilder{TModel, TMetadata}" />.</returns>
+    /// <returns>An instance of <see cref="TrueHigherOrderFromSpecPropositionBuilder{TModel,TMetadata}" />.</returns>
     public TrueExpressionTreeHigherOrderFromSpecPropositionBuilder<TModel, TPredicateResult> As(
         Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate) =>
         new(expression,

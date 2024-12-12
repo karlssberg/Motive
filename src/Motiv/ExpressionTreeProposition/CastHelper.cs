@@ -41,7 +41,8 @@ public static class CastHelper
                     target == typeof(double) ||
                     target == typeof(decimal));
         }
-        else if (target == typeof(char))
+
+        if (target == typeof(char))
         {
             // All numeric to char conversions are explicit
             return true;

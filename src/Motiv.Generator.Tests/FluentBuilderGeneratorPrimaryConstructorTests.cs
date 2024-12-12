@@ -29,7 +29,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -71,7 +71,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0 Number(int number)
+                    public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
                     }
@@ -80,12 +80,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public struct Step_0
                 {
                     private readonly int _number__parameter;
-                    public Step_0(int number)
+                    public Step_0(in int number)
                     {
                         _number__parameter = number;
                     }
 
-                    public MyBuildTarget Text(string text)
+                    public MyBuildTarget Text(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
                     }
@@ -130,7 +130,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0 Number(int number)
+                    public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
                     }
@@ -139,12 +139,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public struct Step_0
                 {
                     private readonly int _number__parameter;
-                    public Step_0(int number)
+                    public Step_0(in int number)
                     {
                         _number__parameter = number;
                     }
 
-                    public MyBuildTarget Text(string text)
+                    public MyBuildTarget Text(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
                     }
@@ -194,7 +194,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0 Number(int number)
+                    public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
                     }
@@ -203,12 +203,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public struct Step_0
                 {
                     private readonly int _number__parameter;
-                    public Step_0(int number)
+                    public Step_0(in int number)
                     {
                         _number__parameter = number;
                     }
 
-                    public Step_1 Text(string text)
+                    public Step_1 Text(in string text)
                     {
                         return new Step_1(_number__parameter, text);
                     }
@@ -218,13 +218,13 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 {
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
-                    public Step_1(int number, string text)
+                    public Step_1(in int number, in string text)
                     {
                         _number__parameter = number;
                         _text__parameter = text;
                     }
 
-                    public MyBuildTarget Id(System.Guid id)
+                    public MyBuildTarget Id(in System.Guid id)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, id);
                     }
@@ -279,7 +279,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0 Number(int number)
+                    public static Step_0 Number(in int number)
                     {
                         return new Step_0(number);
                     }
@@ -288,12 +288,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public struct Step_0
                 {
                     private readonly int _number__parameter;
-                    public Step_0(int number)
+                    public Step_0(in int number)
                     {
                         _number__parameter = number;
                     }
 
-                    public Step_1 Text(string text)
+                    public Step_1 Text(in string text)
                     {
                         return new Step_1(_number__parameter, text);
                     }
@@ -303,13 +303,13 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 {
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
-                    public Step_1(int number, string text)
+                    public Step_1(in int number, in string text)
                     {
                         _number__parameter = number;
                         _text__parameter = text;
                     }
 
-                    public Step_2 Id(System.Guid id)
+                    public Step_2 Id(in System.Guid id)
                     {
                         return new Step_2(_number__parameter, _text__parameter, id);
                     }
@@ -320,14 +320,14 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
                     private readonly System.Guid _id__parameter;
-                    public Step_2(int number, string text, System.Guid id)
+                    public Step_2(in int number, in string text, in System.Guid id)
                     {
                         _number__parameter = number;
                         _text__parameter = text;
                         _id__parameter = id;
                     }
 
-                    public MyBuildTarget Regex(System.Text.RegularExpressions.Regex regex)
+                    public MyBuildTarget Regex(in System.Text.RegularExpressions.Regex regex)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, _id__parameter, regex);
                     }

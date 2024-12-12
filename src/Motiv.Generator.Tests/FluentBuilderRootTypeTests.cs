@@ -39,7 +39,7 @@ public class FluentBuilderRootTypeTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget Value(int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -93,7 +93,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial record Factory
                 {
-                    public MyBuildTarget Value(int value)
+                    public MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -147,7 +147,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial struct Factory
                 {
-                    public MyBuildTarget Value(int value)
+                    public MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -186,7 +186,7 @@ public class FluentBuilderRootTypeTests
             public class MyBuildTarget
             {
                 [Motiv.Generator.Attributes.GenerateFluentBuilder("Test.Factory")]
-                public MyBuildTarget(int value)
+                public MyBuildTarget(in int value)
                 {
                     Value = value;
                 }
@@ -203,7 +203,7 @@ public class FluentBuilderRootTypeTests
             {
                 public partial record struct Factory
                 {
-                    public MyBuildTarget Value(int value)
+                    public MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }

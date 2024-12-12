@@ -47,12 +47,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             {
                 public static partial class Factory
                 {
-                    public static MyBuildTarget<T> Value1<T>(T value1)
+                    public static MyBuildTarget<T> Value1<T>(in T value1)
                     {
                         return new MyBuildTarget<T>(value1);
                     }
 
-                    public static Step_0 Value1(string value1)
+                    public static Step_0 Value1(in string value1)
                     {
                         return new Step_0(value1);
                     }
@@ -61,12 +61,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_0
                 {
                     private readonly string _value1__parameter;
-                    public Step_0(string value1)
+                    public Step_0(in string value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget Value2(string value2)
+                    public MyBuildTarget Value2(in string value2)
                     {
                         return new MyBuildTarget(_value1__parameter, value2);
                     }
@@ -139,12 +139,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> Value1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
 
-                    public static Step_1 String1(string string1)
+                    public static Step_1 String1(in string string1)
                     {
                         return new Step_1(string1);
                     }
@@ -153,12 +153,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget<T1, T2> Value2<T2>(T2 value2)
+                    public MyBuildTarget<T1, T2> Value2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -167,12 +167,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_1
                 {
                     private readonly string _string1__parameter;
-                    public Step_1(string string1)
+                    public Step_1(in string string1)
                     {
                         _string1__parameter = string1;
                     }
 
-                    public Step_2 String2(string string2)
+                    public Step_2 String2(in string string2)
                     {
                         return new Step_2(_string1__parameter, string2);
                     }
@@ -182,13 +182,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 {
                     private readonly string _string1__parameter;
                     private readonly string _string2__parameter;
-                    public Step_2(string string1, string string2)
+                    public Step_2(in string string1, in string string2)
                     {
                         _string1__parameter = string1;
                         _string2__parameter = string2;
                     }
 
-                    public MyBuildTarget String3(string string3)
+                    public MyBuildTarget String3(in string string3)
                     {
                         return new MyBuildTarget(_string1__parameter, _string2__parameter, string3);
                     }
@@ -254,7 +254,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> Value1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
@@ -263,17 +263,17 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public Step_1<T1> Value2(string value2)
+                    public Step_1<T1> Value2(in string value2)
                     {
                         return new Step_1<T1>(_value1__parameter, value2);
                     }
 
-                    public MyBuildTarget<T1, T2> Value3<T2>(T2 value3)
+                    public MyBuildTarget<T1, T2> Value3<T2>(in T2 value3)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value3);
                     }
@@ -283,13 +283,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 {
                     private readonly T1 _value1__parameter;
                     private readonly string _value2__parameter;
-                    public Step_1(T1 value1, string value2)
+                    public Step_1(in T1 value1, in string value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2> Value3<T2>(T2 value3)
+                    public MyBuildTarget<T1, T2> Value3<T2>(in T2 value3)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -350,12 +350,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             {
                 public static partial class Factory
                 {
-                    public static Step_0<T1> Value1<T1>(T1 value1)
+                    public static Step_0<T1> Value1<T1>(in T1 value1)
                     {
                         return new Step_0<T1>(value1);
                     }
 
-                    public static Step_1<T2> Value2<T2>(T2 value2)
+                    public static Step_1<T2> Value2<T2>(in T2 value2)
                     {
                         return new Step_1<T2>(value2);
                     }
@@ -364,12 +364,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_0<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(T1 value1)
+                    public Step_0(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
-                    public MyBuildTarget<T1, T2> Value2<T2>(T2 value2)
+                    public MyBuildTarget<T1, T2> Value2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -378,12 +378,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public struct Step_1<T2>
                 {
                     private readonly T2 _value2__parameter;
-                    public Step_1(T2 value2)
+                    public Step_1(in T2 value2)
                     {
                         _value2__parameter = value2;
                     }
 
-                    public MyBuildTarget<T1, T2> Value1<T1>(T1 value1)
+                    public MyBuildTarget<T1, T2> Value1<T1>(in T1 value1)
                     {
                         return new MyBuildTarget<T1, T2>(_value2__parameter, value1);
                     }
