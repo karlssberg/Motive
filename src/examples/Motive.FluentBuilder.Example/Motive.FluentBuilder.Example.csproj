@@ -21,9 +21,4 @@
                         ReferenceOutputAssembly="false" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Generated\" />
-      <Folder Include="Generated\Motiv.Generator\" />
-    </ItemGroup>
-
 </Project>

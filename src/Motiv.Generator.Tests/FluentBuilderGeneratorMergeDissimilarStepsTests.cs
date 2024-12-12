@@ -528,4 +528,115 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             }
         }.RunAsync();
     }
+
+    [Fact]
+    public async Task Should_merge_generated_when_applied_to_record_constructors_with_divergence_from_the_second_step()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [GenerateFluentFactory("Test.Shape")]
+            public record Rectangle(int Width, int Height)
+            {
+                public int Width { get; set; } = Width;
+                public int Height { get; set; } = Height;
+            }
+
+            [GenerateFluentFactory("Test.Shape")]
+            public record Cuboid(int Width, int Height, int Depth)
+            {
+                public int Width { get; set; } = Width;
+                public int Height { get; set; } = Height;
+                public int Depth { get; set; } = Depth;
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            namespace Test
+            {
+                public static partial class Shape
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0 Width(in int width)
+                    {
+                        return new Step_0(width);
+                    }
+                }
+
+                public struct Step_0
+                {
+                    private readonly int _width__parameter;
+                    public Step_0(in int width)
+                    {
+                        _width__parameter = width;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1 Height(in int height)
+                    {
+                        return new Step_1(_width__parameter, height);
+                    }
+                }
+
+                public struct Step_1
+                {
+                    private readonly int _width__parameter;
+                    private readonly int _height__parameter;
+                    public Step_1(in int width, in int height)
+                    {
+                        _width__parameter = width;
+                        _height__parameter = height;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Rectangle Create()
+                    {
+                        return new Rectangle(_width__parameter, _height__parameter);
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_2 Depth(in int depth)
+                    {
+                        return new Step_2(_width__parameter, _height__parameter, depth);
+                    }
+                }
+
+                public struct Step_2
+                {
+                    private readonly int _width__parameter;
+                    private readonly int _height__parameter;
+                    private readonly int _depth__parameter;
+                    public Step_2(in int width, in int height, in int depth)
+                    {
+                        _width__parameter = width;
+                        _height__parameter = height;
+                        _depth__parameter = depth;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Cuboid Create()
+                    {
+                        return new Cuboid(_width__parameter, _height__parameter, _depth__parameter);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Shape.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
 }

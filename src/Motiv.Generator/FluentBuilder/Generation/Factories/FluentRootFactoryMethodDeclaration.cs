@@ -13,7 +13,7 @@ public static class FluentRootFactoryMethodDeclaration
         FluentBuilderMethod method,
         IMethodSymbol constructor)
     {
-        var identifierNameSyntaxes = method.ConstructorParameters
+        var identifierNameSyntaxes = method.KnownConstructorParameters
             .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
             .AppendIfNotNull(
                 method.SourceParameterSymbol is not null

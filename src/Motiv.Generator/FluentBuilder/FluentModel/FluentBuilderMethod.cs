@@ -14,7 +14,7 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
 
     public IMethodSymbol? Constructor { get; set; }
 
-    public ImmutableArray<IParameterSymbol> ConstructorParameters { get; set; } = ImmutableArray<IParameterSymbol>.Empty;
+    public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = ImmutableArray<IParameterSymbol>.Empty;
 
     private sealed class FluentBuilderMethodEqualityComparer : IEqualityComparer<FluentBuilderMethod>
     {
@@ -25,8 +25,10 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
             if (y is null) return false;
             if (x.GetType() != y.GetType()) return false;
             if (x.MethodName != y.MethodName) return false;
-            if (!x.ConstructorParameters.SequenceEqual(y.ConstructorParameters)) return false;
-
+            if (!x.KnownConstructorParameters
+                    .Select(p => (p.Type, p.Name))
+                    .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type, p.Name))))
+                return false;
 
             if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
             if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
@@ -36,26 +38,23 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
             return SymbolEqualityComparer.Default.Equals(x.SourceParameterSymbol?.Type, y.SourceParameterSymbol?.Type);
         }
 
-        private static bool Equals(ITypeSymbol x, ITypeSymbol y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (SymbolEqualityComparer.Default.Equals(x, y)) return true;
-            return x.IsOpenGenericType()
-                   && y.IsOpenGenericType()
-                   && x.Name == y.Name;
-        }
-
         public int GetHashCode(FluentBuilderMethod obj)
         {
-            var hash = obj.ConstructorParameters.GetHashCode() * 397
-                                    ^ obj.MethodName.GetHashCode() * 397;
+            var hash = obj.KnownConstructorParameters
+                .Select(p => (p.Type, p.Name))
+                .Aggregate(
+                    101,
+                    (left, right) =>
+                        left * 397 ^ SymbolEqualityComparer.Default.GetHashCode(right.Type) * 397 ^ right.Name.GetHashCode());
+
+            hash = hash * 397 ^ obj.MethodName.GetHashCode();
 
             if (obj.SourceParameterSymbol is null)
                 return hash;
 
             return obj.SourceParameterSymbol.Type.IsOpenGenericType()
-                ? hash ^ obj.SourceParameterSymbol.Type.ToString().GetHashCode()
-                : hash ^ SymbolEqualityComparer.Default.GetHashCode(obj.SourceParameterSymbol.Type);
+                ? hash * 397 ^ obj.SourceParameterSymbol.Type.ToString().GetHashCode()
+                : hash * 397 ^ SymbolEqualityComparer.Default.GetHashCode(obj.SourceParameterSymbol.Type);
         }
     }
 

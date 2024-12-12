@@ -100,7 +100,7 @@ public static class FluentModelFactory
             {
                 SourceParameterSymbol = method.SourceParameter,
                 Constructor = constructorContext.Constructor,
-                ConstructorParameters = constructorParameters,
+                KnownConstructorParameters = constructorParameters,
             };
 
         var fluentBuilderStep = new FluentBuilderStep
@@ -128,7 +128,7 @@ public static class FluentModelFactory
                 new FluentBuilderMethod("Create", nextStep)
                 {
                     Constructor = constructorContext.Constructor,
-                    ConstructorParameters = constructorContext.Constructor.Parameters,
+                    KnownConstructorParameters = constructorContext.Constructor.Parameters,
                 }
             ]
         };
