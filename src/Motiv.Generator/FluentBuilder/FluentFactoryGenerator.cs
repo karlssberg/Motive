@@ -20,9 +20,8 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         //AttachDebugger();
         var compilationProvider = context.CompilationProvider;
 
-        // Step 1: Find all FluentConstructors
         var typeOrConstructorDeclarations = context.SyntaxProvider
-            .CreateSyntaxProvider(
+            .ForAttributeWithMetadataName(FluentFactoryConstructorAttributeFullName,
                 predicate: (node, _) => node switch
                 {
                     TypeDeclarationSyntax { ParameterList: not null, AttributeLists.Count: > 0 } => true,
@@ -31,10 +30,11 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 },
                 transform: (ctx, token) =>
                 {
-                    var syntax = ctx.Node;
+                    var syntax = ctx.TargetNode;
                     var filePath = syntax.SyntaxTree.FilePath;
                     return (syntax, filePath);
-                });
+                }
+            );
 
         // Step 2: Gather all discovered candidate constructors
         var constructorModels = typeOrConstructorDeclarations
