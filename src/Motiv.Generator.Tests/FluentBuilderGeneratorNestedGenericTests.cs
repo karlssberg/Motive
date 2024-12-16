@@ -40,7 +40,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget<T> Value<T>(in System.Func<T, bool> value)
+                    public static MyBuildTarget<T> WithValue<T>(in System.Func<T, bool> value)
                     {
                         return new MyBuildTarget<T>(value);
                     }
@@ -102,7 +102,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in System.Func<T1, bool> value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
@@ -117,7 +117,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
+                    public MyBuildTarget<T1, T2> WithValue2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -183,7 +183,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in System.Func<T1, bool> value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in System.Func<T1, bool> value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
@@ -198,7 +198,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
+                    public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
@@ -215,7 +215,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2, T3> Value3<T3>(in System.Func<System.Func<T1, bool>, T3> value3)
+                    public MyBuildTarget<T1, T2, T3> WithValue3<T3>(in System.Func<System.Func<T1, bool>, T3> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -279,7 +279,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value1)
+                    public static Step_0__Test_Factory<T1, T2> WithValue1<T1, T2>(in System.Func<T1, T2> value1)
                     {
                         return new Step_0__Test_Factory<T1, T2>(value1);
                     }
@@ -294,7 +294,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory<T1, T2, T3, T4> Value2<T3, T4>(in System.Func<T3, T4> value2)
+                    public Step_1__Test_Factory<T1, T2, T3, T4> WithValue2<T3, T4>(in System.Func<T3, T4> value2)
                     {
                         return new Step_1__Test_Factory<T1, T2, T3, T4>(_value1__parameter, value2);
                     }
@@ -311,7 +311,7 @@ public class FluentBuilderGeneratorNestedGenericTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2, T3, T4, T5, T6> Value3<T5, T6>(in System.Func<T5, T6> value3)
+                    public MyBuildTarget<T1, T2, T3, T4, T5, T6> WithValue3<T5, T6>(in System.Func<T5, T6> value3)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4, T5, T6>(_value1__parameter, _value2__parameter, value3);
                     }

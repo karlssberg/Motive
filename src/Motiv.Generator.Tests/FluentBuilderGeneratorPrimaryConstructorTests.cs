@@ -1,5 +1,4 @@
-﻿using Motiv.Generator.Attributes;
-using Motiv.Generator.FluentBuilder;
+﻿using Motiv.Generator.FluentBuilder;
 using VerifyCS =
     Motiv.Generator.Tests.CSharpSourceGeneratorVerifier<Motiv.Generator.FluentBuilder.FluentFactoryGenerator>;
 
@@ -36,7 +35,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -85,7 +84,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory Number(in int number)
+                    public static Step_0__Test_Factory WithNumber(in int number)
                     {
                         return new Step_0__Test_Factory(number);
                     }
@@ -100,7 +99,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Text(in string text)
+                    public MyBuildTarget WithText(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
                     }
@@ -152,7 +151,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory Number(in int number)
+                    public static Step_0__Test_Factory WithNumber(in int number)
                     {
                         return new Step_0__Test_Factory(number);
                     }
@@ -167,7 +166,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Text(in string text)
+                    public MyBuildTarget WithText(in string text)
                     {
                         return new MyBuildTarget(_number__parameter, text);
                     }
@@ -224,7 +223,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory Number(in int number)
+                    public static Step_0__Test_Factory WithNumber(in int number)
                     {
                         return new Step_0__Test_Factory(number);
                     }
@@ -239,7 +238,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory Text(in string text)
+                    public Step_1__Test_Factory WithText(in string text)
                     {
                         return new Step_1__Test_Factory(_number__parameter, text);
                     }
@@ -256,7 +255,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Id(in System.Guid id)
+                    public MyBuildTarget WithId(in System.Guid id)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, id);
                     }
@@ -318,7 +317,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory Number(in int number)
+                    public static Step_0__Test_Factory WithNumber(in int number)
                     {
                         return new Step_0__Test_Factory(number);
                     }
@@ -333,7 +332,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory Text(in string text)
+                    public Step_1__Test_Factory WithText(in string text)
                     {
                         return new Step_1__Test_Factory(_number__parameter, text);
                     }
@@ -350,7 +349,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory Id(in System.Guid id)
+                    public Step_2__Test_Factory WithId(in System.Guid id)
                     {
                         return new Step_2__Test_Factory(_number__parameter, _text__parameter, id);
                     }
@@ -369,7 +368,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Regex(in System.Text.RegularExpressions.Regex regex)
+                    public MyBuildTarget WithRegex(in System.Text.RegularExpressions.Regex regex)
                     {
                         return new MyBuildTarget(_number__parameter, _text__parameter, _id__parameter, regex);
                     }

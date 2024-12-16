@@ -39,7 +39,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -90,7 +90,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -145,7 +145,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -195,7 +195,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -250,7 +250,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -300,7 +300,7 @@ public class FluentBuilderGeneratorTargetTypeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in int value)
+                    public static MyBuildTarget WithValue(in int value)
                     {
                         return new MyBuildTarget(value);
                     }

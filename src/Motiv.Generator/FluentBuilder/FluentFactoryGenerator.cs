@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -26,8 +25,8 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             .CreateSyntaxProvider(
                 predicate: (node, _) => node switch
                 {
-                    TypeDeclarationSyntax { ParameterList: not null } type => type.AttributeLists.Count > 0,
-                    ConstructorDeclarationSyntax ctor => ctor.AttributeLists.Count > 0,
+                    TypeDeclarationSyntax { ParameterList: not null, AttributeLists.Count: > 0 } => true,
+                    ConstructorDeclarationSyntax { AttributeLists.Count: > 0 } => true,
                     _ => false
                 },
                 transform: (ctx, token) =>
@@ -100,8 +99,11 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 })
         ];
 
-
-        ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(INamedTypeSymbol type, string nameSpace, ISymbol alreadyDeclaredRootType, FluentFactoryMetadata metadata)
+        ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(
+            INamedTypeSymbol type,
+            string nameSpace,
+            ISymbol alreadyDeclaredRootType,
+            FluentFactoryMetadata metadata)
         {
             var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
             if (primaryCtor != null)

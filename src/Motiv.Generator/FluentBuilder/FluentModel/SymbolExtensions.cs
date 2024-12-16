@@ -20,6 +20,6 @@ public static class SymbolExtensions
             return attribute.ConstructorArguments[0].Value?.ToString() ?? string.Empty;
         }
 
-        return parameterSymbol.Name.Capitalize();
+        return $"With{parameterSymbol.Name.Capitalize()}";
     }
 }

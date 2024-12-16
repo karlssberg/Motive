@@ -54,13 +54,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget<T> Value1<T>(in T value1)
+                    public static MyBuildTarget<T> WithValue1<T>(in T value1)
                     {
                         return new MyBuildTarget<T>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory Value1(in string value1)
+                    public static Step_0__Test_Factory WithValue1(in string value1)
                     {
                         return new Step_0__Test_Factory(value1);
                     }
@@ -75,7 +75,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value2(in string value2)
+                    public MyBuildTarget WithValue2(in string value2)
                     {
                         return new MyBuildTarget(_value1__parameter, value2);
                     }
@@ -155,13 +155,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1__Test_Factory String1(in string string1)
+                    public static Step_1__Test_Factory WithString1(in string string1)
                     {
                         return new Step_1__Test_Factory(string1);
                     }
@@ -176,7 +176,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_2__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
@@ -191,7 +191,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3__Test_Factory String2(in string string2)
+                    public Step_3__Test_Factory WithString2(in string string2)
                     {
                         return new Step_3__Test_Factory(_string1__parameter, string2);
                     }
@@ -225,7 +225,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_4__Test_Factory String3(in string string3)
+                    public Step_4__Test_Factory WithString3(in string string3)
                     {
                         return new Step_4__Test_Factory(_string1__parameter, _string2__parameter, string3);
                     }
@@ -317,7 +317,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
@@ -332,13 +332,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory<T1> Value2(in string value2)
+                    public Step_1__Test_Factory<T1> WithValue2(in string value2)
                     {
                         return new Step_1__Test_Factory<T1>(_value1__parameter, value2);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory<T1, T2> Value3<T2>(in T2 value3)
+                    public Step_2__Test_Factory<T1, T2> WithValue3<T2>(in T2 value3)
                     {
                         return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value3);
                     }
@@ -355,7 +355,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3__Test_Factory<T1, T2> Value3<T2>(in T2 value3)
+                    public Step_3__Test_Factory<T1, T2> WithValue3<T2>(in T2 value3)
                     {
                         return new Step_3__Test_Factory<T1, T2>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -459,13 +459,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1__Test_Factory<T2> Value2<T2>(in T2 value2)
+                    public static Step_1__Test_Factory<T2> WithValue2<T2>(in T2 value2)
                     {
                         return new Step_1__Test_Factory<T2>(value2);
                     }
@@ -480,7 +480,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_2__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
@@ -495,7 +495,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3__Test_Factory<T2, T1> Value1<T1>(in T1 value1)
+                    public Step_3__Test_Factory<T2, T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_3__Test_Factory<T2, T1>(_value2__parameter, value1);
                     }
@@ -589,7 +589,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Shape
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Shape Width(in int width)
+                    public static Step_0__Test_Shape WithWidth(in int width)
                     {
                         return new Step_0__Test_Shape(width);
                     }
@@ -604,7 +604,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Shape Height(in int height)
+                    public Step_1__Test_Shape WithHeight(in int height)
                     {
                         return new Step_1__Test_Shape(_width__parameter, height);
                     }
@@ -627,7 +627,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Shape Depth(in int depth)
+                    public Step_2__Test_Shape WithDepth(in int depth)
                     {
                         return new Step_2__Test_Shape(_width__parameter, _height__parameter, depth);
                     }

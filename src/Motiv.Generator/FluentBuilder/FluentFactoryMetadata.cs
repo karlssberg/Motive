@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace Motiv.Generator.FluentBuilder;
+﻿namespace Motiv.Generator.FluentBuilder;
 
 public record FluentFactoryMetadata
 {

@@ -126,13 +126,13 @@ public class FluentBuilderGeneratorMergeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1__Test_Factory Value1(in string value1)
+                    public static Step_1__Test_Factory WithValue1(in string value1)
                     {
                         return new Step_1__Test_Factory(value1);
                     }
@@ -147,7 +147,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2> Value2<T2>(in T2 value2)
+                    public MyBuildTarget<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
@@ -162,7 +162,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value2(in string value2)
+                    public MyBuildTarget WithValue2(in string value2)
                     {
                         return new MyBuildTarget(_value1__parameter, value2);
                     }
@@ -238,7 +238,7 @@ public class FluentBuilderGeneratorMergeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
@@ -253,13 +253,13 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2> Value2<T2>(in T2 value2)
+                    public MyBuildTarget<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1> Value2(in string value2)
+                    public MyBuildTarget<T1> WithValue2(in string value2)
                     {
                         return new MyBuildTarget<T1>(_value1__parameter, value2);
                     }
@@ -343,13 +343,13 @@ public class FluentBuilderGeneratorMergeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1__Test_Factory Value1(in string value1)
+                    public static Step_1__Test_Factory WithValue1(in string value1)
                     {
                         return new Step_1__Test_Factory(value1);
                     }
@@ -364,7 +364,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_2__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
@@ -379,7 +379,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3__Test_Factory Value2(in string value2)
+                    public Step_3__Test_Factory WithValue2(in string value2)
                     {
                         return new Step_3__Test_Factory(_value1__parameter, value2);
                     }
@@ -396,7 +396,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2, T3> Value3<T3>(in T3 value3)
+                    public MyBuildTarget<T1, T2, T3> WithValue3<T3>(in T3 value3)
                     {
                         return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -413,7 +413,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value3(in string value3)
+                    public MyBuildTarget WithValue3(in string value3)
                     {
                         return new MyBuildTarget(_value1__parameter, _value2__parameter, value3);
                     }
@@ -505,7 +505,7 @@ public class FluentBuilderGeneratorMergeTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> WithValue1<T1>(in T1 value1)
                     {
                         return new Step_0__Test_Factory<T1>(value1);
                     }
@@ -520,13 +520,13 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
                         return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Factory<T1> Value2(in string value2)
+                    public Step_2__Test_Factory<T1> WithValue2(in string value2)
                     {
                         return new Step_2__Test_Factory<T1>(_value1__parameter, value2);
                     }
@@ -543,7 +543,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3__Test_Factory<T1, T2, T3> Value3<T3>(in T3 value3)
+                    public Step_3__Test_Factory<T1, T2, T3> WithValue3<T3>(in T3 value3)
                     {
                         return new Step_3__Test_Factory<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -560,7 +560,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_4__Test_Factory<T1> Value3(in string value3)
+                    public Step_4__Test_Factory<T1> WithValue3(in string value3)
                     {
                         return new Step_4__Test_Factory<T1>(_value1__parameter, _value2__parameter, value3);
                     }
@@ -579,7 +579,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2, T3, T4> Value4<T4>(in T4 value4)
+                    public MyBuildTarget<T1, T2, T3, T4> WithValue4<T4>(in T4 value4)
                     {
                         return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
                     }
@@ -598,7 +598,7 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1> Value4(in string value4)
+                    public MyBuildTarget<T1> WithValue4(in string value4)
                     {
                         return new MyBuildTarget<T1>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
                     }
@@ -638,8 +638,8 @@ public class FluentBuilderGeneratorMergeTests
                 [FluentConstructor(typeof(Factory))]
                 [FluentConstructor(typeof(MyBuildTarget))]
                 public MyBuildTarget(
-                    [FluentMethod("WithValue1")]string value1,
-                    [FluentMethod("WithValue2")]string value2)
+                    string value1,
+                    string value2)
                 {
                     Value1 = value1;
                     Value2 = value2;

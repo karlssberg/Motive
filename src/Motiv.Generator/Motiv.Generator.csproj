@@ -11,8 +11,6 @@
     <PropertyGroup>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsRoslynComponent>true</IsRoslynComponent>
-    </PropertyGroup>
-    <PropertyGroup>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <AnalyzerLanguage>cs</AnalyzerLanguage>
     </PropertyGroup>
