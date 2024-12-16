@@ -20,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Generated\" />
       <Folder Include="obj\" />
     </ItemGroup>
 </Project>

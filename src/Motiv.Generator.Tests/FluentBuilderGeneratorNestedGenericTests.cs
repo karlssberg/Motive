@@ -102,16 +102,16 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
+                    public static Step_0__Test_Factory<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
-                        return new Step_0<T1>(value1);
+                        return new Step_0__Test_Factory<T1>(value1);
                     }
                 }
 
-                public struct Step_0<T1>
+                public struct Step_0__Test_Factory<T1>
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
-                    public Step_0(in System.Func<T1, bool> value1)
+                    public Step_0__Test_Factory(in System.Func<T1, bool> value1)
                     {
                         _value1__parameter = value1;
                     }
@@ -183,32 +183,32 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1> Value1<T1>(in System.Func<T1, bool> value1)
+                    public static Step_0__Test_Factory<T1> Value1<T1>(in System.Func<T1, bool> value1)
                     {
-                        return new Step_0<T1>(value1);
+                        return new Step_0__Test_Factory<T1>(value1);
                     }
                 }
 
-                public struct Step_0<T1>
+                public struct Step_0__Test_Factory<T1>
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
-                    public Step_0(in System.Func<T1, bool> value1)
+                    public Step_0__Test_Factory(in System.Func<T1, bool> value1)
                     {
                         _value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
+                    public Step_1__Test_Factory<T1, T2> Value2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
-                        return new Step_1<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
                 }
 
-                public struct Step_1<T1, T2>
+                public struct Step_1__Test_Factory<T1, T2>
                 {
                     private readonly System.Func<T1, bool> _value1__parameter;
                     private readonly System.Collections.Generic.IEnumerable<T2> _value2__parameter;
-                    public Step_1(in System.Func<T1, bool> value1, in System.Collections.Generic.IEnumerable<T2> value2)
+                    public Step_1__Test_Factory(in System.Func<T1, bool> value1, in System.Collections.Generic.IEnumerable<T2> value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
@@ -279,32 +279,32 @@ public class FluentBuilderGeneratorNestedGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value1)
+                    public static Step_0__Test_Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value1)
                     {
-                        return new Step_0<T1, T2>(value1);
+                        return new Step_0__Test_Factory<T1, T2>(value1);
                     }
                 }
 
-                public struct Step_0<T1, T2>
+                public struct Step_0__Test_Factory<T1, T2>
                 {
                     private readonly System.Func<T1, T2> _value1__parameter;
-                    public Step_0(in System.Func<T1, T2> value1)
+                    public Step_0__Test_Factory(in System.Func<T1, T2> value1)
                     {
                         _value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1<T1, T2, T3, T4> Value2<T3, T4>(in System.Func<T3, T4> value2)
+                    public Step_1__Test_Factory<T1, T2, T3, T4> Value2<T3, T4>(in System.Func<T3, T4> value2)
                     {
-                        return new Step_1<T1, T2, T3, T4>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2, T3, T4>(_value1__parameter, value2);
                     }
                 }
 
-                public struct Step_1<T1, T2, T3, T4>
+                public struct Step_1__Test_Factory<T1, T2, T3, T4>
                 {
                     private readonly System.Func<T1, T2> _value1__parameter;
                     private readonly System.Func<T3, T4> _value2__parameter;
-                    public Step_1(in System.Func<T1, T2> value1, in System.Func<T3, T4> value2)
+                    public Step_1__Test_Factory(in System.Func<T1, T2> value1, in System.Func<T3, T4> value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;

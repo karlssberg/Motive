@@ -33,7 +33,7 @@ public static class FluentModelFactory
 
         foreach (var (step, index) in fluentBuilderSteps.Select((step, index) => (step, index)))
         {
-            step.Name = $"Step_{index}";
+            step.Name = $"Step_{index}__{fullname.Replace(".", "_")}";
         }
 
         var fluentBuilderMethods = mergedFluentBuilderSteps

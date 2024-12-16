@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -39,7 +40,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         // Step 2: Gather all discovered candidate constructors
         var constructorModels = typeOrConstructorDeclarations
             .Combine(compilationProvider)
-            .Select((data, ct) => CreateConstructorModels(data.Left.syntax, data.Left.filePath, data.Right, ct))
+            .SelectMany((data, ct) => CreateConstructorModels(data.Left.syntax, data.Left.filePath, data.Right, ct))
             .WithTrackingName("ConstructorModelCreation");
 
         // Step 3: Convert to a model of the fluent steps
@@ -58,7 +59,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(consolidated, GenerateDispatcher);
     }
 
-    private static ImmutableArray<FluentConstructorContext> CreateConstructorModels(
+    private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorModels(
         SyntaxNode syntax,
         string filePath,
         Compilation compilation,
@@ -72,29 +73,35 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         if (symbol == null)
             return [];
 
-        var metadata = GetFluentFactoryMetadata(symbol, semanticModel);
-        var attributePresent = metadata.AttributePresent;
-        var rootTypeFullName = metadata.RootTypeFullName;
-        if (!attributePresent || string.IsNullOrWhiteSpace(rootTypeFullName))
-            return [];
+        return [..
+            GetFluentFactoryMetadata(symbol, semanticModel)
+                .Select(metadata =>
+                {
+                    var attributePresent = metadata.AttributePresent;
+                    var rootTypeFullName = metadata.RootTypeFullName;
+                    if (!attributePresent || string.IsNullOrWhiteSpace(rootTypeFullName))
+                        return [];
 
-        var lastIndexOf = rootTypeFullName.LastIndexOf('.');
-        var nameSpace = lastIndexOf == -1
-            ? rootTypeFullName
-            : rootTypeFullName.Substring(0, lastIndexOf);
+                    var lastIndexOf = rootTypeFullName.LastIndexOf('.');
+                    var nameSpace = lastIndexOf == -1
+                        ? rootTypeFullName
+                        : rootTypeFullName.Substring(0, lastIndexOf);
 
-        var alreadyDeclaredRootType = semanticModel.Compilation.GetTypeByMetadataName(rootTypeFullName);
-        if (!IsRootTypeDecoratedWithAttribute(alreadyDeclaredRootType))
-            return [];
+                    var alreadyDeclaredRootType = semanticModel.Compilation.GetTypeByMetadataName(rootTypeFullName);
+                    if (!IsRootTypeDecoratedWithAttribute(alreadyDeclaredRootType))
+                        return [];
 
-        return symbol switch
-        {
-            IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, alreadyDeclaredRootType, metadata)],
-            INamedTypeSymbol type => CreateFluentConstructorContexts(type),
-            _ => []
-        };
+                    return symbol switch
+                    {
+                        IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, alreadyDeclaredRootType, metadata)],
+                        INamedTypeSymbol type => CreateFluentConstructorContexts(type, nameSpace, alreadyDeclaredRootType!, metadata),
+                        _ => []
+                    };
+                })
+        ];
 
-        ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(INamedTypeSymbol type)
+
+        ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(INamedTypeSymbol type, string nameSpace, ISymbol alreadyDeclaredRootType, FluentFactoryMetadata metadata)
         {
             var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
             if (primaryCtor != null)
@@ -117,31 +124,33 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                    .Any(attr => attr.AttributeClass?.ToDisplayString() == FluentFactoryAttributeFullName);
     }
 
-    private static FluentFactoryMetadata GetFluentFactoryMetadata(ISymbol symbol, SemanticModel semanticModel)
+    private static IEnumerable<FluentFactoryMetadata> GetFluentFactoryMetadata(ISymbol symbol, SemanticModel semanticModel)
     {
-        var attribute = symbol.GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == FluentFactoryConstructorAttributeFullName);
+        return symbol.GetAttributes()
+            .Where(a => a.AttributeClass?.ToDisplayString() == FluentFactoryConstructorAttributeFullName)
+            .Select(attribute =>
+            {
+                if (attribute == null || attribute.ConstructorArguments.Length == 0)
+                    return FluentFactoryMetadata.Invalid;
 
-        if (attribute == null || attribute.ConstructorArguments.Length == 0)
-            return FluentFactoryMetadata.Invalid;
+                var typeArg = attribute.ConstructorArguments.FirstOrDefault();
+                if (typeArg.IsNull)
+                    return FluentFactoryMetadata.Invalid;
 
-        var typeArg = attribute.ConstructorArguments.FirstOrDefault();
-        if (typeArg.IsNull)
-            return FluentFactoryMetadata.Invalid;
+                if (typeArg.Value is not ITypeSymbol typeSymbol)
+                    return FluentFactoryMetadata.Invalid;
 
-        if (typeArg.Value is not ITypeSymbol typeSymbol)
-            return FluentFactoryMetadata.Invalid;
+                var namedAttributeArgument = attribute.NamedArguments
+                    .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentConstructorAttribute.Options))
+                    .Value;
+                var options = ConvertToFluentFactoryGeneratorOptions(namedAttributeArgument);
 
-        var namedAttributeArgument = attribute.NamedArguments
-            .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentConstructorAttribute.Options))
-            .Value;
-        var options = ConvertToFluentFactoryGeneratorOptions(namedAttributeArgument);
-
-        return new FluentFactoryMetadata
-        {
-            Options = options,
-            RootTypeFullName = typeSymbol.ToDisplayString()
-        };
+                return new FluentFactoryMetadata
+                {
+                    Options = options,
+                    RootTypeFullName = typeSymbol.ToDisplayString()
+                };
+            });
     }
 
     private static FluentFactoryGeneratorOptions ConvertToFluentFactoryGeneratorOptions(TypedConstant namedAttributeArgument)

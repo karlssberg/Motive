@@ -41,16 +41,16 @@ public class FluentBuilderGeneratorNonGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Value(in int value)
+                    public static Step_0__Test_Factory Value(in int value)
                     {
-                        return new Step_0(value);
+                        return new Step_0__Test_Factory(value);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Factory
                 {
                     private readonly int _value__parameter;
-                    public Step_0(in int value)
+                    public Step_0__Test_Factory(in int value)
                     {
                         _value__parameter = value;
                     }
@@ -116,16 +116,16 @@ public class FluentBuilderGeneratorNonGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Number(in int number)
+                    public static Step_0__Test_Factory Number(in int number)
                     {
-                        return new Step_0(number);
+                        return new Step_0__Test_Factory(number);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Factory
                 {
                     private readonly int _number__parameter;
-                    public Step_0(in int number)
+                    public Step_0__Test_Factory(in int number)
                     {
                         _number__parameter = number;
                     }
@@ -195,32 +195,32 @@ public class FluentBuilderGeneratorNonGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Number(in int number)
+                    public static Step_0__Test_Factory Number(in int number)
                     {
-                        return new Step_0(number);
+                        return new Step_0__Test_Factory(number);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Factory
                 {
                     private readonly int _number__parameter;
-                    public Step_0(in int number)
+                    public Step_0__Test_Factory(in int number)
                     {
                         _number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1 Text(in string text)
+                    public Step_1__Test_Factory Text(in string text)
                     {
-                        return new Step_1(_number__parameter, text);
+                        return new Step_1__Test_Factory(_number__parameter, text);
                     }
                 }
 
-                public struct Step_1
+                public struct Step_1__Test_Factory
                 {
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
-                    public Step_1(in int number, in string text)
+                    public Step_1__Test_Factory(in int number, in string text)
                     {
                         _number__parameter = number;
                         _text__parameter = text;
@@ -297,50 +297,50 @@ public class FluentBuilderGeneratorNonGenericTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Number(in int number)
+                    public static Step_0__Test_Factory Number(in int number)
                     {
-                        return new Step_0(number);
+                        return new Step_0__Test_Factory(number);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Factory
                 {
                     private readonly int _number__parameter;
-                    public Step_0(in int number)
+                    public Step_0__Test_Factory(in int number)
                     {
                         _number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1 Text(in string text)
+                    public Step_1__Test_Factory Text(in string text)
                     {
-                        return new Step_1(_number__parameter, text);
+                        return new Step_1__Test_Factory(_number__parameter, text);
                     }
                 }
 
-                public struct Step_1
+                public struct Step_1__Test_Factory
                 {
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
-                    public Step_1(in int number, in string text)
+                    public Step_1__Test_Factory(in int number, in string text)
                     {
                         _number__parameter = number;
                         _text__parameter = text;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2 Id(in System.Guid id)
+                    public Step_2__Test_Factory Id(in System.Guid id)
                     {
-                        return new Step_2(_number__parameter, _text__parameter, id);
+                        return new Step_2__Test_Factory(_number__parameter, _text__parameter, id);
                     }
                 }
 
-                public struct Step_2
+                public struct Step_2__Test_Factory
                 {
                     private readonly int _number__parameter;
                     private readonly string _text__parameter;
                     private readonly System.Guid _id__parameter;
-                    public Step_2(in int number, in string text, in System.Guid id)
+                    public Step_2__Test_Factory(in int number, in string text, in System.Guid id)
                     {
                         _number__parameter = number;
                         _text__parameter = text;

@@ -17,9 +17,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             namespace Test;
 
             [FluentFactory]
-            public static partial class Factory
-            {
-            }
+            public static partial class Factory;
 
             public class MyBuildTarget<T>
             {
@@ -62,16 +60,16 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Value1(in string value1)
+                    public static Step_0__Test_Factory Value1(in string value1)
                     {
-                        return new Step_0(value1);
+                        return new Step_0__Test_Factory(value1);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Factory
                 {
                     private readonly string _value1__parameter;
-                    public Step_0(in string value1)
+                    public Step_0__Test_Factory(in string value1)
                     {
                         _value1__parameter = value1;
                     }
@@ -109,9 +107,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             namespace Test;
 
             [FluentFactory]
-            public static partial class Factory
-            {
-            }
+            public static partial class Factory;
 
             public class MyBuildTarget<T1, T2>
             {
@@ -159,53 +155,53 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
                     {
-                        return new Step_0<T1>(value1);
+                        return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1 String1(in string string1)
+                    public static Step_1__Test_Factory String1(in string string1)
                     {
-                        return new Step_1(string1);
+                        return new Step_1__Test_Factory(string1);
                     }
                 }
 
-                public struct Step_0<T1>
+                public struct Step_0__Test_Factory<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(in T1 value1)
+                    public Step_0__Test_Factory(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_2__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
                     {
-                        return new Step_2<T1, T2>(_value1__parameter, value2);
+                        return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
                 }
 
-                public struct Step_1
+                public struct Step_1__Test_Factory
                 {
                     private readonly string _string1__parameter;
-                    public Step_1(in string string1)
+                    public Step_1__Test_Factory(in string string1)
                     {
                         _string1__parameter = string1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3 String2(in string string2)
+                    public Step_3__Test_Factory String2(in string string2)
                     {
-                        return new Step_3(_string1__parameter, string2);
+                        return new Step_3__Test_Factory(_string1__parameter, string2);
                     }
                 }
 
-                public struct Step_2<T1, T2>
+                public struct Step_2__Test_Factory<T1, T2>
                 {
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value2__parameter;
-                    public Step_2(in T1 value1, in T2 value2)
+                    public Step_2__Test_Factory(in T1 value1, in T2 value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
@@ -218,29 +214,29 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
                 }
 
-                public struct Step_3
+                public struct Step_3__Test_Factory
                 {
                     private readonly string _string1__parameter;
                     private readonly string _string2__parameter;
-                    public Step_3(in string string1, in string string2)
+                    public Step_3__Test_Factory(in string string1, in string string2)
                     {
                         _string1__parameter = string1;
                         _string2__parameter = string2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_4 String3(in string string3)
+                    public Step_4__Test_Factory String3(in string string3)
                     {
-                        return new Step_4(_string1__parameter, _string2__parameter, string3);
+                        return new Step_4__Test_Factory(_string1__parameter, _string2__parameter, string3);
                     }
                 }
 
-                public struct Step_4
+                public struct Step_4__Test_Factory
                 {
                     private readonly string _string1__parameter;
                     private readonly string _string2__parameter;
                     private readonly string _string3__parameter;
-                    public Step_4(in string string1, in string string2, in string string3)
+                    public Step_4__Test_Factory(in string string1, in string string2, in string string3)
                     {
                         _string1__parameter = string1;
                         _string2__parameter = string2;
@@ -280,9 +276,8 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             namespace Test;
 
             [FluentFactory]
-            public static partial class Factory
-            {
-            }
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
                 [FluentConstructor(typeof(Factory))]
@@ -322,55 +317,55 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
                     {
-                        return new Step_0<T1>(value1);
+                        return new Step_0__Test_Factory<T1>(value1);
                     }
                 }
 
-                public struct Step_0<T1>
+                public struct Step_0__Test_Factory<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(in T1 value1)
+                    public Step_0__Test_Factory(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1<T1> Value2(in string value2)
+                    public Step_1__Test_Factory<T1> Value2(in string value2)
                     {
-                        return new Step_1<T1>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1>(_value1__parameter, value2);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2<T1, T2> Value3<T2>(in T2 value3)
+                    public Step_2__Test_Factory<T1, T2> Value3<T2>(in T2 value3)
                     {
-                        return new Step_2<T1, T2>(_value1__parameter, value3);
+                        return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value3);
                     }
                 }
 
-                public struct Step_1<T1>
+                public struct Step_1__Test_Factory<T1>
                 {
                     private readonly T1 _value1__parameter;
                     private readonly string _value2__parameter;
-                    public Step_1(in T1 value1, in string value2)
+                    public Step_1__Test_Factory(in T1 value1, in string value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3<T1, T2> Value3<T2>(in T2 value3)
+                    public Step_3__Test_Factory<T1, T2> Value3<T2>(in T2 value3)
                     {
-                        return new Step_3<T1, T2>(_value1__parameter, _value2__parameter, value3);
+                        return new Step_3__Test_Factory<T1, T2>(_value1__parameter, _value2__parameter, value3);
                     }
                 }
 
-                public struct Step_2<T1, T2>
+                public struct Step_2__Test_Factory<T1, T2>
                 {
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value3__parameter;
-                    public Step_2(in T1 value1, in T2 value3)
+                    public Step_2__Test_Factory(in T1 value1, in T2 value3)
                     {
                         _value1__parameter = value1;
                         _value3__parameter = value3;
@@ -383,12 +378,12 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
                 }
 
-                public struct Step_3<T1, T2>
+                public struct Step_3__Test_Factory<T1, T2>
                 {
                     private readonly T1 _value1__parameter;
                     private readonly string _value2__parameter;
                     private readonly T2 _value3__parameter;
-                    public Step_3(in T1 value1, in string value2, in T2 value3)
+                    public Step_3__Test_Factory(in T1 value1, in string value2, in T2 value3)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
@@ -428,9 +423,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             namespace Test;
 
             [FluentFactory]
-            public static partial class Factory
-            {
-            }
+            public static partial class Factory;
 
             public class MyBuildTarget<T1, T2>
             {
@@ -466,53 +459,53 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0<T1> Value1<T1>(in T1 value1)
+                    public static Step_0__Test_Factory<T1> Value1<T1>(in T1 value1)
                     {
-                        return new Step_0<T1>(value1);
+                        return new Step_0__Test_Factory<T1>(value1);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_1<T2> Value2<T2>(in T2 value2)
+                    public static Step_1__Test_Factory<T2> Value2<T2>(in T2 value2)
                     {
-                        return new Step_1<T2>(value2);
+                        return new Step_1__Test_Factory<T2>(value2);
                     }
                 }
 
-                public struct Step_0<T1>
+                public struct Step_0__Test_Factory<T1>
                 {
                     private readonly T1 _value1__parameter;
-                    public Step_0(in T1 value1)
+                    public Step_0__Test_Factory(in T1 value1)
                     {
                         _value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2<T1, T2> Value2<T2>(in T2 value2)
+                    public Step_2__Test_Factory<T1, T2> Value2<T2>(in T2 value2)
                     {
-                        return new Step_2<T1, T2>(_value1__parameter, value2);
+                        return new Step_2__Test_Factory<T1, T2>(_value1__parameter, value2);
                     }
                 }
 
-                public struct Step_1<T2>
+                public struct Step_1__Test_Factory<T2>
                 {
                     private readonly T2 _value2__parameter;
-                    public Step_1(in T2 value2)
+                    public Step_1__Test_Factory(in T2 value2)
                     {
                         _value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_3<T2, T1> Value1<T1>(in T1 value1)
+                    public Step_3__Test_Factory<T2, T1> Value1<T1>(in T1 value1)
                     {
-                        return new Step_3<T2, T1>(_value2__parameter, value1);
+                        return new Step_3__Test_Factory<T2, T1>(_value2__parameter, value1);
                     }
                 }
 
-                public struct Step_2<T1, T2>
+                public struct Step_2__Test_Factory<T1, T2>
                 {
                     private readonly T1 _value1__parameter;
                     private readonly T2 _value2__parameter;
-                    public Step_2(in T1 value1, in T2 value2)
+                    public Step_2__Test_Factory(in T1 value1, in T2 value2)
                     {
                         _value1__parameter = value1;
                         _value2__parameter = value2;
@@ -525,11 +518,11 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
                 }
 
-                public struct Step_3<T2, T1>
+                public struct Step_3__Test_Factory<T2, T1>
                 {
                     private readonly T2 _value2__parameter;
                     private readonly T1 _value1__parameter;
-                    public Step_3(in T2 value2, in T1 value1)
+                    public Step_3__Test_Factory(in T2 value2, in T1 value1)
                     {
                         _value2__parameter = value2;
                         _value1__parameter = value1;
@@ -596,32 +589,32 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Shape
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0 Width(in int width)
+                    public static Step_0__Test_Shape Width(in int width)
                     {
-                        return new Step_0(width);
+                        return new Step_0__Test_Shape(width);
                     }
                 }
 
-                public struct Step_0
+                public struct Step_0__Test_Shape
                 {
                     private readonly int _width__parameter;
-                    public Step_0(in int width)
+                    public Step_0__Test_Shape(in int width)
                     {
                         _width__parameter = width;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1 Height(in int height)
+                    public Step_1__Test_Shape Height(in int height)
                     {
-                        return new Step_1(_width__parameter, height);
+                        return new Step_1__Test_Shape(_width__parameter, height);
                     }
                 }
 
-                public struct Step_1
+                public struct Step_1__Test_Shape
                 {
                     private readonly int _width__parameter;
                     private readonly int _height__parameter;
-                    public Step_1(in int width, in int height)
+                    public Step_1__Test_Shape(in int width, in int height)
                     {
                         _width__parameter = width;
                         _height__parameter = height;
@@ -634,18 +627,18 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2 Depth(in int depth)
+                    public Step_2__Test_Shape Depth(in int depth)
                     {
-                        return new Step_2(_width__parameter, _height__parameter, depth);
+                        return new Step_2__Test_Shape(_width__parameter, _height__parameter, depth);
                     }
                 }
 
-                public struct Step_2
+                public struct Step_2__Test_Shape
                 {
                     private readonly int _width__parameter;
                     private readonly int _height__parameter;
                     private readonly int _depth__parameter;
-                    public Step_2(in int width, in int height, in int depth)
+                    public Step_2__Test_Shape(in int width, in int height, in int depth)
                     {
                         _width__parameter = width;
                         _height__parameter = height;
