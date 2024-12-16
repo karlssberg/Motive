@@ -9,9 +9,12 @@ public record FluentBuilderFile(
     ImmutableArray<FluentBuilderStep> FluentSteps,
     ImmutableArray<INamespaceSymbol> Usings)
 {
-    public string Name { get; } = FullName.Substring(FullName.LastIndexOf('.') + 1);
-    public string NameSpace { get; } = FullName.Substring(0, FullName.LastIndexOf('.'));
+    public string Name { get; } = GetName(FullName);
+
+    public string Namespace { get; } = GetNamespace(FullName);
+
     public ImmutableArray<FluentBuilderMethod> FluentMethods { get; set; } = FluentMethods;
+
     public ImmutableArray<FluentBuilderStep> FluentSteps { get; set; } = FluentSteps;
 
     public string FullName { get; } = FullName;
@@ -19,7 +22,28 @@ public record FluentBuilderFile(
     public ImmutableArray<INamespaceSymbol> Usings { get; set; } = Usings;
 
     public TypeKind TypeKind { get; set; }
+
     public Accessibility Accessibility { get; set; }
+
     public bool IsStatic { get; set; } = true;
+
     public bool IsRecord { get; set; }
+
+    private static string GetName(string fullName)
+    {
+        var lastIndexOf = fullName.LastIndexOf('.');
+
+        return lastIndexOf == -1
+            ? fullName
+            : fullName.Substring(lastIndexOf + 1);
+    }
+
+    private static string GetNamespace(string fullName)
+    {
+        var lastIndexOf = fullName.LastIndexOf('.');
+
+        return lastIndexOf == -1
+            ? string.Empty
+            : fullName.Substring(0, lastIndexOf);
+    }
 }

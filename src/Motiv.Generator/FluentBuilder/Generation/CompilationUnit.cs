@@ -7,7 +7,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation;
 
-public static class FluentModelToCodeConverter
+public static class CompilationUnit
 {
     public static SyntaxNode CreateCompilationUnit(
         FluentBuilderFile file)
@@ -15,18 +15,21 @@ public static class FluentModelToCodeConverter
         var rootType = RootTypeDeclaration.Create(file);
         var fluentSteps = file.FluentSteps.Select(FluentStepDeclaration.Create);
 
-        IEnumerable<MemberDeclarationSyntax> memberDeclarationSyntaxes = [rootType, ..fluentSteps];
+        MemberDeclarationSyntax[] memberDeclarationSyntaxes = [rootType, ..fluentSteps];
 
         var usingDirectiveSyntaxes = file.Usings
             .Where(namespaceSymbol => !namespaceSymbol.IsGlobalNamespace)
+            .Where(namespaceSymbol => namespaceSymbol.OriginalDefinition.ToDisplayString() != file.Namespace)
             .Select(dep =>
                 UsingDirective(
                     ParseName(dep.ToDisplayString())));
 
+        IEnumerable<MemberDeclarationSyntax> members = string.IsNullOrEmpty(file.Namespace)
+            ? memberDeclarationSyntaxes
+            : [NamespaceDeclaration(ParseName(file.Namespace)).WithMembers(List(memberDeclarationSyntaxes))];
+
         return CompilationUnit()
             .WithUsings(List(usingDirectiveSyntaxes))
-            .WithMembers(List(Enumerable.Empty<MemberDeclarationSyntax>()
-                .Append(NamespaceDeclaration(ParseName(file.NameSpace))
-                    .WithMembers(List(memberDeclarationSyntaxes)))));
+            .WithMembers(List(members));
     }
 }

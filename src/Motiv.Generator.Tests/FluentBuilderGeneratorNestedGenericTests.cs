@@ -14,9 +14,14 @@ public class FluentBuilderGeneratorNestedGenericTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(Func<T, bool> value)
                 {
                     Value = value;
@@ -65,9 +70,14 @@ public class FluentBuilderGeneratorNestedGenericTests
             using System.Collections.Generic;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, bool> value1,
                     IEnumerable<T2> value2)
@@ -137,9 +147,14 @@ public class FluentBuilderGeneratorNestedGenericTests
             using System.Collections.Generic;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, bool> value1,
                     IEnumerable<T2> value2,
@@ -229,9 +244,14 @@ public class FluentBuilderGeneratorNestedGenericTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3, T4, T5, T6>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     Func<T1, T2> value1,
                     Func<T3, T4> value2,

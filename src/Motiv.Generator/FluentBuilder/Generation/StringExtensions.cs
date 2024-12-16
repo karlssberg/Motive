@@ -16,5 +16,4 @@ public static class StringExtensions
     {
         return $"_{name.ToCamelCase()}__parameter";
     }
-
 }

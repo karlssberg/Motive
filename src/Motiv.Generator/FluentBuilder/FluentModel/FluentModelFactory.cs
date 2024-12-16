@@ -118,7 +118,7 @@ public static class FluentModelFactory
     private static FluentBuilderStep? MaybeCreateCreationMethodStep(FluentBuilderStep? nextStep, FluentConstructorContext constructorContext)
     {
         if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
-            return default;
+            return null;
 
         return new FluentBuilderStep
         {

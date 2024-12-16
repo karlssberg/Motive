@@ -21,7 +21,7 @@ public class FluentMethodContext(
         unchecked
         {
             return PriorSourceParameters.Aggregate(
-                SourceParameter.GetHashCode() * 397,
+                SymbolEqualityComparer.Default.GetHashCode(SourceParameter) * 397,
                 (prev, current) => prev ^ current.GetHashCode() * 397);
         }
     }
@@ -32,7 +32,8 @@ public class FluentMethodContext(
     {
         if (fluentMethodContext is null) return false;
         if (ReferenceEquals(this, fluentMethodContext)) return true;
-        return SourceParameter.Equals(fluentMethodContext.SourceParameter) && PriorSourceParameters.Equals(fluentMethodContext.PriorSourceParameters);
+        return SymbolEqualityComparer.Default.Equals(SourceParameter, fluentMethodContext.SourceParameter) &&
+               PriorSourceParameters.SequenceEqual(fluentMethodContext.PriorSourceParameters);
     }
 
     public ImmutableArray<FluentMethodContext> PriorSourceParameters { get;} = priorSourceParameters;

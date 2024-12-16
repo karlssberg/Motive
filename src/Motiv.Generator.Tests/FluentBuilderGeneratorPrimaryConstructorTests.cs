@@ -15,7 +15,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -62,7 +67,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public record MyBuildTarget(int Number, string text);
             """;
 
@@ -120,7 +130,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public record MyBuildTarget(
                 int Number,
                 string text)
@@ -181,7 +196,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public struct MyBuildTarget(
                 int number,
                 string text,
@@ -266,7 +286,12 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             using System.Text.RegularExpressions;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public ref struct MyBuildTarget(
                 int number,
                 string text,

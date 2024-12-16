@@ -9,58 +9,74 @@ using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder;
 
-[Generator]
+[Generator(LanguageNames.CSharp)]
 public class FluentFactoryGenerator : IIncrementalGenerator
 {
-    private const string GenerateFluentBuilderAttributeFullName = "Motiv.Generator.Attributes.GenerateFluentFactoryAttribute";
+    private const string FluentFactoryConstructorAttributeFullName = "Motiv.Generator.Attributes.FluentConstructorAttribute";
+    private const string FluentFactoryAttributeFullName = "Motiv.Generator.Attributes.FluentFactoryAttribute";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         //AttachDebugger();
+        var compilationProvider = context.CompilationProvider;
 
         // Step 1: Find all FluentConstructors
-        var constructorDeclarations = context.SyntaxProvider
+        var typeOrConstructorDeclarations = context.SyntaxProvider
             .CreateSyntaxProvider(
                 predicate: (node, _) => node switch
                 {
-                    TypeDeclarationSyntax { ParameterList: not null} type => type.AttributeLists.Count > 0,
+                    TypeDeclarationSyntax { ParameterList: not null } type => type.AttributeLists.Count > 0,
                     ConstructorDeclarationSyntax ctor => ctor.AttributeLists.Count > 0,
                     _ => false
                 },
-                transform: CreateBuilderModel);
+                transform: (ctx, token) =>
+                {
+                    var syntax = ctx.Node;
+                    var filePath = syntax.SyntaxTree.FilePath;
+                    return (syntax, filePath);
+                });
 
-        // Step 2: Collect and consolidate all FluentConstructors and transform to FluentBuilderFiles
-        var consolidated = constructorDeclarations
+        // Step 2: Gather all discovered candidate constructors
+        var constructorModels = typeOrConstructorDeclarations
+            .Combine(compilationProvider)
+            .Select((data, ct) => CreateConstructorModels(data.Left.syntax, data.Left.filePath, data.Right, ct))
+            .WithTrackingName("ConstructorModelCreation");
+
+        // Step 3: Convert to a model of the fluent steps
+        var consolidated = constructorModels
             .Collect()
+            .WithTrackingName("ConstructorModelsConsolidation")
             .SelectMany((builderContextsCollection, _) =>
                 builderContextsCollection
                     .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group])));
+                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group])))
+            .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
-        // Step 3: Generate based on consolidated view
+        // Step 4: Generate source based on model
         context.RegisterSourceOutput(consolidated, GenerateDispatcher);
     }
 
-    private static ImmutableArray<FluentConstructorContext> CreateBuilderModel(
-        GeneratorSyntaxContext context,
+    private static ImmutableArray<FluentConstructorContext> CreateConstructorModels(
+        SyntaxNode syntax,
+        string filePath,
+        Compilation compilation,
         CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
-            return ImmutableArray<FluentConstructorContext>.Empty;
+            return [];
 
-        var syntax = context.Node;
-        var semanticModel = context.SemanticModel;
+        var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
         var symbol = semanticModel.GetDeclaredSymbol(syntax);
         if (symbol == null)
-            return ImmutableArray<FluentConstructorContext>.Empty;
+            return [];
 
-        var metadata = GetFluentFactoryMetadata(symbol);
+        var metadata = GetFluentFactoryMetadata(symbol, semanticModel);
         var attributePresent = metadata.AttributePresent;
         var rootTypeFullName = metadata.RootTypeFullName;
         if (!attributePresent || string.IsNullOrWhiteSpace(rootTypeFullName))
-            return ImmutableArray<FluentConstructorContext>.Empty;
+            return [];
 
         var lastIndexOf = rootTypeFullName.LastIndexOf('.');
         var nameSpace = lastIndexOf == -1
@@ -68,12 +84,14 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             : rootTypeFullName.Substring(0, lastIndexOf);
 
         var alreadyDeclaredRootType = semanticModel.Compilation.GetTypeByMetadataName(rootTypeFullName);
+        if (!IsRootTypeDecoratedWithAttribute(alreadyDeclaredRootType))
+            return [];
 
         return symbol switch
         {
             IMethodSymbol method => [new FluentConstructorContext(nameSpace, method, alreadyDeclaredRootType, metadata)],
             INamedTypeSymbol type => CreateFluentConstructorContexts(type),
-            _ => ImmutableArray<FluentConstructorContext>.Empty
+            _ => []
         };
 
         ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(INamedTypeSymbol type)
@@ -91,27 +109,38 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         }
     }
 
-    private static FluentFactoryMetadata GetFluentFactoryMetadata(ISymbol symbol)
+    private static bool IsRootTypeDecoratedWithAttribute(INamedTypeSymbol? alreadyDeclaredRootType)
+    {
+        return alreadyDeclaredRootType is not null
+               && alreadyDeclaredRootType
+                   .GetAttributes()
+                   .Any(attr => attr.AttributeClass?.ToDisplayString() == FluentFactoryAttributeFullName);
+    }
+
+    private static FluentFactoryMetadata GetFluentFactoryMetadata(ISymbol symbol, SemanticModel semanticModel)
     {
         var attribute = symbol.GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass?.ToString() == GenerateFluentBuilderAttributeFullName);
+            .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == FluentFactoryConstructorAttributeFullName);
 
         if (attribute == null || attribute.ConstructorArguments.Length == 0)
             return FluentFactoryMetadata.Invalid;
 
-        var rootTypeFullName = attribute.ConstructorArguments[0].Value?.ToString();
-        if (string.IsNullOrWhiteSpace(rootTypeFullName))
+        var typeArg = attribute.ConstructorArguments.FirstOrDefault();
+        if (typeArg.IsNull)
+            return FluentFactoryMetadata.Invalid;
+
+        if (typeArg.Value is not ITypeSymbol typeSymbol)
             return FluentFactoryMetadata.Invalid;
 
         var namedAttributeArgument = attribute.NamedArguments
-            .FirstOrDefault(namedArg => namedArg.Key == nameof(GenerateFluentFactoryAttribute.Options))
+            .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentConstructorAttribute.Options))
             .Value;
         var options = ConvertToFluentFactoryGeneratorOptions(namedAttributeArgument);
 
         return new FluentFactoryMetadata
         {
             Options = options,
-            RootTypeFullName = rootTypeFullName ?? string.Empty
+            RootTypeFullName = typeSymbol.ToDisplayString()
         };
     }
 
@@ -121,7 +150,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             return FluentFactoryGeneratorOptions.None;
 
         // Get the underlying int value
-        var value = (int?)namedAttributeArgument.Value ?? (int)FluentFactoryOptions.None;
+        var value = (int?)namedAttributeArgument.Value ?? (int)FluentMethodOptions.None;
 
         // Get the type symbol for the enum
         if (namedAttributeArgument.Type is not INamedTypeSymbol enumType)
@@ -136,7 +165,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         // Check which flags are set
         var setFlags = flagMembers
             .Where(member => {
-                var memberValue = (int?)member.ConstantValue ?? (int)FluentFactoryOptions.None;
+                var memberValue = (int?)member.ConstantValue ?? (int)FluentMethodOptions.None;
                 return memberValue != 0 && (value & memberValue) == memberValue;
             })
             .ToList();
@@ -152,9 +181,11 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         SourceProductionContext context,
         FluentBuilderFile builder)
     {
-        var source = FluentModelToCodeConverter.CreateCompilationUnit(builder).NormalizeWhitespace().ToString();
+        var source = CompilationUnit.CreateCompilationUnit(builder).NormalizeWhitespace().ToString();
 
-        context.AddSource($"{builder.NameSpace}.{builder.Name}.g.cs", source);
+        context.CancellationToken.ThrowIfCancellationRequested();
+
+        context.AddSource($"{builder.FullName}.g.cs", source);
     }
 
     [Conditional("DEBUG")]

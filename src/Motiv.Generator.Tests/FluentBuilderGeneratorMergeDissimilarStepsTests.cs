@@ -14,9 +14,16 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory
+            {
+            }
+
             public class MyBuildTarget<T>
             {
-                [GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(T value1)
                 {
                     Value1 = value1;
@@ -27,7 +34,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
             public class MyBuildTarget
             {
-                [GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(string value1, string value2)
                 {
                     Value1 = value1;
@@ -97,10 +104,18 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory
+            {
+            }
 
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -116,7 +131,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     String string1,
                     String string2,
@@ -260,10 +275,17 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
         const string code =
             """
             using System;
+            using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory
+            {
+            }
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     String value2,
@@ -274,7 +296,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     Value3 = value3;
                 }
 
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value3)
@@ -403,9 +425,16 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory
+            {
+            }
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -414,7 +443,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     Value2 = value2;
                 }
 
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T2 value2,
                     T1 value1)
@@ -537,14 +566,19 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [GenerateFluentFactory("Test.Shape")]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Shape;
+
+            [FluentConstructor(typeof(Shape))]
             public record Rectangle(int Width, int Height)
             {
                 public int Width { get; set; } = Width;
                 public int Height { get; set; } = Height;
             }
 
-            [GenerateFluentFactory("Test.Shape")]
+            [FluentConstructor(typeof(Shape))]
             public record Cuboid(int Width, int Height, int Depth)
             {
                 public int Width { get; set; } = Width;

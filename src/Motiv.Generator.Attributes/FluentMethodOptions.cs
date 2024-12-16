@@ -1,7 +1,7 @@
 ﻿namespace Motiv.Generator.Attributes;
 
 [Flags]
-public enum FluentFactoryOptions
+public enum FluentMethodOptions
 {
     None = 0,
     NoCreateMethod = 1,

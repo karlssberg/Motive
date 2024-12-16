@@ -14,10 +14,10 @@ public class FluentBuilderGeneratorMergeTests
             using System;
             using Motiv.Generator.Attributes;
 
-            public class MyBuildTarget<T>
+            public class MyClass<T>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
-                public MyBuildTarget(T value)
+                [FluentConstructor(typeof(MyClass), Options = FluentMethodOptions.NoCreateMethod)]
+                public MyClass([FluentMethod("Create")]T value)
                 {
                     Value = value;
                 }
@@ -25,10 +25,11 @@ public class FluentBuilderGeneratorMergeTests
                 public T Value { get; set; }
             }
 
-            public class MyBuildTarget
+            [FluentFactory]
+            public partial class MyClass
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
-                public MyBuildTarget(string value)
+                [FluentConstructor(typeof(MyClass), Options = FluentMethodOptions.NoCreateMethod)]
+                public MyClass([FluentMethod("Create")]string value)
                 {
                     Value = value;
                 }
@@ -41,21 +42,18 @@ public class FluentBuilderGeneratorMergeTests
             """
             using System;
 
-            namespace Test
+            public partial class MyClass
             {
-                public static partial class Factory
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass<T> Create<T>(in T value)
                 {
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget<T> Value<T>(in T value)
-                    {
-                        return new MyBuildTarget<T>(value);
-                    }
+                    return new MyClass<T>(value);
+                }
 
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget Value(in string value)
-                    {
-                        return new MyBuildTarget(value);
-                    }
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass Create(in string value)
+                {
+                    return new MyClass(value);
                 }
             }
             """;
@@ -67,7 +65,7 @@ public class FluentBuilderGeneratorMergeTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "MyClass.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -81,9 +79,14 @@ public class FluentBuilderGeneratorMergeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -99,7 +102,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     String value1,
                     String value2)
@@ -188,9 +191,14 @@ public class FluentBuilderGeneratorMergeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -206,7 +214,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     String value2)
@@ -280,9 +288,14 @@ public class FluentBuilderGeneratorMergeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,
@@ -302,7 +315,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     String value1,
                     String value2,
@@ -429,9 +442,14 @@ public class FluentBuilderGeneratorMergeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,
@@ -455,7 +473,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     String value2,

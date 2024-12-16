@@ -86,8 +86,7 @@ public static class RootTypeDeclaration
                 IEnumerable<SyntaxToken> GetSyntaxTokens()
                 {
                     yield return Token(SyntaxKind.PublicKeyword);
-                    if (file.IsStatic)
-                        yield return Token(SyntaxKind.StaticKeyword);
+                    yield return Token(SyntaxKind.StaticKeyword);
                 }
             });
     }

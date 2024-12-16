@@ -11,21 +11,29 @@ public class FluentBuilderGeneratorGenericTests
     {
         const string code =
             """
-            public class MyBuildTarget<T>
-            {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
-                public MyBuildTarget(T value)
-                {
-                    Value = value;
-                }
+            using Motiv.Generator.Attributes;
 
-                public T Value { get; set; }
+            namespace Test.Namespace
+            {
+                [FluentFactory]
+                public static partial class Factory;
+
+                public class MyBuildTarget<T>
+                {
+                    [FluentConstructor(typeof(Factory))]
+                    public MyBuildTarget(T value)
+                    {
+                        Value = value;
+                    }
+
+                    public T Value { get; set; }
+                }
             }
             """;
 
         const string expected =
             """
-            namespace Test
+            namespace Test.Namespace
             {
                 public static partial class Factory
                 {
@@ -60,7 +68,7 @@ public class FluentBuilderGeneratorGenericTests
                 Sources = { code },
                 GeneratedSources =
                 {
-                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                    (typeof(FluentFactoryGenerator), "Test.Namespace.Factory.g.cs", expected)
                 }
             }
         }.RunAsync();
@@ -71,9 +79,16 @@ public class FluentBuilderGeneratorGenericTests
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -153,9 +168,16 @@ public class FluentBuilderGeneratorGenericTests
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,
@@ -258,9 +280,16 @@ public class FluentBuilderGeneratorGenericTests
     {
         const string code =
             """
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,

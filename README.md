@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/karlssberg/Motiv/actions/workflows/dotnet.yml/badge.svg) [![NuGet](https://img.shields.io/nuget/v/Motiv.svg)](https://www.nuget.org/packages/Motiv/) [![codecov](https://codecov.io/gh/karlssberg/Motiv/graph/badge.svg?token=XNN34D2JIP)](https://codecov.io/gh/karlssberg/Motiv)
 
-Regular Boolean logic has a fundamental flaw: once evaluated,
+Boolean logic has a fundamental flaw: once evaluated,
 you lose all context about why something was true or false.
 
 This is known as _the boolean blindness problem_:

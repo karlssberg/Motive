@@ -15,9 +15,14 @@ public class FluentBuilderGeneratorNonGenericTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory")]
+                [FluentConstructor(typeof(Factory))]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -80,9 +85,14 @@ public class FluentBuilderGeneratorNonGenericTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text)
@@ -150,9 +160,14 @@ public class FluentBuilderGeneratorNonGenericTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text,
@@ -242,9 +257,14 @@ public class FluentBuilderGeneratorNonGenericTests
             using System.Text.RegularExpressions;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text,

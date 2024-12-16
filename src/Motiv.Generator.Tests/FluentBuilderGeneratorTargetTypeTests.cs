@@ -13,9 +13,14 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(in int value)
                 {
                     Value = value;
@@ -64,7 +69,12 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -109,9 +119,14 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public struct MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -159,7 +174,12 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public struct MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -204,9 +224,14 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public record MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -254,7 +279,12 @@ public class FluentBuilderGeneratorTargetTypeTests
             using System;
             using Motiv.Generator.Attributes;
 
-            [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
             public record MyBuildTarget(int Value)
             {
                 public int Value { get; set; } = Value;

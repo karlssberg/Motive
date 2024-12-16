@@ -13,9 +13,14 @@ public class FluentMethodCustomizationTests
             """
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget([FluentMethod("SetValue")]T value)
                 {
                     Value = value;
@@ -60,9 +65,14 @@ public class FluentMethodCustomizationTests
             """
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2)
@@ -127,9 +137,14 @@ public class FluentMethodCustomizationTests
             """
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,
@@ -215,9 +230,14 @@ public class FluentMethodCustomizationTests
             """
             using Motiv.Generator.Attributes;
 
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,

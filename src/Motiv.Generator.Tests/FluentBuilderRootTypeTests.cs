@@ -16,13 +16,12 @@ public class FluentBuilderRootTypeTests
 
             namespace Test;
 
-            public static partial class Factory
-            {
-            }
+            [FluentFactory]
+            public static partial class Factory;
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -72,13 +71,12 @@ public class FluentBuilderRootTypeTests
 
             namespace Test;
 
-            public partial record Factory
-            {
-            }
+            [FluentFactory]
+            public partial record Factory;
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -97,7 +95,7 @@ public class FluentBuilderRootTypeTests
                 public partial record Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value(in int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -128,13 +126,12 @@ public class FluentBuilderRootTypeTests
 
             namespace Test;
 
-            public partial struct Factory
-            {
-            }
+            [FluentFactory]
+            public partial struct Factory;
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -153,7 +150,7 @@ public class FluentBuilderRootTypeTests
                 public partial struct Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value(in int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
@@ -186,13 +183,12 @@ public class FluentBuilderRootTypeTests
 
             namespace Test;
 
-            public partial record struct Factory
-            {
-            }
+            [FluentFactory]
+            public partial record struct Factory;
 
             public class MyBuildTarget
             {
-                [Motiv.Generator.Attributes.GenerateFluentFactory("Test.Factory", Options = FluentFactoryOptions.NoCreateMethod)]
+                [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
                 public MyBuildTarget(in int value)
                 {
                     Value = value;
@@ -211,7 +207,7 @@ public class FluentBuilderRootTypeTests
                 public partial record struct Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget Value(in int value)
+                    public static MyBuildTarget Value(in int value)
                     {
                         return new MyBuildTarget(value);
                     }
