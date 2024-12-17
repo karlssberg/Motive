@@ -1,13 +1,14 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Analysis;
+using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 
 public static class FluentModelFactory
 {
-    public static FluentBuilderFile CreateFluentBuilderFile(string fullname, ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
+    public static FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(string fullname, ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
         ImmutableArray<INamespaceSymbol> usings =
             [
@@ -15,8 +16,9 @@ public static class FluentModelFactory
                     .SelectMany(ctx => ctx.Constructor.Parameters)
                     .Select(parameter => parameter.Type)
                     .Select(type => type.ContainingNamespace)
-                    .Distinct(SymbolEqualityComparer.Default)
-                    .OfType<INamespaceSymbol>()
+                    .Concat(fluentConstructorContexts.Select(ctx => ctx.Constructor.ContainingType.ContainingNamespace))
+                    .DistinctBy(ns => ns.ToDisplayString())
+                    .OrderBy(ns => ns.ToDisplayString())
             ];
 
         var initialFluentBuilderSteps = GetStartingFluentBuilderSteps(fluentConstructorContexts);
@@ -41,7 +43,7 @@ public static class FluentModelFactory
             .ToImmutableArray();
 
         var sampleConstructorContext = fluentConstructorContexts.First();
-        return new FluentBuilderFile(
+        return new FluentFactoryCompilationUnit(
             fullname,
             [..fluentBuilderMethods],
             fluentBuilderSteps,

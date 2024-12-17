@@ -183,6 +183,127 @@ public class FluentBuilderGeneratorMergeTests
         }.RunAsync();
     }
 
+     [Fact]
+    public async Task Should_merge_generated_from_different_namespaces_when_applied_to_class_constructors_with_two_parameters()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            namespace MyFactory
+            {
+                [FluentFactory]
+                public static partial class Factory;
+            }
+
+            namespace TestA
+            {
+                public class MyBuildTarget<T1, T2>
+                {
+                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                    public MyBuildTarget(
+                        T1 value1,
+                        T2 value2)
+                    {
+                        Value1 = value1;
+                        Value2 = value2;
+                    }
+
+                    public T1 Value1 { get; set; }
+
+                    public T2 Value2 { get; set; }
+                }
+            }
+
+            namespace TestB
+            {
+                public class MyBuildTarget
+                {
+                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                    public MyBuildTarget(
+                        String value1,
+                        String value2)
+                    {
+                        Value1 = value1;
+                        Value2 = value2;
+                    }
+
+                    public String Value1 { get; set; }
+
+                    public String Value2 { get; set; }
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+            using TestA;
+            using TestB;
+
+            namespace MyFactory
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__MyFactory_Factory<T1> WithValue1<T1>(in T1 value1)
+                    {
+                        return new Step_0__MyFactory_Factory<T1>(value1);
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_1__MyFactory_Factory WithValue1(in string value1)
+                    {
+                        return new Step_1__MyFactory_Factory(value1);
+                    }
+                }
+
+                public struct Step_0__MyFactory_Factory<T1>
+                {
+                    private readonly T1 _value1__parameter;
+                    public Step_0__MyFactory_Factory(in T1 value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTarget<T1, T2> WithValue2<T2>(in T2 value2)
+                    {
+                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                    }
+                }
+
+                public struct Step_1__MyFactory_Factory
+                {
+                    private readonly string _value1__parameter;
+                    public Step_1__MyFactory_Factory(in string value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTarget WithValue2(in string value2)
+                    {
+                        return new MyBuildTarget(_value1__parameter, value2);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "MyFactory.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
     [Fact]
     public async Task Should_merge_generated_when_applied_to_class_constructors_with_two_parameters_with_divergence_on_the_second_step()
     {

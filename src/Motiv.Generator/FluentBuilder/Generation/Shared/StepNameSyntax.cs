@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -8,12 +9,16 @@ public static class StepNameSyntax
 {
     public static NameSyntax Create(FluentBuilderStep step)
     {
-        return step.GenericConstructorParameters.Length > 0
+        var distinctGemericParameters = step.GenericConstructorParameters
+            .SelectMany(t => t.Type.GetGenericTypeArguments())
+            .DistinctBy(symbol => symbol.ToDisplayString())
+            .ToImmutableArray();
+
+        return distinctGemericParameters.Length > 0
             ? GenericName(Identifier(step.Name))
                 .WithTypeArgumentList(
                     TypeArgumentList(SeparatedList<TypeSyntax>(
-                        step.GenericConstructorParameters
-                            .SelectMany(t => t.Type.GetGenericTypeArguments())
+                        distinctGemericParameters
                             .Select(arg => IdentifierName(arg.Name))))
                 )
             : IdentifierName(step.Name);

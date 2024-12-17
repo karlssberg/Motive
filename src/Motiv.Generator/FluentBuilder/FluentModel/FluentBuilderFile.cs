@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentBuilderFile(
+public record FluentFactoryCompilationUnit(
     string FullName,
     ImmutableArray<FluentBuilderMethod> FluentMethods,
     ImmutableArray<FluentBuilderStep> FluentSteps,

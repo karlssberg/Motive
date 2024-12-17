@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.Generation;
 
@@ -27,5 +28,17 @@ public static class EnumerableExtensions
         return value is null
             ? source
             : source.Append(value);
+    }
+
+    public static IEnumerable<TValue> DistinctBy<TTKey, TValue>(this IEnumerable<TValue> types, Func<TValue, TTKey> keySelector)
+    {
+        var set = new HashSet<TTKey>();
+        foreach (var type in types)
+        {
+            if (set.Add(keySelector(type)))
+            {
+                yield return type;
+            }
+        }
     }
 }

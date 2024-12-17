@@ -10,7 +10,7 @@ namespace Motiv.Generator.FluentBuilder.Generation;
 public static class CompilationUnit
 {
     public static SyntaxNode CreateCompilationUnit(
-        FluentBuilderFile file)
+        FluentFactoryCompilationUnit file)
     {
         var rootType = RootTypeDeclaration.Create(file);
         var fluentSteps = file.FluentSteps.Select(FluentStepDeclaration.Create);

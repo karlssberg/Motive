@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -11,7 +12,12 @@ public static class SymbolExtensions
         return parameter.Type switch
         {
             ITypeParameterSymbol => true,
-            INamedTypeSymbol namedType => namedType.TypeArguments.Any(t => t is ITypeParameterSymbol) ||
+            INamedTypeSymbol namedType => namedType.TypeArguments.Any(t => t switch
+                                          {
+                                              ITypeParameterSymbol => true,
+                                              INamedTypeSymbol { IsGenericType: true } typeSymbol => typeSymbol.IsOpenGenericType(),
+                                              _ => false
+                                          }) ||
                                           // Also check if this is a generic type definition itself
                                           namedType.IsUnboundGenericType,
             _ => false
@@ -23,7 +29,12 @@ public static class SymbolExtensions
         return type switch
         {
             ITypeParameterSymbol => true,
-            INamedTypeSymbol namedType => namedType.TypeArguments.Any(t => t is ITypeParameterSymbol) ||
+            INamedTypeSymbol namedType => namedType.TypeArguments.Any(t => t switch
+                                          {
+                                              ITypeParameterSymbol => true,
+                                              INamedTypeSymbol { IsGenericType: true } typeSymbol => typeSymbol.IsOpenGenericType(),
+                                              _ => false
+                                          }) ||
                                           // Also check if this is a generic type definition itself
                                           namedType.IsUnboundGenericType,
             _ => false
@@ -42,25 +53,47 @@ public static class SymbolExtensions
 
     public static IEnumerable<TypeParameterSyntax> GetGenericTypeParameters(this ITypeSymbol type)
     {
-        return type switch
-        {
-            ITypeParameterSymbol typeParameter => [CreateTypeParameterSyntax(typeParameter)],
-            INamedTypeSymbol namedType => namedType.TypeArguments.SelectMany(t => t.GetGenericTypeParameters()),
-            _ => []
-        };
+        IEnumerable<ITypeSymbol> types = [type];
 
-        TypeParameterSyntax CreateTypeParameterSyntax(ITypeParameterSymbol typeParameter)
-        {
-            return SyntaxFactory.TypeParameter(SyntaxFactory.Identifier(typeParameter.Name));
-        }
+        return types.GetGenericTypeParameters()
+            .Select(ToTypeParameterSyntax);
     }
 
-    public static IEnumerable<ITypeSymbol> GetGenericTypeArguments(this ITypeSymbol type)
+    public static IEnumerable<ITypeParameterSymbol> GetGenericTypeParameters(this IEnumerable<ITypeSymbol> type)
+    {
+        return type
+            .SelectMany(symbol => symbol.GetGenericTypeParametersInternal())
+            .DistinctBy(symbol => symbol.ToDisplayString());
+    }
+
+    public static TypeParameterSyntax ToTypeParameterSyntax(this ITypeParameterSymbol typeParameter)
+    {
+        return SyntaxFactory.TypeParameter(SyntaxFactory.Identifier(typeParameter.Name));
+    }
+
+    private static IEnumerable<ITypeParameterSymbol> GetGenericTypeParametersInternal(this ITypeSymbol type)
     {
         return type switch
         {
             ITypeParameterSymbol typeParameter => [typeParameter],
-            INamedTypeSymbol namedType => namedType.TypeArguments.SelectMany(t => t.GetGenericTypeArguments()),
+            INamedTypeSymbol namedType => namedType.TypeArguments
+                .SelectMany(t => t.GetGenericTypeParametersInternal()),
+            _ => []
+        };
+    }
+
+    public static IEnumerable<ITypeSymbol> GetGenericTypeArguments(this ITypeSymbol type)
+    {
+        return GenericTypeArgumentsInternal(type).DistinctBy(type => type.Name);
+    }
+
+    private static IEnumerable<ITypeSymbol> GenericTypeArgumentsInternal(ITypeSymbol type)
+    {
+        return type switch
+        {
+            ITypeParameterSymbol typeParameter => [typeParameter],
+            INamedTypeSymbol namedType => namedType.TypeArguments
+                .SelectMany(t => t.GetGenericTypeArguments()),
             _ => []
         };
     }

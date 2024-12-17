@@ -51,11 +51,22 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                     .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        FluentModelFactory.CreateFluentBuilderFile(group.Key, [..group])))
+                        FluentModelFactory.CreateFluentFactoryCompilationUnit(group.Key, [..group])))
             .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
         // Step 4: Generate source based on model
-        context.RegisterSourceOutput(consolidated, GenerateDispatcher);
+        context.RegisterSourceOutput(consolidated, Execute);
+    }
+
+    private static void Execute(
+        SourceProductionContext context,
+        FluentFactoryCompilationUnit builder)
+    {
+        var source = CompilationUnit.CreateCompilationUnit(builder).NormalizeWhitespace().ToString();
+
+        context.CancellationToken.ThrowIfCancellationRequested();
+
+        context.AddSource($"{builder.FullName}.g.cs", source);
     }
 
     private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorModels(
@@ -186,17 +197,6 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 ? option
                 : FluentFactoryGeneratorOptions.None)
             .Aggregate((prev, next) => prev | next);
-    }
-
-    private static void GenerateDispatcher(
-        SourceProductionContext context,
-        FluentBuilderFile builder)
-    {
-        var source = CompilationUnit.CreateCompilationUnit(builder).NormalizeWhitespace().ToString();
-
-        context.CancellationToken.ThrowIfCancellationRequested();
-
-        context.AddSource($"{builder.FullName}.g.cs", source);
     }
 
     [Conditional("DEBUG")]

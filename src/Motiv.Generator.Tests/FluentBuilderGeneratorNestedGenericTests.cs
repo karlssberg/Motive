@@ -138,6 +138,84 @@ public class FluentBuilderGeneratorNestedGenericTests
         }.RunAsync();
     }
 
+
+    [Fact]
+    public async Task Should_generate_when_applied_to_a_class_constructor_with_two_parameters_with_deeply_nested_type_parameters()
+    {
+        const string code =
+            """
+            using System;
+            using System.Collections.Generic;
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyBuildTarget<T1, T2>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                public MyBuildTarget(
+                    [FluentMethod("SetValue1")]Func<IEnumerable<KeyValuePair<T1, T1>>, bool> value1,
+                    [FluentMethod("SetValue2")]Func<IEnumerable<KeyValuePair<T2, T2>>, bool> value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public Func<IEnumerable<KeyValuePair<T1,T1>>, bool> Value1 { get; set; }
+
+                public Func<IEnumerable<KeyValuePair<T2,T2>>, bool> Value2 { get; set; }
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Factory<T1> SetValue1<T1>(in System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T1, T1>>, bool> value1)
+                    {
+                        return new Step_0__Test_Factory<T1>(value1);
+                    }
+                }
+
+                public struct Step_0__Test_Factory<T1>
+                {
+                    private readonly System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T1, T1>>, bool> _value1__parameter;
+                    public Step_0__Test_Factory(in System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T1, T1>>, bool> value1)
+                    {
+                        _value1__parameter = value1;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTarget<T1, T2> SetValue2<T2>(in System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T2, T2>>, bool> value2)
+                    {
+                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+
     [Fact]
     public async Task Should_generate_when_applied_to_a_class_constructor_with_three_parameters()
     {

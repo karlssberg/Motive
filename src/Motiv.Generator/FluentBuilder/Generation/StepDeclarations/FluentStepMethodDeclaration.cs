@@ -51,10 +51,12 @@ public static class FluentStepMethodDeclaration
 
         var typeParameterSyntaxes = method.SourceParameterSymbol.Type
             .GetGenericTypeParameters()
-            .Where(p => !existingTypeParameters.Contains(p.ToString()));
+            .Where(p => !existingTypeParameters.Contains(p.ToString()))
+            .ToImmutableArray();
 
-        return methodDeclaration
-            .WithTypeParameterList(
+        return typeParameterSyntaxes.Length == 0
+            ? methodDeclaration
+            : methodDeclaration.WithTypeParameterList(
                 TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
     }
 

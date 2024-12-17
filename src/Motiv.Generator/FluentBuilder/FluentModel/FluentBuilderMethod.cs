@@ -26,35 +26,31 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
             if (x.GetType() != y.GetType()) return false;
             if (x.MethodName != y.MethodName) return false;
             if (!x.KnownConstructorParameters
-                    .Select(p => (p.Type, p.Name))
-                    .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type, p.Name))))
+                    .Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))
+                    .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))))
                 return false;
 
             if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
             if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
 
-            if (x.SourceParameterSymbol.Type.IsOpenGenericType() || y.SourceParameterSymbol.Type.IsOpenGenericType())
-                return x.SourceParameterSymbol.Type.ToString() == y.SourceParameterSymbol.Type.ToString();
-            return SymbolEqualityComparer.Default.Equals(x.SourceParameterSymbol?.Type, y.SourceParameterSymbol?.Type);
+            return x.SourceParameterSymbol.Type.ToDisplayString() == y.SourceParameterSymbol.Type.ToDisplayString();
         }
 
         public int GetHashCode(FluentBuilderMethod obj)
         {
             var hash = obj.KnownConstructorParameters
-                .Select(p => (p.Type, p.Name))
+                .Select(p => (p.Type, Name: p.GetFluentMethodName()))
                 .Aggregate(
                     101,
                     (left, right) =>
-                        left * 397 ^ SymbolEqualityComparer.Default.GetHashCode(right.Type) * 397 ^ right.Name.GetHashCode());
+                        left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
 
             hash = hash * 397 ^ obj.MethodName.GetHashCode();
 
             if (obj.SourceParameterSymbol is null)
                 return hash;
 
-            return obj.SourceParameterSymbol.Type.IsOpenGenericType()
-                ? hash * 397 ^ obj.SourceParameterSymbol.Type.ToString().GetHashCode()
-                : hash * 397 ^ SymbolEqualityComparer.Default.GetHashCode(obj.SourceParameterSymbol.Type);
+            return obj.SourceParameterSymbol.Type.ToDisplayString().GetHashCode();
         }
     }
 

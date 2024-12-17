@@ -59,7 +59,11 @@ public static class FluentFactoryMethodDeclaration
 
         var typeParameterSyntaxes = method.SourceParameterSymbol.Type
             .GetGenericTypeParameters()
-            .Where(p => !existingTypeParameters.Contains(p.ToString()));
+            .Where(p => !existingTypeParameters.Contains(p.ToString()))
+            .ToImmutableArray();
+
+        if (typeParameterSyntaxes.Length == 0)
+            return methodDeclaration;
 
         return methodDeclaration
             .WithTypeParameterList(

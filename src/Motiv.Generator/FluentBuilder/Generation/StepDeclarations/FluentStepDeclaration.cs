@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Factories;
@@ -37,16 +39,23 @@ public static class FluentStepDeclaration
                 ..methodDeclarationSyntaxes,
             ]));
 
-        if (step.GenericConstructorParameters.Length > 0)
-        {
-            structDeclaration = structDeclaration
-                .WithTypeParameterList(
-                    TypeParameterList(
-                        SeparatedList(
-                            step.GenericConstructorParameters
-                                .SelectMany(t => t.Type.GetGenericTypeParameters()))));
-        }
+        if (step.GenericConstructorParameters.Length <= 0)
+            return structDeclaration;
 
-        return structDeclaration;
+        var typeParameterSyntaxes = step.GenericConstructorParameters
+            .Select<IParameterSymbol, ITypeSymbol>(t => t.Type)
+            .GetGenericTypeParameters()
+            .Distinct(SymbolEqualityComparer.Default)
+            .OfType<ITypeParameterSymbol>()
+            .Select(symbol => symbol.ToTypeParameterSyntax())
+            .ToImmutableArray();
+
+        if (typeParameterSyntaxes.Length == 0)
+            return structDeclaration;
+
+        return structDeclaration
+            .WithTypeParameterList(
+                TypeParameterList(
+                    SeparatedList(typeParameterSyntaxes)));
     }
 }

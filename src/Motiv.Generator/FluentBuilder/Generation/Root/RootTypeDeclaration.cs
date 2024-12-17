@@ -9,7 +9,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.Root;
 
 public static class RootTypeDeclaration
 {
-    public static TypeDeclarationSyntax Create(FluentBuilderFile file)
+    public static TypeDeclarationSyntax Create(FluentFactoryCompilationUnit file)
     {
         var rootMethodDeclarations = GetRootMethodDeclarations(file);
 
@@ -53,7 +53,7 @@ public static class RootTypeDeclaration
         return typeDeclaration;
     }
 
-    private static IEnumerable<SyntaxToken> GetRootTypeModifiers(FluentBuilderFile file)
+    private static IEnumerable<SyntaxToken> GetRootTypeModifiers(FluentFactoryCompilationUnit file)
     {
         yield return Token(file.Accessibility switch
         {
@@ -70,7 +70,7 @@ public static class RootTypeDeclaration
         yield return Token(SyntaxKind.PartialKeyword);
     }
 
-    private static IEnumerable<MethodDeclarationSyntax> GetRootMethodDeclarations(FluentBuilderFile file)
+    private static IEnumerable<MethodDeclarationSyntax> GetRootMethodDeclarations(FluentFactoryCompilationUnit file)
     {
         return file.FluentMethods
             .Select<FluentBuilderMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null
