@@ -20,7 +20,7 @@ public class FluentBuilderGeneratorTargetTypeTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(in int value)
                 {
                     Value = value;
@@ -74,7 +74,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -126,7 +126,7 @@ public class FluentBuilderGeneratorTargetTypeTests
 
             public struct MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -179,7 +179,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public struct MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -231,7 +231,7 @@ public class FluentBuilderGeneratorTargetTypeTests
 
             public record MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(int value)
                 {
                     Value = value;
@@ -284,7 +284,7 @@ public class FluentBuilderGeneratorTargetTypeTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public record MyBuildTarget(int Value)
             {
                 public int Value { get; set; } = Value;

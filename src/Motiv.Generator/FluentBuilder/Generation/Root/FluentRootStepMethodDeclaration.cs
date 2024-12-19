@@ -10,7 +10,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.Root;
 public static class FluentRootStepMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentBuilderMethod method)
+        FluentMethod method)
     {
         var returnObjectExpression = FluentStepCreationExpression.Create(
             method,

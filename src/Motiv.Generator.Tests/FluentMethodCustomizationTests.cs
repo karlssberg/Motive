@@ -20,7 +20,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget([FluentMethod("SetValue")]T value)
                 {
                     Value = value;
@@ -72,7 +72,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2)
@@ -144,7 +144,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2, T3>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,
@@ -237,7 +237,7 @@ public class FluentMethodCustomizationTests
 
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     [FluentMethod("SetValue1")]T1 value1,
                     [FluentMethod("SetValue2")]T2 value2,

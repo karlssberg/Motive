@@ -5,7 +5,7 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public record FluentFactoryCompilationUnit(
     string FullName,
-    ImmutableArray<FluentBuilderMethod> FluentMethods,
+    ImmutableArray<FluentMethod> FluentMethods,
     ImmutableArray<FluentBuilderStep> FluentSteps,
     ImmutableArray<INamespaceSymbol> Usings)
 {
@@ -13,7 +13,7 @@ public record FluentFactoryCompilationUnit(
 
     public string Namespace { get; } = GetNamespace(FullName);
 
-    public ImmutableArray<FluentBuilderMethod> FluentMethods { get; set; } = FluentMethods;
+    public ImmutableArray<FluentMethod> FluentMethods { get; set; } = FluentMethods;
 
     public ImmutableArray<FluentBuilderStep> FluentSteps { get; set; } = FluentSteps;
 

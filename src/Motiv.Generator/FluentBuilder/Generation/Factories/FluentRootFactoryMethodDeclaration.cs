@@ -11,7 +11,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.Factories;
 public static class FluentRootFactoryMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentBuilderMethod method,
+        FluentMethod method,
         IMethodSymbol constructor)
     {
         var identifierNameSyntaxes = method.KnownConstructorParameters
@@ -22,6 +22,7 @@ public static class FluentRootFactoryMethodDeclaration
                 : null);
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
+            method,
             constructor.ContainingType,
             identifierNameSyntaxes);
 

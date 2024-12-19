@@ -1,10 +1,9 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnStep)
+public record FluentMethod(string MethodName, FluentBuilderStep? ReturnStep)
 {
     public string MethodName { get; } = MethodName;
 
@@ -15,10 +14,13 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
     public IMethodSymbol? Constructor { get; set; }
 
     public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = ImmutableArray<IParameterSymbol>.Empty;
+    public ImmutableArray<IMethodSymbol> ParameterConverters { get; set; } = ImmutableArray<IMethodSymbol>.Empty;
+    public IMethodSymbol? ParameterConverter { get; set; }
+    public IParameterSymbol? OverloadParameter => ParameterConverter?.Parameters.FirstOrDefault();
 
-    private sealed class FluentBuilderMethodEqualityComparer : IEqualityComparer<FluentBuilderMethod>
+    private sealed class FluentBuilderMethodEqualityComparer : IEqualityComparer<FluentMethod>
     {
-        public bool Equals(FluentBuilderMethod? x, FluentBuilderMethod? y)
+        public bool Equals(FluentMethod? x, FluentMethod? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (x is null) return false;
@@ -36,7 +38,7 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
             return x.SourceParameterSymbol.Type.ToDisplayString() == y.SourceParameterSymbol.Type.ToDisplayString();
         }
 
-        public int GetHashCode(FluentBuilderMethod obj)
+        public int GetHashCode(FluentMethod obj)
         {
             var hash = obj.KnownConstructorParameters
                 .Select(p => (p.Type, Name: p.GetFluentMethodName()))
@@ -54,6 +56,6 @@ public record FluentBuilderMethod(string MethodName, FluentBuilderStep? ReturnSt
         }
     }
 
-    public static IEqualityComparer<FluentBuilderMethod> FluentBuilderMethodComparer { get; } = new FluentBuilderMethodEqualityComparer();
+    public static IEqualityComparer<FluentMethod> FluentBuilderMethodComparer { get; } = new FluentBuilderMethodEqualityComparer();
 
 }

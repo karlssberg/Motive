@@ -21,7 +21,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
             public class MyBuildTarget<T>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(T value1)
                 {
                     Value1 = value1;
@@ -32,7 +32,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(string value1, string value2)
                 {
                     Value1 = value1;

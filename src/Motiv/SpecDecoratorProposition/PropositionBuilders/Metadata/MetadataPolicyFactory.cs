@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Metadata;
 
@@ -8,10 +9,11 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Metadata;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
 /// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly ref struct MetadataPolicyFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    PolicyBase<TModel, TUnderlyingMetadata> spec,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenTrue,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenFalse)
+    [FluentMethod("Build")]PolicyBase<TModel, TUnderlyingMetadata> spec,
+    [FluentMethod("WhenTrue")]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenTrue,
+    [FluentMethod("WhenFalse")]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenFalse)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>

@@ -1,3 +1,4 @@
+using Motiv.Generator.Attributes;
 using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
@@ -8,10 +9,11 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly ref struct ExplanationPropositionFactory<TModel, TUnderlyingMetadata>(
-    SpecBase<TModel, TUnderlyingMetadata> spec,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> trueBecause,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> falseBecause)
+    [FluentMethod("Build")]SpecBase<TModel, TUnderlyingMetadata> spec,
+    [FluentMethod("WhenTrue")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> trueBecause,
+    [FluentMethod("WhenFalse")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.

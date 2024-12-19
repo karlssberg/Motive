@@ -20,7 +20,7 @@ public record FluentBuilderStep
     public static IEqualityComparer<FluentBuilderStep> ConstructorParametersComparer { get; } =
         new ConstructorParametersEqualityComparer();
 
-    public ImmutableArray<FluentBuilderMethod> FluentMethods { get; set; } = [];
+    public ImmutableArray<FluentMethod> FluentMethods { get; set; } = [];
 
     public ImmutableArray<IParameterSymbol> GenericConstructorParameters => [
         ..KnownConstructorParameters
@@ -35,12 +35,15 @@ public record FluentBuilderStep
             if (x is null) return false;
             if (y is null) return false;
             if (x.GetType() != y.GetType()) return false;
-            return x.KnownConstructorParameters.SequenceEqual(y.KnownConstructorParameters);
+            return x.KnownConstructorParameters
+                .Select(p => (p.Name, p.Type.ToDisplayString()))
+                .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Name, p.Type.ToDisplayString())));
         }
 
         public int GetHashCode(FluentBuilderStep obj)
         {
-            return obj.KnownConstructorParameters.GetHashCode();
+            return obj.KnownConstructorParameters
+                .Aggregate(101, (accumulator, parameter) => accumulator * 17 ^ (parameter.Name, parameter.Type.ToDisplayString()).GetHashCode());
         }
     }
 }

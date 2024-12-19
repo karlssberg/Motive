@@ -19,7 +19,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public class MyBuildTarget(int value)
             {
                 public int Value { get; set; } = value;
@@ -71,7 +71,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public record MyBuildTarget(int Number, string text);
             """;
 
@@ -134,7 +134,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public record MyBuildTarget(
                 int Number,
                 string text)
@@ -200,7 +200,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public struct MyBuildTarget(
                 int number,
                 string text,
@@ -290,7 +290,7 @@ public class FluentBuilderGeneratorPrimaryConstructorTests
             [FluentFactory]
             public static partial class Factory;
 
-            [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
             public ref struct MyBuildTarget(
                 int number,
                 string text,

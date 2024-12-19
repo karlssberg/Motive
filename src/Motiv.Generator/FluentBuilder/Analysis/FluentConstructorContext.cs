@@ -1,26 +1,25 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Motiv.Generator.FluentBuilder.FluentModel;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
 public record FluentConstructorContext
 {
-    private readonly Lazy<ImmutableArray<FluentMethodContext>> _lazyFluentMethods;
-
-    public FluentConstructorContext(string @namespace, IMethodSymbol constructor, ISymbol? symbol, FluentFactoryMetadata metadata)
+    public FluentConstructorContext(
+        string @namespace,
+        IMethodSymbol constructor,
+        ISymbol? symbol,
+        FluentFactoryMetadata metadata)
     {
         NameSpace = @namespace;
         Constructor = constructor;
         Options = metadata.Options;
         RootTypeFullName = metadata.RootTypeFullName;
-        _lazyFluentMethods =  new Lazy<ImmutableArray<FluentMethodContext>>(() =>
+        FluentMethodContexts =
         [
-            ..Constructor?.Parameters
-                .Aggregate(ImmutableArray<FluentMethodContext>.Empty,
-                    (parameterArray, parameter) =>
-                        parameterArray.Add(new FluentMethodContext(parameterArray, parameter)))
-            ?? []
-        ]);
+            ..Constructor?.Parameters.ToFluentMethodContexts() ?? []
+        ];
 
         IsStatic = symbol switch
         {
@@ -57,6 +56,6 @@ public record FluentConstructorContext
     public string NameSpace { get; set; }
     public IMethodSymbol Constructor { get; set; }
     public string RootTypeFullName { get; set; }
-    public ImmutableArray<FluentMethodContext> FluentMethodContexts => _lazyFluentMethods.Value;
+    public ImmutableArray<FluentMethodContext> FluentMethodContexts { get; set; }
 
 }

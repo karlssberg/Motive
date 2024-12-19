@@ -1,10 +1,11 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Motiv.Generator.Attributes;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
 public class FluentMethodContext(
-    ImmutableArray<FluentMethodContext> priorSourceParameters,
+    ImmutableArray<FluentMethodContext> priorMethodContexts,
     IParameterSymbol sourceParameter)
     : IEquatable<FluentMethodContext>
 {
@@ -20,7 +21,7 @@ public class FluentMethodContext(
     {
         unchecked
         {
-            return PriorSourceParameters.Aggregate(
+            return PriorMethodContexts.Aggregate(
                 SymbolEqualityComparer.Default.GetHashCode(SourceParameter) * 397,
                 (prev, current) => prev ^ current.GetHashCode() * 397);
         }
@@ -28,34 +29,39 @@ public class FluentMethodContext(
 
     public IParameterSymbol SourceParameter { get; } = sourceParameter;
 
+    private readonly Lazy<ImmutableArray<IMethodSymbol>> _lazyParameterOverloads = new(() =>
+    {
+        var typeConstant = sourceParameter
+            .GetAttributes()
+            .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
+            .Select(attr => attr.NamedArguments
+                .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
+                .Value)
+            .FirstOrDefault();
+        if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
+            return ImmutableArray<IMethodSymbol>.Empty;
+
+        return [
+            ..typeSymbol
+                .GetMembers()
+                .OfType<IMethodSymbol>()
+                .Where(method => method.Parameters.Length == 1)
+                .Where(method => method.ReturnType.Name == sourceParameter.Type.Name)
+                .Where(method => method.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
+        ];
+    });
+
+    public ImmutableArray<IMethodSymbol> ParameterConverters  => _lazyParameterOverloads.Value;
+
     public bool Equals(FluentMethodContext? fluentMethodContext)
     {
         if (fluentMethodContext is null) return false;
         if (ReferenceEquals(this, fluentMethodContext)) return true;
         return SymbolEqualityComparer.Default.Equals(SourceParameter, fluentMethodContext.SourceParameter) &&
-               PriorSourceParameters.SequenceEqual(fluentMethodContext.PriorSourceParameters);
+               PriorMethodContexts.SequenceEqual(fluentMethodContext.PriorMethodContexts);
     }
 
-    public ImmutableArray<FluentMethodContext> PriorSourceParameters { get;} = priorSourceParameters;
-
-    public static IEqualityComparer<FluentMethodContext> PriorSourceParametersComparer { get; } = new PriorSourceParametersEqualityComparer();
-
-    private sealed class PriorSourceParametersEqualityComparer : IEqualityComparer<FluentMethodContext>
-    {
-        public bool Equals(FluentMethodContext? x, FluentMethodContext? y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (x is null) return false;
-            if (y is null) return false;
-            if (x.GetType() != y.GetType()) return false;
-            return x.PriorSourceParameters.SequenceEqual(y.PriorSourceParameters);
-        }
-
-        public int GetHashCode(FluentMethodContext obj)
-        {
-            return obj.PriorSourceParameters.GetHashCode();
-        }
-    }
+    public ImmutableArray<FluentMethodContext> PriorMethodContexts { get;} = priorMethodContexts;
 }
 
 

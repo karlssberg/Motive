@@ -1,4 +1,5 @@
-﻿using Motiv.HigherOrderProposition.PolicyResultPredicate;
+﻿using Motiv.Generator.Attributes;
+using Motiv.HigherOrderProposition.PolicyResultPredicate;
 using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Policy;
@@ -11,13 +12,13 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Policy;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TMetadata">The type of the metadata associated with the specification.</typeparam>
 /// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
+[FluentConstructor(typeof(Motiv.Spec))]
 public readonly ref struct MetadataFromPolicyHigherOrderPropositionFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    PolicyBase<TModel, TUnderlyingMetadata> spec,
-    Func<IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, bool> higherOrderPredicate,
-    Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenTrue,
-    Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenFalse,
-    Func<bool, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>,
-        IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>> causeSelector)
+    [FluentMethod("Build")]PolicyBase<TModel, TUnderlyingMetadata> spec,
+    [FluentMethod("As")]Func<IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, bool> higherOrderPredicate,
+    [FluentMethod("WithCauses")]Func<bool, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>> causeSelector,
+    [FluentMethod("WhenTrue")]Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenTrue,
+    [FluentMethod("WhenFalse")]Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenFalse)
 {
     /// <summary>Creates a specification and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the specification represents.</param>

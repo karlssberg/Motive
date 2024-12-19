@@ -11,7 +11,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.Factories;
 public static class FluentFactoryMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentBuilderMethod method,
+        FluentMethod method,
         FluentBuilderStep step,
         IMethodSymbol constructor)
     {
@@ -19,10 +19,11 @@ public static class FluentFactoryMethodDeclaration
             .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
             .AppendIfNotNull(
                 method.SourceParameterSymbol is not null
-                ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
-                : null);
+                    ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
+                    : null);
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
+            method,
             constructor.ContainingType,
             identifierNameSyntaxes);
 

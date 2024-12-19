@@ -15,7 +15,7 @@ public static class FluentStepDeclaration
         FluentBuilderStep step)
     {
         var methodDeclarationSyntaxes = step.FluentMethods
-            .Select<FluentBuilderMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null
+            .Select<FluentMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null
                 ? FluentFactoryMethodDeclaration.Create(method, step, method.Constructor)
                 : FluentStepMethodDeclaration.Create(method, step));
 

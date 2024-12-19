@@ -10,7 +10,7 @@ namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
 public static class FluentStepMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentBuilderMethod method,
+        FluentMethod method,
         FluentBuilderStep step)
     {
         var stepActivationArgs = ArgumentList(SeparatedList(CreateStepConstructorArguments(method, step)));
@@ -60,7 +60,7 @@ public static class FluentStepMethodDeclaration
                 TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
     }
 
-    private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(FluentBuilderMethod method,
+    private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(FluentMethod method,
         FluentBuilderStep step)
     {
         return step.KnownConstructorParameters

@@ -91,7 +91,7 @@ public class FluentBuilderGeneratorNonGenericTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text)
@@ -166,7 +166,7 @@ public class FluentBuilderGeneratorNonGenericTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text,
@@ -263,7 +263,7 @@ public class FluentBuilderGeneratorNonGenericTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     int number,
                     string text,

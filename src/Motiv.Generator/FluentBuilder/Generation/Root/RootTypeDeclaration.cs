@@ -73,7 +73,7 @@ public static class RootTypeDeclaration
     private static IEnumerable<MethodDeclarationSyntax> GetRootMethodDeclarations(FluentFactoryCompilationUnit file)
     {
         return file.FluentMethods
-            .Select<FluentBuilderMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null
+            .Select<FluentMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null
                 ? FluentRootFactoryMethodDeclaration.Create(method, method.Constructor)
                 : FluentRootStepMethodDeclaration.Create(method))
 

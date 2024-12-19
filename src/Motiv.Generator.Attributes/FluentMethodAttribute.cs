@@ -4,6 +4,7 @@
 public class FluentMethodAttribute(string methodName) : Attribute
 {
     public string MethodName { get; } = methodName;
+    public Type? Overloads { get; set; }
 }
 
 

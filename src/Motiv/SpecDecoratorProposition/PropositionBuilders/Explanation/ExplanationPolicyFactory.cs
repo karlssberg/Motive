@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 
@@ -8,11 +9,13 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly ref struct ExplanationPolicyFactory<TModel, TUnderlyingMetadata>(
-    PolicyBase<TModel, TUnderlyingMetadata> spec,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> trueBecause,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> falseBecause)
+    [FluentMethod("Build")]PolicyBase<TModel, TUnderlyingMetadata> spec,
+    [FluentMethod("WhenTrue", Overloads = typeof(ExplanationConverter))]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(ExplanationConverter))]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> falseBecause)
 {
+
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
     /// </summary>
@@ -25,4 +28,28 @@ public readonly ref struct ExplanationPolicyFactory<TModel, TUnderlyingMetadata>
             trueBecause,
             falseBecause,
             new SpecDescription(statement.ThrowIfNullOrWhitespace(nameof(statement)), spec.Description));
+
+}
+
+
+public static class MetadataConverter
+{
+    [FluentParameterConverter]
+    public static Func<T1, T2, TResult> Convert<T1, T2, TResult>(TResult value) =>
+        (_, _) => value;
+
+    [FluentParameterConverter]
+    public static Func<T1, T2, TResult> Convert<T1, T2, TResult>(Func<T1, TResult> value) =>
+        (arg1, _) => value(arg1);
+}
+
+public static class ExplanationConverter
+{
+    [FluentParameterConverter]
+    public static Func<T1, T2, string> Convert<T1, T2>(string value) =>
+        (_, _) => value;
+
+    [FluentParameterConverter]
+    public static Func<T1, T2, string> Convert<T1, T2>(Func<T1, string> value) =>
+        (arg1, _) => value(arg1);
 }

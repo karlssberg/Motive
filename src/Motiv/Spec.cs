@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Motiv.BooleanPredicateProposition.PropositionBuilders;
 using Motiv.BooleanResultPredicateProposition.PropositionBuilders;
 using Motiv.ExpressionTreeProposition.PropositionBuilders;
+using Motiv.Generator.Attributes;
 using Motiv.SpecDecoratorProposition.PropositionBuilders;
 
 namespace Motiv;
@@ -91,6 +92,7 @@ public class Spec<TModel> : SpecBase<TModel, string>
 }
 
 /// <summary>Creates propositions using a fluent API.</summary>
+[FluentFactory]
 public static partial class Spec
 {
     /// <summary>Starts the construction of a proposition using a predicate function.</summary>
@@ -144,35 +146,15 @@ public static partial class Spec
         return new TruePropositionBuilder<TModel, TMetadata>(factory());
     }
 
-    /// <summary>Starts the construction of a specification using a specification factory function.</summary>
-    /// <param name="policyFactory">The specification factory function to be used in the specification.</param>
-    /// <returns>A <see cref="TruePolicyBuilder{TModel, TMetadata}" /> instance for further specification building.</returns>
-    public static TruePolicyBuilder<TModel, TMetadata> Build<TModel, TMetadata>(
-        Func<PolicyBase<TModel, TMetadata>> policyFactory)
-    {
-        policyFactory.ThrowIfNull(nameof(policyFactory));
-        return new TruePolicyBuilder<TModel, TMetadata>(policyFactory());
-    }
-
-    /// <summary>Starts the construction of a specification that is derived from an existing specification.</summary>
-    /// <param name="spec">The proposition upon which to derive a new proposition.</param>
-    /// <returns>A <see cref="TruePropositionBuilder{TModel, TMetadata}" /> instance for further specification building.</returns>
-    public static TruePropositionBuilder<TModel, TMetadata> Build<TModel, TMetadata>(
-        SpecBase<TModel, TMetadata> spec)
-    {
-        spec.ThrowIfNull(nameof(spec));
-        return new TruePropositionBuilder<TModel, TMetadata>(spec);
-    }
-
-    /// <summary>Starts the construction of a specification that is derived from an existing specification.</summary>
-    /// <param name="policy">The proposition upon which to derive a new proposition.</param>
-    /// <returns>A <see cref="TruePolicyBuilder{TModel, TMetadata}" /> instance for further specification building.</returns>
-    public static TruePolicyBuilder<TModel, TMetadata> Build<TModel, TMetadata>(
-        PolicyBase<TModel, TMetadata> policy)
-    {
-        policy.ThrowIfNull(nameof(policy));
-        return new TruePolicyBuilder<TModel, TMetadata>(policy);
-    }
+    // /// <summary>Starts the construction of a specification that is derived from an existing specification.</summary>
+    // /// <param name="spec">The proposition upon which to derive a new proposition.</param>
+    // /// <returns>A <see cref="TruePropositionBuilder{TModel, TMetadata}" /> instance for further specification building.</returns>
+    // public static TruePropositionBuilder<TModel, TMetadata> Build<TModel, TMetadata>(
+    //     SpecBase<TModel, TMetadata> spec)
+    // {
+    //     spec.ThrowIfNull(nameof(spec));
+    //     return new TruePropositionBuilder<TModel, TMetadata>(spec);
+    // }
 
     /// <summary>Transforms a lambda expression tree into a tree of <see cref="SpecBase{TModel, TMetadata}" /> propositions.</summary>
     /// <param name="expression">

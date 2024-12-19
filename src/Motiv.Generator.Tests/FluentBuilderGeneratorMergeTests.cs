@@ -16,7 +16,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyClass<T>
             {
-                [FluentConstructor(typeof(MyClass), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(MyClass), Options = FluentOptions.NoCreateMethod)]
                 public MyClass([FluentMethod("Create")]T value)
                 {
                     Value = value;
@@ -28,7 +28,7 @@ public class FluentBuilderGeneratorMergeTests
             [FluentFactory]
             public partial class MyClass
             {
-                [FluentConstructor(typeof(MyClass), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(MyClass), Options = FluentOptions.NoCreateMethod)]
                 public MyClass([FluentMethod("Create")]string value)
                 {
                     Value = value;
@@ -86,7 +86,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1, T2>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -102,7 +102,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     String value1,
                     String value2)
@@ -201,7 +201,7 @@ public class FluentBuilderGeneratorMergeTests
             {
                 public class MyBuildTarget<T1, T2>
                 {
-                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentOptions.NoCreateMethod)]
                     public MyBuildTarget(
                         T1 value1,
                         T2 value2)
@@ -220,7 +220,7 @@ public class FluentBuilderGeneratorMergeTests
             {
                 public class MyBuildTarget
                 {
-                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                    [FluentConstructor(typeof(MyFactory.Factory), Options = FluentOptions.NoCreateMethod)]
                     public MyBuildTarget(
                         String value1,
                         String value2)
@@ -319,7 +319,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1, T2>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2)
@@ -335,7 +335,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     String value2)
@@ -416,7 +416,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1, T2, T3>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,
@@ -436,7 +436,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     String value1,
                     String value2,
@@ -570,7 +570,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1, T2, T3, T4>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     T2 value2,
@@ -594,7 +594,7 @@ public class FluentBuilderGeneratorMergeTests
 
             public class MyBuildTarget<T1>
             {
-                [FluentConstructor(typeof(Factory), Options = FluentMethodOptions.NoCreateMethod)]
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyBuildTarget(
                     T1 value1,
                     String value2,

@@ -1,8 +1,9 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition;
 
-internal sealed class PolicyDecoratorExplanationProposition<TModel, TUnderlyingMetadata>(
+internal sealed partial class PolicyDecoratorExplanationProposition<TModel, TUnderlyingMetadata>(
     PolicyBase<TModel, TUnderlyingMetadata> underlyingSpec,
     Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> trueBecause,
     Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> falseBecause,
