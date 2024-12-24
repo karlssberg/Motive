@@ -38,36 +38,41 @@ public static class TypeMapper
         if (!method.IsGenericMethod)
             return method;
 
-        // Substitute type parameters in parameter types
-        var newParameters = method.Parameters.Select(p =>
-            p.Type.ReplaceTypeParameters(substitutions));
-
-        // Substitute in return type
-        var newReturnType = method.ReturnType.ReplaceTypeParameters(substitutions);
-
         // Construct new method type
-        return method.Construct(substitutions.Values.ToArray());
+        var typeArgs = method.TypeArguments
+            .Select(arg =>
+            {
+                if (arg is not ITypeParameterSymbol typeArg)
+                    return arg;
+
+                return substitutions.TryGetValue(typeArg, out var replacement)
+                    ? replacement
+                    : typeArg;
+            });
+
+        return method.Construct(typeArgs.ToArray());
     }
 
     // Extension method to help with substitution
     public static ITypeSymbol ReplaceTypeParameters(
-        this ITypeSymbol type,
-        ImmutableDictionary<ITypeParameterSymbol, ITypeSymbol> substitutions)
-    {
-        if (type is ITypeParameterSymbol typeParam &&
-            substitutions.TryGetValue(typeParam, out var replacement))
-        {
-            return replacement;
-        }
+             this ITypeSymbol type,
+             ImmutableDictionary<ITypeParameterSymbol, ITypeSymbol> substitutions)
+         {
+             if (type is ITypeParameterSymbol typeParam &&
+                 substitutions.TryGetValue(typeParam, out var replacement))
+             {
+                 return replacement;
+             }
 
-        if (type is INamedTypeSymbol namedType && namedType.IsGenericType)
-        {
-            var newTypeArgs = namedType.TypeArguments
-                .Select(t => t.ReplaceTypeParameters(substitutions))
-                .ToArray();
-            return namedType.Construct(newTypeArgs);
-        }
+             if (type is INamedTypeSymbol namedType && namedType.IsGenericType)
+             {
+                 var originalDefinition = namedType.OriginalDefinition;
+                 var newTypeArgs = originalDefinition.TypeArguments
+                     .Select(t => t.ReplaceTypeParameters(substitutions))
+                     .ToArray();
+                 return originalDefinition.Construct(newTypeArgs);
+             }
 
-        return type;
-    }
+             return type;
+         }
 }

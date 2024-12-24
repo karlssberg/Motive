@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -44,14 +45,12 @@ public static class FluentStepMethodDeclaration
         if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
-        var existingTypeParameters = step.GenericConstructorParameters
-            .SelectMany(t => t.Type.GetGenericTypeParameters())
-            .Select(p => p.Identifier.Text)
-            .ToImmutableHashSet();
-
+        var parameterConverterTypeArguments = method.ParameterConverter?.TypeArguments ?? ImmutableArray<ITypeSymbol>.Empty;
         var typeParameterSyntaxes = method.SourceParameterSymbol.Type
             .GetGenericTypeParameters()
-            .Where(p => !existingTypeParameters.Contains(p.ToString()))
+            .Union(parameterConverterTypeArguments.OfType<ITypeParameterSymbol>())
+            .Except(step.KnownConstructorParameters.SelectMany(parameter => parameter.Type.GetGenericTypeParameters()))
+            .Select(symbol => symbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
         return typeParameterSyntaxes.Length == 0

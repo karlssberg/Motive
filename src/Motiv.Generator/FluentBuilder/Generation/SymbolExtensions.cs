@@ -50,18 +50,21 @@ public static class SymbolExtensions
         };
     }
 
-    public static IEnumerable<TypeParameterSyntax> GetGenericTypeParameters(this ITypeSymbol type)
+    public static IEnumerable<TypeParameterSyntax> GetGenericTypeParameterSyntaxList(this IEnumerable<ITypeSymbol> types)
     {
-        IEnumerable<ITypeSymbol> types = [type];
-
         return types.GetGenericTypeParameters()
             .Select(ToTypeParameterSyntax);
+    }
+
+    public static IEnumerable<TypeParameterSyntax> GetGenericTypeParameterSyntaxList(this ITypeSymbol type)
+    {
+        return new[] { type }.GetGenericTypeParameterSyntaxList();
     }
 
     public static IEnumerable<ITypeParameterSymbol> GetGenericTypeParameters(this IEnumerable<ITypeSymbol> type)
     {
         return type
-            .SelectMany(symbol => symbol.GetGenericTypeParametersInternal())
+            .SelectMany(symbol => symbol.GetGenericTypeParameters())
             .DistinctBy(symbol => symbol.ToDisplayString());
     }
 
@@ -70,13 +73,13 @@ public static class SymbolExtensions
         return SyntaxFactory.TypeParameter(SyntaxFactory.Identifier(typeParameter.Name));
     }
 
-    private static IEnumerable<ITypeParameterSymbol> GetGenericTypeParametersInternal(this ITypeSymbol type)
+    public static IEnumerable<ITypeParameterSymbol> GetGenericTypeParameters(this ITypeSymbol type)
     {
         return type switch
         {
             ITypeParameterSymbol typeParameter => [typeParameter],
             INamedTypeSymbol namedType => namedType.TypeArguments
-                .SelectMany(t => t.GetGenericTypeParametersInternal()),
+                .SelectMany(t => t.GetGenericTypeParameters()),
             _ => []
         };
     }
@@ -112,11 +115,11 @@ public static class SymbolExtensions
                 if (argumentType is ITypeParameterSymbol targetParam)
                 {
                     // Check if source type parameter satisfies all target's constraints
-                    foreach (var constraint in targetParam.ConstraintTypes)
+                    if (targetParam.ConstraintTypes
+                        .Select(constraint => compilation.ClassifyCommonConversion(sourceParam, constraint))
+                        .Any(paramConversion => paramConversion is { Exists: false }))
                     {
-                        var paramConversion = compilation.ClassifyCommonConversion(sourceParam, constraint);
-                        if (!paramConversion.Exists)
-                            return false;
+                        return false;
                     }
 
                     if (targetParam.HasValueTypeConstraint && !sourceParam.HasValueTypeConstraint)
@@ -132,11 +135,11 @@ public static class SymbolExtensions
                 }
 
                 // If target is a regular type, check if source's constraints are compatible
-                foreach (var constraint in sourceParam.ConstraintTypes)
+                if (sourceParam.ConstraintTypes
+                    .Select(constraint => compilation.ClassifyCommonConversion(constraint, argumentType))
+                    .Any(typeConversion => typeConversion is { Exists: true, IsImplicit: true }))
                 {
-                    var typeConversion = compilation.ClassifyCommonConversion(constraint, argumentType);
-                    if (typeConversion.Exists && typeConversion.IsImplicit)
-                        return true;
+                    return true;
                 }
 
                 // Check special constraints against target
@@ -145,10 +148,49 @@ public static class SymbolExtensions
 
                 return !sourceParam.HasReferenceTypeConstraint || argumentType.IsReferenceType;
             }
+            case INamedTypeSymbol { TypeKind: TypeKind.Delegate } paramNamedType:
+            {
+                // Handle delegate variance
+                if (argumentType is not INamedTypeSymbol { TypeKind: TypeKind.Delegate } argNamedType)
+                    return false;
+
+                // Check if they have the same number of type arguments
+                if (paramNamedType.TypeArguments.Length != argNamedType.TypeArguments.Length)
+                    return false;
+
+                // For Func<>, the return type is covariant (last type parameter)
+                // All other parameters are contravariant
+                for (int i = 0; i < paramNamedType.TypeArguments.Length; i++)
+                {
+                    var paramTypeArg = paramNamedType.TypeArguments[i];
+                    var argTypeArg = argNamedType.TypeArguments[i];
+
+                    // For the return type (last parameter)
+                    if (i == paramNamedType.TypeArguments.Length - 1)
+                    {
+                        // Covariant - argType must be assignable to paramType
+                        if (!compilation.IsAssignable(paramTypeArg, argTypeArg))
+                            return false;
+                    }
+                    else
+                    {
+                        // Contravariant - paramType must be assignable to argType
+                        if (!compilation.IsAssignable(argTypeArg, paramTypeArg))
+                            return false;
+                    }
+                }
+                return true;
+            }
             default:
                 // Fall back to checking conversion
                 var conversion = compilation.ClassifyCommonConversion(parameterType, argumentType);
                 return conversion is { Exists: true, IsImplicit: true };
         }
     }
+
+   public static IEnumerable<ITypeParameterSymbol> Union(this IEnumerable<ITypeParameterSymbol> first, IEnumerable<ITypeParameterSymbol> second) =>
+       first
+           .Union(second, SymbolEqualityComparer.IncludeNullability)
+           .OfType<ITypeParameterSymbol>()
+           .OrderBy(symbol => symbol.Name);
 }
