@@ -6,7 +6,7 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 public record FluentFactoryCompilationUnit(
     string FullName,
     ImmutableArray<FluentMethod> FluentMethods,
-    ImmutableArray<FluentBuilderStep> FluentSteps,
+    ImmutableArray<FluentStep> FluentSteps,
     ImmutableArray<INamespaceSymbol> Usings)
 {
     public string Name { get; } = GetName(FullName);
@@ -15,7 +15,7 @@ public record FluentFactoryCompilationUnit(
 
     public ImmutableArray<FluentMethod> FluentMethods { get; set; } = FluentMethods;
 
-    public ImmutableArray<FluentBuilderStep> FluentSteps { get; set; } = FluentSteps;
+    public ImmutableArray<FluentStep> FluentSteps { get; set; } = FluentSteps;
 
     public string FullName { get; } = FullName;
 

@@ -3,11 +3,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
 
 public static class FluentStepFieldDeclarations
 {
-    public static IEnumerable<FieldDeclarationSyntax> Create(FluentBuilderStep step)
+    public static IEnumerable<FieldDeclarationSyntax> Create(FluentStep step)
     {
         return step.KnownConstructorParameters
             .Select(parameter =>

@@ -27,7 +27,7 @@ public static class TargetTypeObjectCreationExpression
                 .WithTypeArgumentList(
                     TypeArgumentList(SeparatedList<TypeSyntax>(
                         distinctTypeArguments
-                            .Select(t => IdentifierName(t.Name)))));
+                            .Select(t => IdentifierName(t.ToDisplayString())))));
 
         if (method.OverloadParameter is not null && method.ParameterConverter is not null)
         {
@@ -49,14 +49,7 @@ public static class TargetTypeObjectCreationExpression
         IEnumerable<ArgumentSyntax> argNodes =
         [
             ..argumentList.Take(argumentList.Count - 1),
-            Argument(InvocationExpression(
-                    MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        ParseTypeName(parameterConverterMethod.ContainingType.ToDisplayString()),
-                        IdentifierName(parameterConverterMethod.Name)))
-                .WithArgumentList(ArgumentList(SeparatedList<ArgumentSyntax>(
-                    argumentList.Skip(argumentList.Count - 1)
-                ))))
+            Argument(ParameterConverterInvocationExpression.Create(method, parameterConverterMethod, argumentList.Last()))
         ];
 
         return ObjectCreationExpression(name)

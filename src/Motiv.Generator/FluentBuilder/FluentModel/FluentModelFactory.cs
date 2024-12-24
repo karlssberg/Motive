@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.Generation;
+using Motiv.Generator.FluentBuilder.Generation.Shared;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
@@ -32,7 +33,7 @@ public static class FluentModelFactory
             .ToImmutableArray();
 
         var fluentBuilderSteps = GetAllFluentSteps(builderSteps)
-            .Distinct(FluentBuilderStep.ConstructorParametersComparer)
+            .Distinct(FluentStep.ConstructorParametersComparer)
             .Select((step, index) =>
             {
                 step.Name = $"Step_{index}__{fullname.Replace(".", "_")}";
@@ -58,14 +59,15 @@ public static class FluentModelFactory
         };
     }
 
-    private static ImmutableArray<FluentBuilderStep> GetAllFluentSteps(ImmutableArray<FluentBuilderStep> mergedFluentBuilderSteps)
+    private static ImmutableArray<FluentStep> GetAllFluentSteps(ImmutableArray<FluentStep> mergedFluentBuilderSteps)
     {
-        IEnumerable<FluentBuilderStep> concatenated =
+        IEnumerable<FluentStep> concatenated =
         [
             ..mergedFluentBuilderSteps,
             ..mergedFluentBuilderSteps.SelectMany(step =>
                 GetAllFluentSteps([
-                    ..step.FluentMethods
+                    ..step
+                        .FluentMethods
                         .Select(method => method.ReturnStep)
                         .Where(returnStep => returnStep is not null)
                 ]))
@@ -74,22 +76,22 @@ public static class FluentModelFactory
         return [..MergedFluentSteps(concatenated)];
     }
 
-    private static ImmutableArray<FluentBuilderStep> GetStartingFluentSteps(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
+    private static ImmutableArray<FluentStep> GetStartingFluentSteps(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
         return
         [
             ..fluentConstructorContexts
                 .Select(constructorContext => constructorContext.FluentMethodContexts
                     .Reverse()
-                    .Aggregate(default(FluentBuilderStep?), (previousStep, method) =>
+                    .Aggregate(default(FluentStep?), (previousStep, method) =>
                         CreateFluentBuilderStep(method, previousStep, constructorContext)))
                 .Where(step => step is not null)
         ];
     }
 
-    private static FluentBuilderStep? CreateFluentBuilderStep(
+    private static FluentStep? CreateFluentBuilderStep(
         FluentMethodContext method,
-        FluentBuilderStep? nextStep,
+        FluentStep? nextStep,
         FluentConstructorContext constructorContext)
     {
         var fluentMethodName = method.SourceParameter.GetFluentMethodName();
@@ -102,18 +104,30 @@ public static class FluentModelFactory
         var fluentBuilderMethod =
             new FluentMethod(
                 fluentMethodName,
-                nextStep ?? MaybeCreateCreationMethodStep(nextStep, constructorContext))
+                nextStep ?? MaybeCreateCreationMethodStep(nextStep, constructorContext),
+                constructorContext.Constructor)
             {
                 SourceParameterSymbol = method.SourceParameter,
-                Constructor = constructorContext.Constructor,
                 KnownConstructorParameters = constructorParameters,
                 ParameterConverters = method.ParameterConverters
             };
 
-        var fluentBuilderStep = new FluentBuilderStep
+        var fluentBuilderStep = new FluentStep
         {
             KnownConstructorParameters = [..constructorParameters],
-            FluentMethods = [fluentBuilderMethod]
+            FluentMethods = [
+                fluentBuilderMethod,
+                ..fluentBuilderMethod.ParameterConverters
+                    .Select<IMethodSymbol, FluentMethod>(converter =>
+                    {
+                        var normalizedConverter = NormalizedConverterMethod(converter, fluentBuilderMethod);
+                        return fluentBuilderMethod with
+                        {
+                            SourceParameterSymbol = normalizedConverter.Parameters.First(),
+                            ParameterConverter = normalizedConverter
+                        };
+                    })
+            ]
         };
 
         if (fluentBuilderMethod.ReturnStep is not null)
@@ -122,45 +136,29 @@ public static class FluentModelFactory
         return fluentBuilderStep;
     }
 
-    private static FluentBuilderStep? MaybeCreateCreationMethodStep(FluentBuilderStep? nextStep, FluentConstructorContext constructorContext)
+    private static FluentStep? MaybeCreateCreationMethodStep(FluentStep? nextStep, FluentConstructorContext constructorContext)
     {
         if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
             return null;
 
-        return new FluentBuilderStep
+        return new FluentStep
         {
             KnownConstructorParameters = [..constructorContext.Constructor.Parameters],
             FluentMethods =
             [
-                new FluentMethod("Create", nextStep)
+                new FluentMethod("Create", nextStep, constructorContext.Constructor)
                 {
-                    Constructor = constructorContext.Constructor,
                     KnownConstructorParameters = constructorContext.Constructor.Parameters,
                 }
             ]
         };
     }
 
-    private static IEnumerable<FluentBuilderStep> MergedFluentSteps(IEnumerable<FluentBuilderStep> fluentBuilderSteps)
+    private static IEnumerable<FluentStep> MergedFluentSteps(IEnumerable<FluentStep> fluentBuilderSteps)
     {
         var groupedSteps = fluentBuilderSteps
-            .Select(step =>
-            {
-                step.FluentMethods = [
-                    ..step.FluentMethods.SelectMany<FluentMethod, FluentMethod>(method =>
-                    [
-                        method,
-                        ..method.ParameterConverters
-                            .Select<IMethodSymbol, FluentMethod>(converter => method with
-                            {
-                                SourceParameterSymbol = converter.Parameters.First(),
-                                ParameterConverter = converter
-                            })
-                    ])
-                ];
-                return step;
-            })
-            .GroupBy(step => step, FluentBuilderStep.ConstructorParametersComparer);
+            .GroupBy(step => step, FluentStep.ConstructorParametersComparer)
+            .ToImmutableArray();
 
         return groupedSteps
                 .Select(group =>
@@ -174,7 +172,21 @@ public static class FluentModelFactory
                     mergedStep.FluentMethods = [..MergeFluentMethods(mergedStep.FluentMethods)];
 
                     return mergedStep;
-                });
+                })
+                .ToImmutableArray();
+    }
+
+    private static IMethodSymbol NormalizedConverterMethod(IMethodSymbol converter, FluentMethod method)
+    {
+
+        var returnType = converter.ReturnType;
+        var sourceParameter = method.SourceParameterSymbol;
+
+        var mapping = TypeMapper.MapGenericArguments(returnType, sourceParameter!.Type);
+
+        var normalizedMethod = converter.NormalizeMethodTypeParameters(mapping);
+
+        return normalizedMethod;
     }
 
     private static IEnumerable<FluentMethod> MergeFluentMethods(IEnumerable<FluentMethod> fluentMethods)

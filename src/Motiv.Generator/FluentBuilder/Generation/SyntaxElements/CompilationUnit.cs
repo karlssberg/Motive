@@ -1,11 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
-using Motiv.Generator.FluentBuilder.Generation.Root;
-using Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.RootStep;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements;
 
 public static class CompilationUnit
 {

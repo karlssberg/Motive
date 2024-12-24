@@ -338,4 +338,364 @@ public class FluentMethodCustomizationTests
             }
         }.RunAsync();
     }
+
+    [Fact]
+        public async Task Should_add_overloaded_methods()
+        {
+            const string code =
+                """
+                using System;
+                using Motiv.Generator.Attributes;
+
+                [FluentFactory]
+                public static partial class Factory;
+
+                public class MyClass<T>
+                {
+                    [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                    public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
+                    {
+                        Value = value;
+                    }
+
+                    public T Value { get; set; }
+                }
+
+                public static class Overloads
+                {
+                    [FluentParameterConverter]
+                    public static T Convert<T>(Func<T> factory)
+                    {
+                        return factory();
+                    }
+                }
+
+                """;
+
+            const string expected =
+                """
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyClass<T> Create<T>(in T value)
+                    {
+                        return new MyClass<T>(value);
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyClass<T> Create<T>(in System.Func<T> factory)
+                    {
+                        return new MyClass<T>(Overloads.Convert<T>(factory));
+                    }
+                }
+                """;
+
+            await new VerifyCS.Test
+            {
+                TestState =
+                {
+                    Sources = { code },
+                    GeneratedSources =
+                    {
+                        (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                    }
+                }
+            }.RunAsync();
+        }
+
+    [Fact]
+    public async Task Should_apply_a_generic_converter_to_concrete_types()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyClass
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClass(
+                    [FluentMethod("Value1", Overloads = typeof(Overloads))]string value1,
+                    [FluentMethod("Create", Overloads = typeof(Overloads))]string value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public string Value1 { get; set; }
+                public string Value2 { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterConverter]
+                public static T Convert<T>(Func<T> factory)
+                {
+                    return factory();
+                }
+            }
+
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory Value1(in string value1)
+                {
+                    return new Step_0__Factory(value1);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory Value1(in System.Func<string> factory)
+                {
+                    return new Step_0__Factory(Overloads.Convert<string>(factory));
+                }
+            }
+
+            public struct Step_0__Factory
+            {
+                private readonly string _value1__parameter;
+                public Step_0__Factory(in string value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass Create(in string value2)
+                {
+                    return new MyClass(_value1__parameter, value2);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass Create(in System.Func<string> factory)
+                {
+                    return new MyClass(_value1__parameter, Overloads.Convert<string>(factory));
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_correctly_assign_generic_arguments_of_overloaded_methods_using_a_two_step_fluent_factory()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyClass<T>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClass(
+                    [FluentMethod("Value1", Overloads = typeof(Overloads))]T value1,
+                    [FluentMethod("Create", Overloads = typeof(Overloads))]T value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public T Value1 { get; set; }
+                public T Value2 { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterConverter]
+                public static T Convert<T>(Func<T> factory)
+                {
+                    return factory();
+                }
+            }
+
+            """;
+
+        const string expected =
+            """
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory<T> Value1<T>(in T value1)
+                {
+                    return new Step_0__Factory<T>(value1);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory<T> Value1<T>(in System.Func<T> factory)
+                {
+                    return new Step_0__Factory<T>(Overloads.Convert<T>(factory));
+                }
+            }
+
+            public struct Step_0__Factory<T>
+            {
+                private readonly T _value1__parameter;
+                public Step_0__Factory(in T value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass<T> Create(in T value2)
+                {
+                    return new MyClass<T>(_value1__parameter, value2);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass<T> Create(in System.Func<T> factory)
+                {
+                    return new MyClass<T>(_value1__parameter, Overloads.Convert<T>(factory));
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_correctly_assign_generic_arguments_of_overloaded_methods_using_a_three_step_fluent_factory()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyClass<T1, T2, T3>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClass(
+                    [FluentMethod("Value1", Overloads = typeof(Overloads))]T1 value1,
+                    [FluentMethod("Value2", Overloads = typeof(Overloads))]T2 value2,
+                    [FluentMethod("Create", Overloads = typeof(Overloads))]T3 value3)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                    Value3 = value3;
+                }
+
+                public T1 Value1 { get; set; }
+                public T2 Value2 { get; set; }
+                public T3 Value3 { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterConverter]
+                public static TResult Convert<TResult>(Func<string, string, TResult> function)
+                {
+                    // We are not interested in the string values - just that
+                    // the handling of generic arguments is correct
+                    return function("arbitrary-constant-string", "arbitrary-constant-string");
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory<T1> Value1<T1>(in T1 value1)
+                {
+                    return new Step_0__Factory<T1>(value1);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory<T1> Value1<T1>(in System.Func<string, string, T1> function)
+                {
+                    return new Step_0__Factory<T1>(Overloads.Convert<T1>(function));
+                }
+            }
+
+            public struct Step_0__Factory<T1>
+            {
+                private readonly T1 _value1__parameter;
+                public Step_0__Factory(in T1 value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public Step_1__Factory<T1, T2> Value2<T2>(in T2 value2)
+                {
+                    return new Step_1__Factory<T1, T2>(_value1__parameter, value2);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public Step_1__Factory<T1, T2> Value2<T2>(in System.Func<string, string, T2> function)
+                {
+                    return new Step_1__Factory<T1, T2>(_value1__parameter, Overloads.Convert<T2>(function));
+                }
+            }
+
+            public struct Step_1__Factory<T1, T2>
+            {
+                private readonly T1 _value1__parameter;
+                private readonly T2 _value2__parameter;
+                public Step_1__Factory(in T1 value1, in T2 value2)
+                {
+                    _value1__parameter = value1;
+                    _value2__parameter = value2;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass<T1, T2, T3> Create<T3>(in T3 value3)
+                {
+                    return new MyClass<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClass<T1, T2, T3> Create<T3>(in System.Func<string, string, T3> function)
+                {
+                    return new MyClass<T1, T2, T3>(_value1__parameter, _value2__parameter, Overloads.Convert<T3>(function));
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
 }

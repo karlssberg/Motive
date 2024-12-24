@@ -5,22 +5,19 @@ using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation.Root;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 
-public static class FluentRootStepMethodDeclaration
+public static class FluentStepMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method)
+        FluentMethod method,
+        FluentStep step)
     {
-        var returnObjectExpression = FluentStepCreationExpression.Create(
-            method,
-            ArgumentList(SeparatedList(
-                method.SourceParameterSymbol is null
-                    ? Array.Empty<ArgumentSyntax>()
-                    : [Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))]
-                )));
+        var stepActivationArgs = CreateStepConstructorArguments(method, step);
 
-        var methodDeclaration =  MethodDeclaration(
+        var returnObjectExpression = FluentStepCreationExpression.Create(method, stepActivationArgs);
+
+        var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
                 Identifier(method.MethodName))
             .WithAttributeLists(
@@ -47,13 +44,32 @@ public static class FluentRootStepMethodDeclaration
         if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
             return methodDeclaration;
 
-        var typeParameterSyntaxes = method.SourceParameterSymbol.Type.GetGenericTypeParameters().ToImmutableArray();
+        var existingTypeParameters = step.GenericConstructorParameters
+            .SelectMany(t => t.Type.GetGenericTypeParameters())
+            .Select(p => p.Identifier.Text)
+            .ToImmutableHashSet();
 
-        if (typeParameterSyntaxes.Length == 0)
-            return methodDeclaration;
+        var typeParameterSyntaxes = method.SourceParameterSymbol.Type
+            .GetGenericTypeParameters()
+            .Where(p => !existingTypeParameters.Contains(p.ToString()))
+            .ToImmutableArray();
 
-        return methodDeclaration
-            .WithTypeParameterList(
+        return typeParameterSyntaxes.Length == 0
+            ? methodDeclaration
+            : methodDeclaration.WithTypeParameterList(
                 TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
+    }
+
+    private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(
+        FluentMethod method,
+        FluentStep step)
+    {
+        return step.KnownConstructorParameters
+            .Select(parameter =>
+                Argument(IdentifierName(parameter.Name.ToParameterFieldName())))
+            .AppendIfNotNull(
+                method.SourceParameterSymbol is not null
+                    ? Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))
+                    : null);
     }
 }

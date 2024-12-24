@@ -3,15 +3,15 @@ using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentMethod(string MethodName, FluentBuilderStep? ReturnStep)
+public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSymbol Constructor)
 {
     public string MethodName { get; } = MethodName;
 
     public IParameterSymbol? SourceParameterSymbol { get; set; }
 
-    public FluentBuilderStep? ReturnStep { get; set; } = ReturnStep;
+    public FluentStep? ReturnStep { get; set; } = ReturnStep;
 
-    public IMethodSymbol? Constructor { get; set; }
+    public IMethodSymbol Constructor { get; set; } = Constructor;
 
     public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = ImmutableArray<IParameterSymbol>.Empty;
     public ImmutableArray<IMethodSymbol> ParameterConverters { get; set; } = ImmutableArray<IMethodSymbol>.Empty;

@@ -5,11 +5,11 @@ using Motiv.Generator.FluentBuilder.Generation;
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 
-public record FluentBuilderStep
+public record FluentStep
 {
     public string Name { get; set; } = "Step";
 
-    public FluentBuilderStep? Parent { get; set; }
+    public FluentStep? Parent { get; set; }
 
     /// <summary>
     /// The known constructor parameters up until this step.
@@ -17,7 +17,7 @@ public record FluentBuilderStep
     /// </summary>
     public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = [];
 
-    public static IEqualityComparer<FluentBuilderStep> ConstructorParametersComparer { get; } =
+    public static IEqualityComparer<FluentStep> ConstructorParametersComparer { get; } =
         new ConstructorParametersEqualityComparer();
 
     public ImmutableArray<FluentMethod> FluentMethods { get; set; } = [];
@@ -27,9 +27,9 @@ public record FluentBuilderStep
             .Where(parameter => parameter.IsOpenGenericType())
     ];
 
-    private sealed class ConstructorParametersEqualityComparer : IEqualityComparer<FluentBuilderStep>
+    private sealed class ConstructorParametersEqualityComparer : IEqualityComparer<FluentStep>
     {
-        public bool Equals(FluentBuilderStep? x, FluentBuilderStep? y)
+        public bool Equals(FluentStep? x, FluentStep? y)
         {
             if (ReferenceEquals(x, y)) return true;
             if (x is null) return false;
@@ -40,7 +40,7 @@ public record FluentBuilderStep
                 .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Name, p.Type.ToDisplayString())));
         }
 
-        public int GetHashCode(FluentBuilderStep obj)
+        public int GetHashCode(FluentStep obj)
         {
             return obj.KnownConstructorParameters
                 .Aggregate(101, (accumulator, parameter) => accumulator * 17 ^ (parameter.Name, parameter.Type.ToDisplayString()).GetHashCode());

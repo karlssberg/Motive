@@ -3,16 +3,18 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
-using Motiv.Generator.FluentBuilder.Generation.Factories;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Constructors;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 
 public static class FluentStepDeclaration
 {
     public static StructDeclarationSyntax Create(
-        FluentBuilderStep step)
+        FluentStep step)
     {
         var methodDeclarationSyntaxes = step.FluentMethods
             .Select<FluentMethod, MethodDeclarationSyntax>(method => method.Constructor is not null && method.ReturnStep is null

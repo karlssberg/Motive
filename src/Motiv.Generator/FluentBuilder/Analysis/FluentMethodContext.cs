@@ -1,12 +1,14 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.Attributes;
+using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
 public class FluentMethodContext(
     ImmutableArray<FluentMethodContext> priorMethodContexts,
-    IParameterSymbol sourceParameter)
+    IParameterSymbol sourceParameter,
+    Compilation compilation)
     : IEquatable<FluentMethodContext>
 {
     public override bool Equals(object? obj)
@@ -29,29 +31,7 @@ public class FluentMethodContext(
 
     public IParameterSymbol SourceParameter { get; } = sourceParameter;
 
-    private readonly Lazy<ImmutableArray<IMethodSymbol>> _lazyParameterOverloads = new(() =>
-    {
-        var typeConstant = sourceParameter
-            .GetAttributes()
-            .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
-            .Select(attr => attr.NamedArguments
-                .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
-                .Value)
-            .FirstOrDefault();
-        if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
-            return ImmutableArray<IMethodSymbol>.Empty;
-
-        return [
-            ..typeSymbol
-                .GetMembers()
-                .OfType<IMethodSymbol>()
-                .Where(method => method.Parameters.Length == 1)
-                .Where(method => method.ReturnType.Name == sourceParameter.Type.Name)
-                .Where(method => method.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
-        ];
-    });
-
-    public ImmutableArray<IMethodSymbol> ParameterConverters  => _lazyParameterOverloads.Value;
+    public ImmutableArray<IMethodSymbol> ParameterConverters { get; } = GetMethodOverloads(sourceParameter, compilation);
 
     public bool Equals(FluentMethodContext? fluentMethodContext)
     {
@@ -62,6 +42,30 @@ public class FluentMethodContext(
     }
 
     public ImmutableArray<FluentMethodContext> PriorMethodContexts { get;} = priorMethodContexts;
+
+    private static ImmutableArray<IMethodSymbol> GetMethodOverloads(IParameterSymbol sourceParameter, Compilation compilation)
+    {
+        var typeConstant = sourceParameter
+            .GetAttributes()
+            .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
+            .Select(attr => attr.NamedArguments
+                .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
+                .Value)
+            .FirstOrDefault();
+
+        // has overloads?
+        if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
+            return ImmutableArray<IMethodSymbol>.Empty;
+
+        return [
+            ..typeSymbol
+                .GetMembers()
+                .OfType<IMethodSymbol>()
+                .Where(method => method.Parameters.Length == 1)
+                .Where(method => compilation.IsAssignable(method.ReturnType,sourceParameter.Type))
+                .Where(method => method.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
+        ];
+    }
 }
 
 

@@ -7,19 +7,19 @@ namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 
 public static class StepNameSyntax
 {
-    public static NameSyntax Create(FluentBuilderStep step)
+    public static NameSyntax Create(FluentStep step)
     {
-        var distinctGemericParameters = step.GenericConstructorParameters
+        var distinctGenericParameters = step.GenericConstructorParameters
             .SelectMany(t => t.Type.GetGenericTypeArguments())
             .DistinctBy(symbol => symbol.ToDisplayString())
             .ToImmutableArray();
 
-        return distinctGemericParameters.Length > 0
+        return distinctGenericParameters.Length > 0
             ? GenericName(Identifier(step.Name))
                 .WithTypeArgumentList(
                     TypeArgumentList(SeparatedList<TypeSyntax>(
-                        distinctGemericParameters
-                            .Select(arg => IdentifierName(arg.Name))))
+                        distinctGenericParameters
+                            .Select(arg => IdentifierName(arg.ToDisplayString()))))
                 )
             : IdentifierName(step.Name);
     }

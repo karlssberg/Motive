@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.Attributes;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.FluentModel;
-using Motiv.Generator.FluentBuilder.Generation;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements;
 
 namespace Motiv.Generator.FluentBuilder;
 
@@ -21,11 +21,13 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             .ForAttributeWithMetadataName(TypeName.FluentConstructorAttribute,
                 predicate: (node, _) => node switch
                 {
+                    // Capture primary constructors
                     TypeDeclarationSyntax { ParameterList: not null, AttributeLists.Count: > 0 } => true,
+                    // Capture explicit constructors
                     ConstructorDeclarationSyntax { AttributeLists.Count: > 0 } => true,
                     _ => false
                 },
-                transform: (ctx, token) =>
+                transform: (ctx, _) =>
                 {
                     var syntax = ctx.TargetNode;
                     var filePath = syntax.SyntaxTree.FilePath;
@@ -38,11 +40,9 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             .Combine(compilationProvider)
             .SelectMany((data, ct) =>
             {
-                var semanticModel = data.Right.GetSemanticModel(data.Left.syntax.SyntaxTree);
-                var declaredSymbol = semanticModel.GetDeclaredSymbol(data.Left.syntax);
-                return declaredSymbol is not null
-                    ? CreateConstructorModels(semanticModel, declaredSymbol, ct)
-                    : [];
+                var compilation = data.Right;
+                var syntax = data.Left.syntax;
+                return CreateConstructorModels(compilation, syntax, ct);
             })
             .WithTrackingName("ConstructorModelCreation");
 
@@ -74,15 +74,22 @@ public class FluentFactoryGenerator : IIncrementalGenerator
     }
 
     private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorModels(
-        SemanticModel semanticModel,
-        ISymbol symbol,
+        Compilation compilation,
+        SyntaxNode syntaxTree,
         CancellationToken cancellationToken)
     {
         if (cancellationToken.IsCancellationRequested)
             return [];
 
-        return [..
-            GetFluentFactoryMetadata(symbol, semanticModel)
+        var semanticModel = compilation.GetSemanticModel(syntaxTree.SyntaxTree);
+
+        var symbol =  semanticModel.GetDeclaredSymbol(syntaxTree);
+        if (symbol is null)
+            return [];
+
+        return
+        [
+            ..GetFluentFactoryMetadata(symbol, semanticModel)
                 .Select(metadata =>
                 {
                     var attributePresent = metadata.AttributePresent;
@@ -101,7 +108,15 @@ public class FluentFactoryGenerator : IIncrementalGenerator
 
                     return symbol switch
                     {
-                        IMethodSymbol constructor => [new FluentConstructorContext(nameSpace, constructor, alreadyDeclaredRootType, metadata)],
+                        IMethodSymbol constructor =>
+                            [
+                                new FluentConstructorContext(
+                                    nameSpace,
+                                    constructor,
+                                    alreadyDeclaredRootType,
+                                    metadata,
+                                    constructor.ToFluentMethodContexts(compilation))
+                            ],
                         INamedTypeSymbol type => CreateFluentConstructorContexts(type, nameSpace, alreadyDeclaredRootType!, metadata),
                         _ => []
                     };
@@ -116,13 +131,18 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         {
             var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
             if (primaryCtor != null)
-                return [new FluentConstructorContext(nameSpace, primaryCtor, alreadyDeclaredRootType, metadata)];
+                return [new FluentConstructorContext(
+                    nameSpace,
+                    primaryCtor,
+                    alreadyDeclaredRootType,
+                    metadata,
+                    primaryCtor.ToFluentMethodContexts(compilation))];
 
             return
             [
                 ..type.Constructors
                     .Select(ctor =>
-                        new FluentConstructorContext(nameSpace, ctor, alreadyDeclaredRootType, metadata))
+                        new FluentConstructorContext(nameSpace, ctor, alreadyDeclaredRootType, metadata, ctor.ToFluentMethodContexts(compilation)))
             ];
         }
     }
@@ -141,20 +161,22 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             .Where(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentConstructorAttribute)
             .Select(attribute =>
             {
-                if (attribute == null || attribute.ConstructorArguments.Length == 0)
+                // ensure an attribute is present and has an argument
+                if (attribute is null || attribute.ConstructorArguments.Length == 0)
                     return FluentFactoryMetadata.Invalid;
 
                 var typeArg = attribute.ConstructorArguments.FirstOrDefault();
                 if (typeArg.IsNull)
                     return FluentFactoryMetadata.Invalid;
 
+                // Ensure the argument is a typeof() expression
                 if (typeArg.Value is not ITypeSymbol typeSymbol)
                     return FluentFactoryMetadata.Invalid;
 
+                // Grab the options flags symbol
                 var namedAttributeArgument = attribute.NamedArguments
                     .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentConstructorAttribute.Options))
                     .Value;
-
                 var options = ConvertToFluentFactoryGeneratorOptions(namedAttributeArgument);
 
                 return new FluentFactoryMetadata

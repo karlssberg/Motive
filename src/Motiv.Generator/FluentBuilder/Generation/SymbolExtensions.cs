@@ -96,4 +96,59 @@ public static class SymbolExtensions
             _ => []
         };
     }
+
+   public static bool IsAssignable(this Compilation compilation, ITypeSymbol parameterType, ITypeSymbol argumentType)
+    {
+        // If they're exactly the same type, return true
+        if (SymbolEqualityComparer.Default.Equals(parameterType, argumentType))
+            return true;
+
+        switch (parameterType)
+        {
+            // Handle when either is a type parameter
+            case ITypeParameterSymbol sourceParam:
+            {
+                // If target is also a type parameter, check if source satisfies target's constraints
+                if (argumentType is ITypeParameterSymbol targetParam)
+                {
+                    // Check if source type parameter satisfies all target's constraints
+                    foreach (var constraint in targetParam.ConstraintTypes)
+                    {
+                        var paramConversion = compilation.ClassifyCommonConversion(sourceParam, constraint);
+                        if (!paramConversion.Exists)
+                            return false;
+                    }
+
+                    if (targetParam.HasValueTypeConstraint && !sourceParam.HasValueTypeConstraint)
+                        return false;
+
+                    if (targetParam.HasReferenceTypeConstraint && !sourceParam.HasReferenceTypeConstraint)
+                        return false;
+
+                    if (targetParam.HasConstructorConstraint && !sourceParam.HasConstructorConstraint)
+                        return false;
+
+                    return true;
+                }
+
+                // If target is a regular type, check if source's constraints are compatible
+                foreach (var constraint in sourceParam.ConstraintTypes)
+                {
+                    var typeConversion = compilation.ClassifyCommonConversion(constraint, argumentType);
+                    if (typeConversion.Exists && typeConversion.IsImplicit)
+                        return true;
+                }
+
+                // Check special constraints against target
+                if (sourceParam.HasValueTypeConstraint && !argumentType.IsValueType)
+                    return false;
+
+                return !sourceParam.HasReferenceTypeConstraint || argumentType.IsReferenceType;
+            }
+            default:
+                // Fall back to checking conversion
+                var conversion = compilation.ClassifyCommonConversion(parameterType, argumentType);
+                return conversion is { Exists: true, IsImplicit: true };
+        }
+    }
 }

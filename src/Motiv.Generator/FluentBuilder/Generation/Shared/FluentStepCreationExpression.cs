@@ -9,37 +9,36 @@ public static class FluentStepCreationExpression
 {
     public static ObjectCreationExpressionSyntax Create(
         FluentMethod method,
-        ArgumentListSyntax argumentList)
+        IEnumerable<ArgumentSyntax> arguments)
     {
         var name = StepNameSyntax.Create(method.ReturnStep!);
 
         if (method.OverloadParameter is not null && method.ParameterConverter is not null)
         {
-            return CreateMethodOverloadExpression(method, argumentList, name);
+            return CreateMethodOverloadExpression(method, arguments, name);
         }
         return ObjectCreationExpression(name)
             .WithNewKeyword(
                 Token(SyntaxKind.NewKeyword))
-            .WithArgumentList(argumentList);
+            .WithArgumentList(ArgumentList(SeparatedList(arguments)));
     }
 
     private static ObjectCreationExpressionSyntax CreateMethodOverloadExpression(
         FluentMethod method,
-        ArgumentListSyntax argumentList,
+        IEnumerable<ArgumentSyntax> arguments,
         TypeSyntax name)
     {
+        var argumentList = arguments.ToList();
         var parameterConverterMethod = method.ParameterConverter!;
-        var converterMethod =
-            InvocationExpression(
-                    MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        ParseTypeName(parameterConverterMethod.ContainingType.ToDisplayString()),
-                        IdentifierName(parameterConverterMethod.Name)))
-                .WithArgumentList(argumentList);
+        IEnumerable<ArgumentSyntax> argNodes =
+        [
+            ..argumentList.Take(argumentList.Count - 1),
+            Argument(ParameterConverterInvocationExpression.Create(method, parameterConverterMethod, argumentList.Last()))
+        ];
 
         return ObjectCreationExpression(name)
             .WithNewKeyword(
                 Token(SyntaxKind.NewKeyword))
-            .WithArgumentList(ArgumentList(SeparatedList([Argument(converterMethod)])));
+            .WithArgumentList(ArgumentList(SeparatedList(argNodes)));
     }
 }

@@ -4,11 +4,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation.StepDeclarations;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Constructors;
 
 public static class FluentStepConstructorDeclaration
 {
-    public static ConstructorDeclarationSyntax Create(FluentBuilderStep step)
+    public static ConstructorDeclarationSyntax Create(FluentStep step)
     {
         var constructorParameters = CreateFluentStepConstructorParameters(step);
 
@@ -30,7 +30,7 @@ public static class FluentStepConstructorDeclaration
         return constructor;
     }
 
-    private static IEnumerable<SyntaxNodeOrToken> CreateFluentStepConstructorParameters(FluentBuilderStep step)
+    private static IEnumerable<SyntaxNodeOrToken> CreateFluentStepConstructorParameters(FluentStep step)
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
