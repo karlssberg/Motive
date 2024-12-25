@@ -55,7 +55,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                     .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        FluentModelFactory.CreateFluentFactoryCompilationUnit(group.Key, [..group])))
+                        new FluentModelFactory().CreateFluentFactoryCompilationUnit(group.Key, [..group])))
             .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
         // Step 4: Generate source based on model

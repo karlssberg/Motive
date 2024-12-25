@@ -188,9 +188,27 @@ public static class SymbolExtensions
         }
     }
 
-   public static IEnumerable<ITypeParameterSymbol> Union(this IEnumerable<ITypeParameterSymbol> first, IEnumerable<ITypeParameterSymbol> second) =>
-       first
+   public static IEnumerable<ITypeParameterSymbol> Union(
+       this IEnumerable<ITypeParameterSymbol> first,
+       IEnumerable<ITypeParameterSymbol> second)
+   {
+       return first
            .Union(second, SymbolEqualityComparer.IncludeNullability)
            .OfType<ITypeParameterSymbol>()
            .OrderBy(symbol => symbol.Name);
+   }
+
+
+   public static IEnumerable<ITypeParameterSymbol> Except(
+       this IEnumerable<ITypeParameterSymbol> collection,
+       IEnumerable<ITypeParameterSymbol> exclusions)
+   {
+       var exclusionSet = new HashSet<string>(exclusions.Select(parameter => parameter.ToDisplayString()));
+
+       foreach (var item in collection)
+       {
+          if (!exclusionSet.Contains(item.ToDisplayString()))
+            yield return item;
+       }
+   }
 }

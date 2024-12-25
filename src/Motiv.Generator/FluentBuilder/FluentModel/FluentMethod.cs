@@ -1,10 +1,14 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSymbol Constructor)
 {
+#if DEBUG
+    public int InstanceId => RuntimeHelpers.GetHashCode(this);
+#endif
     public string MethodName { get; } = MethodName;
 
     public IParameterSymbol? SourceParameterSymbol { get; set; }
@@ -32,6 +36,10 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
                     .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))))
                 return false;
 
+            if (x.ParameterConverter is null && y.ParameterConverter is null) return true;
+            if (x.ParameterConverter is null || y.ParameterConverter is null) return false;
+            if (x.ParameterConverter.ToDisplayString() != y.ParameterConverter.ToDisplayString()) return false;
+
             if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
             if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
 
@@ -43,16 +51,15 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
             var hash = obj.KnownConstructorParameters
                 .Select(p => (p.Type, Name: p.GetFluentMethodName()))
                 .Aggregate(
-                    101,
-                    (left, right) =>
+                    101, (left, right) =>
                         left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
 
             hash = hash * 397 ^ obj.MethodName.GetHashCode();
+            hash = hash * 397 ^ obj.ParameterConverter?.Name.GetHashCode() ?? 0;
 
-            if (obj.SourceParameterSymbol is null)
-                return hash;
-
-            return obj.SourceParameterSymbol.Type.ToDisplayString().GetHashCode();
+            return obj.SourceParameterSymbol is null
+                ? hash
+                : obj.SourceParameterSymbol.Type.ToDisplayString().GetHashCode();
         }
     }
 
