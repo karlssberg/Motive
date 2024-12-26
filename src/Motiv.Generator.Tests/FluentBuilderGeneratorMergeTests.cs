@@ -183,7 +183,7 @@ public class FluentBuilderGeneratorMergeTests
         }.RunAsync();
     }
 
-     [Fact]
+    [Fact]
     public async Task Should_merge_generated_from_different_namespaces_when_applied_to_class_constructors_with_two_parameters()
     {
         const string code =

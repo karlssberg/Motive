@@ -36,10 +36,6 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
                     .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))))
                 return false;
 
-            if (x.ParameterConverter is null && y.ParameterConverter is null) return true;
-            if (x.ParameterConverter is null || y.ParameterConverter is null) return false;
-            if (x.ParameterConverter.ToDisplayString() != y.ParameterConverter.ToDisplayString()) return false;
-
             if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
             if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
 
@@ -55,7 +51,6 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
                         left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
 
             hash = hash * 397 ^ obj.MethodName.GetHashCode();
-            hash = hash * 397 ^ obj.ParameterConverter?.Name.GetHashCode() ?? 0;
 
             return obj.SourceParameterSymbol is null
                 ? hash

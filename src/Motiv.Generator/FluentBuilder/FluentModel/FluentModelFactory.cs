@@ -7,25 +7,25 @@ using Motiv.Generator.FluentBuilder.Generation.Shared;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-
 public class FluentModelFactory
 {
     private OrderedDictionary<FluentStep, FluentStep> _steps = new(FluentStep.ConstructorParametersComparer);
 
-    public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(string fullname, ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
+    public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(string fullname,
+        ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
         _steps = new OrderedDictionary<FluentStep, FluentStep>(FluentStep.ConstructorParametersComparer);
 
         ImmutableArray<INamespaceSymbol> usings =
-            [
-                ..fluentConstructorContexts
-                    .SelectMany(ctx => ctx.Constructor.Parameters)
-                    .Select(parameter => parameter.Type)
-                    .Select(type => type.ContainingNamespace)
-                    .Concat(fluentConstructorContexts.Select(ctx => ctx.Constructor.ContainingType.ContainingNamespace))
-                    .DistinctBy(ns => ns.ToDisplayString())
-                    .OrderBy(ns => ns.ToDisplayString())
-            ];
+        [
+            ..fluentConstructorContexts
+                .SelectMany(ctx => ctx.Constructor.Parameters)
+                .Select(parameter => parameter.Type)
+                .Select(type => type.ContainingNamespace)
+                .Concat(fluentConstructorContexts.Select(ctx => ctx.Constructor.ContainingType.ContainingNamespace))
+                .DistinctBy(ns => ns.ToDisplayString())
+                .OrderBy(ns => ns.ToDisplayString())
+        ];
 
         var startingFluentSteps = GetStartingFluentSteps(fluentConstructorContexts);
 
@@ -59,7 +59,8 @@ public class FluentModelFactory
         };
     }
 
-    private static ImmutableArray<FluentStep> GetStartingFluentSteps(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
+    private static ImmutableArray<FluentStep> GetStartingFluentSteps(
+        ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
         return
         [
@@ -98,7 +99,8 @@ public class FluentModelFactory
         var fluentBuilderStep = new FluentStep
         {
             KnownConstructorParameters = [..constructorParameters],
-            FluentMethods = [
+            FluentMethods =
+            [
                 fluentBuilderMethod,
                 ..fluentBuilderMethod.ParameterConverters
                     .Select<IMethodSymbol, FluentMethod>(converter =>
@@ -113,15 +115,13 @@ public class FluentModelFactory
             ]
         };
 
-        if (fluentBuilderMethod.ReturnStep is not null)
-        {
-            fluentBuilderMethod.ReturnStep.Parent = fluentBuilderStep;
-        }
+        if (fluentBuilderMethod.ReturnStep is not null) fluentBuilderMethod.ReturnStep.Parent = fluentBuilderStep;
 
         return fluentBuilderStep;
     }
 
-    private static FluentStep? MaybeCreateCreationMethodStep(FluentStep? nextStep, FluentConstructorContext constructorContext)
+    private static FluentStep? MaybeCreateCreationMethodStep(FluentStep? nextStep,
+        FluentConstructorContext constructorContext)
     {
         if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
             return null;
@@ -133,7 +133,7 @@ public class FluentModelFactory
             [
                 new FluentMethod("Create", nextStep, constructorContext.Constructor)
                 {
-                    KnownConstructorParameters = constructorContext.Constructor.Parameters,
+                    KnownConstructorParameters = constructorContext.Constructor.Parameters
                 }
             ]
         };
@@ -146,17 +146,11 @@ public class FluentModelFactory
 
         foreach (var group in groupedSteps)
         {
-            var mergedStep = group
-                .Aggregate((prevStep, nextStep) =>
-                {
-                    prevStep.FluentMethods = prevStep.FluentMethods.AddRange(nextStep.FluentMethods);
-                    return prevStep;
-                });
-            mergedStep.FluentMethods = [..MergeFluentMethods(mergedStep.FluentMethods)];
+            var mergedStep = group.First();
+            mergedStep.FluentMethods = [..MergeFluentMethods(group.SelectMany(s => s.FluentMethods))];
+
             foreach (var method in mergedStep.FluentMethods.Where(method => method.ReturnStep is not null))
-            {
                 method.ReturnStep!.Parent = mergedStep;
-            }
 
             if (_steps.TryGetValue(mergedStep, out var step))
             {
@@ -188,90 +182,59 @@ public class FluentModelFactory
 
         foreach (var group in groups)
         {
-            var method = group
-                .Aggregate((prevMethod, nextMethod) =>
-                {
-                    if (prevMethod.ReturnStep is not null && nextMethod.ReturnStep is not null)
-                    {
-                        prevMethod.ReturnStep!.FluentMethods =
-                            prevMethod.ReturnStep.FluentMethods.AddRange(nextMethod.ReturnStep!.FluentMethods);
-                    }
+            var method = group.First();
+            var mergedMethod = method with { };
 
-                    prevMethod.ParameterConverters =
-                    [
-                        ..prevMethod.ParameterConverters
-                            .Union(nextMethod.ParameterConverters, SymbolEqualityComparer.Default)
-                            .OfType<IMethodSymbol>()
-                    ];
+            var allConverters = new List<IMethodSymbol>();
+            var allFluentMethods = new List<FluentMethod>();
 
-                    return prevMethod;
-                });
+            foreach (var nextMethod in group.Skip(1))
+            {
+                if (mergedMethod.ReturnStep is not null && nextMethod.ReturnStep is not null)
+                    allFluentMethods.AddRange(nextMethod.ReturnStep.FluentMethods);
+
+                allConverters.AddRange(nextMethod.ParameterConverters);
+            }
+
+            if (mergedMethod.ReturnStep is not null && allFluentMethods.Any())
+                mergedMethod.ReturnStep.FluentMethods =
+                    mergedMethod.ReturnStep.FluentMethods.AddRange(allFluentMethods);
+
+            mergedMethod.ParameterConverters =
+            [
+                ..allConverters
+                    .Union(method.ParameterConverters, SymbolEqualityComparer.Default)
+                    .OfType<IMethodSymbol>()
+            ];
+
             var returnSteps = group
                 .Select(m => m.ReturnStep)
                 .OfType<FluentStep>();
 
             var mergedReturnSteps = MergeFluentSteps(returnSteps).ToArray();
 
-            Debug.Assert(mergedReturnSteps.Length <= 1);
-            method.ReturnStep = mergedReturnSteps.FirstOrDefault();
+            if (mergedReturnSteps.Length > 1)
+            {
+                var sameName = mergedReturnSteps.Select(s => s.Name).Distinct().Count() == 1;
+                var sameKnownParameters = mergedReturnSteps.Select(s => s.KnownConstructorParameters).Distinct().Count() == 1;
 
-            yield return method;
+                var parameters =
+                    string.Join("\n\n",
+                        mergedReturnSteps.Select(s => string.Join(" -> ", s.KnownConstructorParameters)));
+                throw new FluentException(
+                    $"""
+                    When merging fluent methods, {mergedReturnSteps.Length} return step were discovered when only one was expected.
+                    The following methods were found:
+                      Same Name: {sameName} ({string.Join(", ", mergedReturnSteps.Select(s => $"\"{s.Name}\"").Distinct())})
+                      Same Known Parameters: {sameKnownParameters}
+
+                      {parameters}
+                    """);
+            }
+
+            mergedMethod.ReturnStep = mergedReturnSteps.FirstOrDefault();
+
+            yield return mergedMethod;
         }
-    }
-
-}
-public class OrderedDictionary<TKey, TValue>(IEqualityComparer<TKey> comparer)
-{
-    private readonly Dictionary<TKey, TValue> _dictionary = new(comparer);
-    private readonly List<TKey> _keys = [];
-
-    public void Add(TKey key, TValue value)
-    {
-        _dictionary.Add(key, value);
-        _keys.Add(key);
-    }
-
-    public bool TryGetValue(TKey key, out TValue value)
-    {
-        return _dictionary.TryGetValue(key, out value);
-    }
-
-    public bool Remove(TKey key)
-    {
-        if (_dictionary.Remove(key))
-        {
-            _keys.Remove(key);
-            return true;
-        }
-        return false;
-    }
-
-    public TValue this[TKey key]
-    {
-        get => _dictionary[key];
-        set
-        {
-            if (!_dictionary.ContainsKey(key))
-                _keys.Add(key);
-            _dictionary[key] = value;
-        }
-    }
-
-    public IEnumerable<KeyValuePair<TKey, TValue>> GetOrderedItems()
-    {
-        foreach (var key in _keys)
-        {
-            yield return new KeyValuePair<TKey, TValue>(key, _dictionary[key]);
-        }
-    }
-
-    public int Count => _dictionary.Count;
-    public IEnumerable<TValue> Values => _keys.Select(key => _dictionary[key]);
-
-    public bool ContainsKey(TKey key) => _dictionary.ContainsKey(key);
-    public void Clear()
-    {
-        _dictionary.Clear();
-        _keys.Clear();
     }
 }
