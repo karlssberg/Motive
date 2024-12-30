@@ -1,8 +1,8 @@
 ﻿namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public class OrderedDictionary<TKey, TValue>(IEqualityComparer<TKey> comparer)
+public class OrderedDictionary<TKey, TValue>
 {
-    private readonly Dictionary<TKey, TValue> _dictionary = new(comparer);
+    private readonly Dictionary<TKey, TValue> _dictionary = new();
     private readonly List<TKey> _keys = [];
 
     public TValue this[TKey key]

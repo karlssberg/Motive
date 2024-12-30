@@ -59,6 +59,138 @@ public class FluentMethodCustomizationTests
     }
 
     [Fact]
+    public async Task Should_generate_custom_step_when_using_generic_nested_types_on_a_delegate()
+    {
+        const string code =
+            """
+            using Motiv.Generator.Attributes;
+            using System;
+            using System.Collections.Generic;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+            public class MyBuildTarget<T1, T2, T3>([FluentMethod("SetValue", Overloads = typeof(Converter))]Func<IEnumerable<T1>, T2, T3> function)
+            {
+                public Func<IEnumerable<T1>, T2, T3> Value { get; set; } = function;
+            }
+
+            public static class Converter
+            {
+                [FluentParameterConverter]
+                public static Func<IEnumerable<T1>, T2, T3> Convert<T1, T2, T3>(T3 value)
+                {
+                    return (_, _) => value;
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyBuildTarget<T1, T2, T3> SetValue<T1, T2, T3>(in System.Func<System.Collections.Generic.IEnumerable<T1>, T2, T3> function)
+                    {
+                        return new MyBuildTarget<T1, T2, T3>(function);
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyBuildTarget<T1, T2, T3> SetValue<T1, T2, T3>(in T3 value)
+                    {
+                        return new MyBuildTarget<T1, T2, T3>(Test.Converter.Convert<T1, T2, T3>(value));
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_generate_custom_step_when_using_generic_nested_types_on_an_interface()
+    {
+        const string code =
+            """
+            using Motiv.Generator.Attributes;
+            using System;
+            using System.Collections.Generic;
+
+            namespace Test;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+            public class MyBuildTarget<T>([FluentMethod("SetValue", Overloads = typeof(Converter))]IEnumerable<IEnumerable<T>> function)
+            {
+                public IEnumerable<IEnumerable<T>> Value { get; set; } = function;
+            }
+
+            public static class Converter
+            {
+                [FluentParameterConverter]
+                public static IEnumerable<IEnumerable<T>> Convert<T>(T value)
+                {
+                    return [[value]];
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System.Collections.Generic;
+
+            namespace Test
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyBuildTarget<T> SetValue<T>(in System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> function)
+                    {
+                        return new MyBuildTarget<T>(function);
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static MyBuildTarget<T> SetValue<T>(in T value)
+                    {
+                        return new MyBuildTarget<T>(Test.Converter.Convert<T>(value));
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
     public async Task Should_generate_custom_step_when_applied_to_a_class_constructor_with_two_parameters()
     {
         const string code =
@@ -1473,4 +1605,119 @@ public class FluentMethodCustomizationTests
             }
         }.RunAsync();
     }
+
+    [Fact]
+    public async Task Given_duplicate_non_converter_and_converter_parameters_Should_afford_precedence_to_non_converter()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyClassA<T>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClassA(
+                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T, string> value1,
+                    [FluentMethod("Create")]Func<T, string> value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public Func<T, string> Value1 { get; set; }
+                public Func<T, string> Value2 { get; set; }
+            }
+
+            public class MyClassB<T>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClassB(
+                    [FluentMethod("Value1")]string value1,
+                    [FluentMethod("Create")]Func<T, string> value2)
+                {
+                    Value1 = value1;
+                    Value2 = value2;
+                }
+
+                public string Value1 { get; set; }
+                public Func<T, string> Value2 { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterConverter]
+                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                {
+                    return _ => value;
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_1__Factory<T> Value1<T>(in System.Func<T, string> value1)
+                {
+                    return new Step_1__Factory<T>(value1);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory Value1(in string value1)
+                {
+                    return new Step_0__Factory(value1);
+                }
+            }
+
+            public struct Step_0__Factory
+            {
+                private readonly string _value1__parameter;
+                public Step_0__Factory(in string value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClassB<T> Create<T>(in System.Func<T, string> value2)
+                {
+                    return new MyClassB<T>(_value1__parameter, value2);
+                }
+            }
+
+            public struct Step_1__Factory<T>
+            {
+                private readonly System.Func<T, string> _value1__parameter;
+                public Step_1__Factory(in System.Func<T, string> value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClassA<T> Create(in System.Func<T, string> value2)
+                {
+                    return new MyClassA<T>(_value1__parameter, value2);
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
 }

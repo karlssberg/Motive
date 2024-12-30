@@ -1,11 +1,12 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-
+[DebuggerDisplay("{ToString()}")]
 public class FluentStep
 {
 #if DEBUG
@@ -19,10 +20,7 @@ public class FluentStep
     /// The known constructor parameters up until this step.
     /// Potentially more parameters are required to satisfy a constructor signature.
     /// </summary>
-    public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = [];
-
-    public static IEqualityComparer<FluentStep> ConstructorParametersComparer { get; } =
-        new ConstructorParametersEqualityComparer();
+    public KnownConstructorParameters KnownConstructorParameters { get; set; } = [];
 
     public ImmutableArray<FluentMethod> FluentMethods { get; set; } = [];
 
@@ -31,29 +29,19 @@ public class FluentStep
             .Where(parameter => parameter.IsOpenGenericType())
     ];
 
-    private sealed class ConstructorParametersEqualityComparer : IEqualityComparer<FluentStep>
-    {
-        public bool Equals(FluentStep? x, FluentStep? y)
-        {
-            if (ReferenceEquals(x, y)) return true;
-            if (x is null) return false;
-            if (y is null) return false;
-            if (x.GetType() != y.GetType()) return false;
-
-            return x.KnownConstructorParameters
-                .Select(p => p.Type.ToDisplayString())
-                .SequenceEqual(y.KnownConstructorParameters.Select(p =>p.Type.ToDisplayString()));
-        }
-
-        public int GetHashCode(FluentStep obj)
-        {
-            return obj.KnownConstructorParameters
-                .Aggregate(101, (accumulator, parameter) => accumulator * 17 ^ parameter.Type.ToDisplayString().GetHashCode());
-        }
-    }
-
     public override string ToString()
     {
         return string.Join(", ", KnownConstructorParameters.Select(p => p.ToDisplayString()));
+    }
+
+    public FluentStep Clone()
+    {
+        return new FluentStep
+        {
+            Name = Name,
+            KnownConstructorParameters = KnownConstructorParameters,
+            FluentMethods = [..FluentMethods.Select(method => method with { ReturnStep = method.ReturnStep?.Clone()})],
+            Parent = Parent
+        };
     }
 }

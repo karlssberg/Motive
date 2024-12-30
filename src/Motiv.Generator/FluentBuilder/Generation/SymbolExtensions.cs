@@ -100,8 +100,11 @@ public static class SymbolExtensions
         };
     }
 
-   public static bool IsAssignable(this Compilation compilation, ITypeSymbol parameterType, ITypeSymbol argumentType)
+   public static bool IsAssignable(this Compilation compilation, ITypeSymbol? parameterType, ITypeSymbol? argumentType)
     {
+        if (parameterType is null || argumentType is null)
+            return false;
+
         // If they're exactly the same type, return true
         if (SymbolEqualityComparer.Default.Equals(parameterType, argumentType))
             return true;
@@ -148,36 +151,23 @@ public static class SymbolExtensions
 
                 return !sourceParam.HasReferenceTypeConstraint || argumentType.IsReferenceType;
             }
-            case INamedTypeSymbol { TypeKind: TypeKind.Delegate } paramNamedType:
+            case INamedTypeSymbol paramNamedType:
             {
                 // Handle delegate variance
-                if (argumentType is not INamedTypeSymbol { TypeKind: TypeKind.Delegate } argNamedType)
+                if (argumentType is not INamedTypeSymbol argNamedType)
                     return false;
 
                 // Check if they have the same number of type arguments
                 if (paramNamedType.TypeArguments.Length != argNamedType.TypeArguments.Length)
                     return false;
-
-                // For Func<>, the return type is covariant (last type parameter)
                 // All other parameters are contravariant
-                for (int i = 0; i < paramNamedType.TypeArguments.Length; i++)
+                for (var i = 0; i < paramNamedType.TypeArguments.Length; i++)
                 {
                     var paramTypeArg = paramNamedType.TypeArguments[i];
                     var argTypeArg = argNamedType.TypeArguments[i];
 
-                    // For the return type (last parameter)
-                    if (i == paramNamedType.TypeArguments.Length - 1)
-                    {
-                        // Covariant - argType must be assignable to paramType
-                        if (!compilation.IsAssignable(paramTypeArg, argTypeArg))
-                            return false;
-                    }
-                    else
-                    {
-                        // Contravariant - paramType must be assignable to argType
-                        if (!compilation.IsAssignable(argTypeArg, paramTypeArg))
-                            return false;
-                    }
+                    if (!compilation.IsAssignable(paramTypeArg, argTypeArg))
+                        return false;
                 }
                 return true;
             }

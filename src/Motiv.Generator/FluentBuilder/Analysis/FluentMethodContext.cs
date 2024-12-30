@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.Attributes;
+using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
@@ -11,27 +12,13 @@ public class FluentMethodContext(
     Compilation compilation)
     : IEquatable<FluentMethodContext>
 {
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((FluentMethodContext)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            return PriorMethodContexts.Aggregate(
-                SymbolEqualityComparer.Default.GetHashCode(SourceParameter) * 397,
-                (prev, current) => prev ^ current.GetHashCode() * 397);
-        }
-    }
-
+    public string Name => SourceParameter.GetFluentMethodName();
     public IParameterSymbol SourceParameter { get; } = sourceParameter;
 
-    public ImmutableArray<IMethodSymbol> ParameterConverters { get; } = GetMethodOverloads(sourceParameter, compilation);
+    public ImmutableArray<IMethodSymbol> ParameterConverters { get; } =
+        GetMethodOverloads(sourceParameter, compilation);
+
+    public ImmutableArray<FluentMethodContext> PriorMethodContexts { get; } = priorMethodContexts;
 
     public bool Equals(FluentMethodContext? fluentMethodContext)
     {
@@ -41,9 +28,28 @@ public class FluentMethodContext(
                PriorMethodContexts.SequenceEqual(fluentMethodContext.PriorMethodContexts);
     }
 
-    public ImmutableArray<FluentMethodContext> PriorMethodContexts { get;} = priorMethodContexts;
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((FluentMethodContext)obj);
+    }
 
-    private static ImmutableArray<IMethodSymbol> GetMethodOverloads(IParameterSymbol sourceParameter, Compilation compilation)
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            return PriorMethodContexts.Aggregate(
+                SymbolEqualityComparer.Default.GetHashCode(SourceParameter) * 397,
+                (prev, current) => prev ^ (current.GetHashCode() * 397));
+        }
+    }
+
+    private static ImmutableArray<IMethodSymbol> GetMethodOverloads(
+        IParameterSymbol sourceParameter,
+        Compilation compilation)
     {
         var typeConstant = sourceParameter
             .GetAttributes()
@@ -57,15 +63,15 @@ public class FluentMethodContext(
         if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
             return ImmutableArray<IMethodSymbol>.Empty;
 
-        return [
+        return
+        [
             ..typeSymbol
                 .GetMembers()
                 .OfType<IMethodSymbol>()
                 .Where(method => method.Parameters.Length == 1)
-                .Where(method => compilation.IsAssignable(method.ReturnType,sourceParameter.Type))
-                .Where(method => method.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
+                .Where(method => compilation.IsAssignable(method.ReturnType.OriginalDefinition, sourceParameter.Type))
+                .Where(method => method.GetAttributes().Any(a =>
+                    a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
         ];
     }
 }
-
-

@@ -18,7 +18,6 @@ public record FluentConstructorContext
         Options = metadata.Options;
         RootTypeFullName = metadata.RootTypeFullName;
         FluentMethodContexts = fluentMethodContexts;
-
         IsStatic = symbol switch
         {
             IMethodSymbol method => method.IsStatic,
@@ -55,5 +54,4 @@ public record FluentConstructorContext
     public IMethodSymbol Constructor { get; set; }
     public string RootTypeFullName { get; set; }
     public ImmutableArray<FluentMethodContext> FluentMethodContexts { get; set; }
-
 }

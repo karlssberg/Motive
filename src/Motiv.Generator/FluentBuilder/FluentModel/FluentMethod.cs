@@ -8,7 +8,13 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
 {
 #if DEBUG
     public int InstanceId => RuntimeHelpers.GetHashCode(this);
+
+    public override string ToString()
+    {
+        return $"InstanceId: {InstanceId}, MethodName: {MethodName}, SourceParameter: {SourceParameterSymbol?.ToDisplayString()}";
+    }
 #endif
+
     public string MethodName { get; } = MethodName;
 
     public IParameterSymbol? SourceParameterSymbol { get; set; }
@@ -17,12 +23,15 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
 
     public IMethodSymbol Constructor { get; set; } = Constructor;
 
-    public ImmutableArray<IParameterSymbol> KnownConstructorParameters { get; set; } = ImmutableArray<IParameterSymbol>.Empty;
+    public KnownConstructorParameters KnownConstructorParameters { get; set; } = new();
+
     public ImmutableArray<IMethodSymbol> ParameterConverters { get; set; } = ImmutableArray<IMethodSymbol>.Empty;
+
     public IMethodSymbol? ParameterConverter { get; set; }
+
     public IParameterSymbol? OverloadParameter => ParameterConverter?.Parameters.FirstOrDefault();
 
-    private sealed class FluentBuilderMethodEqualityComparer : IEqualityComparer<FluentMethod>
+    private sealed class FluentMethodEqualityComparer : IEqualityComparer<FluentMethod>
     {
         public bool Equals(FluentMethod? x, FluentMethod? y)
         {
@@ -31,10 +40,7 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
             if (y is null) return false;
             if (x.GetType() != y.GetType()) return false;
             if (x.MethodName != y.MethodName) return false;
-            if (!x.KnownConstructorParameters
-                    .Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))
-                    .SequenceEqual(y.KnownConstructorParameters.Select(p => (p.Type.ToDisplayString(), p.GetFluentMethodName()))))
-                return false;
+            if (x.KnownConstructorParameters != y.KnownConstructorParameters) return false;
 
             if (x.SourceParameterSymbol is null && y.SourceParameterSymbol is null) return true;
             if (x.SourceParameterSymbol is null || y.SourceParameterSymbol is null) return false;
@@ -44,11 +50,7 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
 
         public int GetHashCode(FluentMethod obj)
         {
-            var hash = obj.KnownConstructorParameters
-                .Select(p => (p.Type, Name: p.GetFluentMethodName()))
-                .Aggregate(
-                    101, (left, right) =>
-                        left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
+            var hash = obj.KnownConstructorParameters.GetHashCode();
 
             hash = hash * 397 ^ obj.MethodName.GetHashCode();
 
@@ -58,6 +60,5 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
         }
     }
 
-    public static IEqualityComparer<FluentMethod> FluentBuilderMethodComparer { get; } = new FluentBuilderMethodEqualityComparer();
-
+    public static IEqualityComparer<FluentMethod> FluentMethodComparer { get; } = new FluentMethodEqualityComparer();
 }
