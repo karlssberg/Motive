@@ -22,7 +22,7 @@ public class FluentStep
     /// </summary>
     public KnownConstructorParameters KnownConstructorParameters { get; set; } = [];
 
-    public ImmutableArray<FluentMethod> FluentMethods { get; set; } = [];
+    public IList<FluentMethod> FluentMethods { get; set; } = [];
 
     public ImmutableArray<IParameterSymbol> GenericConstructorParameters => [
         ..KnownConstructorParameters

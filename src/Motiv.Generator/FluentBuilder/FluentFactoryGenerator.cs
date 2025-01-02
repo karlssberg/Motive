@@ -42,11 +42,11 @@ public class FluentFactoryGenerator : IIncrementalGenerator
             {
                 var compilation = data.Right;
                 var syntax = data.Left.syntax;
-                return CreateConstructorModels(compilation, syntax, ct);
+                return CreateConstructorContexts(compilation, syntax, ct);
             })
             .WithTrackingName("ConstructorModelCreation");
 
-        // Step 3: Convert to a model of the fluent steps
+        // Step 3: Transform constructor contexts into compiled file contents
         var consolidated = constructorModels
             .Collect()
             .Combine(compilationProvider)
@@ -58,11 +58,11 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                     .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        new FluentModelFactory(compilation).CreateFluentFactoryCompilationUnit(group.Key, [..group]));
+                        new TrieFluentModelFactory(compilation).CreateFluentFactoryCompilationUnit(group.Key, [..group]));
             })
             .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
-        // Step 4: Generate source based on model
+        // Step 4: Write the generated files.
         context.RegisterSourceOutput(consolidated, Execute);
     }
 
@@ -77,7 +77,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
         context.AddSource($"{builder.FullName}.g.cs", source);
     }
 
-    private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorModels(
+    private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorContexts(
         Compilation compilation,
         SyntaxNode syntaxTree,
         CancellationToken cancellationToken)
@@ -119,7 +119,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                                 constructor,
                                 alreadyDeclaredRootType,
                                 metadata,
-                                constructor.ToFluentMethodContexts(compilation))
+                                compilation)
                         ],
                         INamedTypeSymbol type => CreateFluentConstructorContexts(type, nameSpace,
                             alreadyDeclaredRootType!, metadata),
@@ -143,7 +143,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                         primaryCtor,
                         alreadyDeclaredRootType,
                         metadata,
-                        primaryCtor.ToFluentMethodContexts(compilation))
+                        compilation)
                 ];
 
             return
@@ -155,7 +155,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                             ctor,
                             alreadyDeclaredRootType,
                             metadata,
-                            ctor.ToFluentMethodContexts(compilation)))
+                            compilation))
             ];
         }
     }

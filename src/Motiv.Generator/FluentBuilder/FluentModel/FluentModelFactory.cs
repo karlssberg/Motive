@@ -86,10 +86,10 @@ public class FluentModelFactory(Compilation compilation)
         var fluentBuilderMethod =
             new FluentMethod(
                 method.Name,
-                methodReturnStep ?? MaybeCreateStepContainingCreateMethod(methodReturnStep, constructorContext),
+                methodReturnStep ?? MaybeCreateStepContainingCreateMethod(constructorContext),
                 constructorContext.Constructor)
             {
-                SourceParameterSymbol = method.SourceParameter,
+                FluentParameter = new FluentParameter(method.SourceParameter),
                 KnownConstructorParameters = new KnownConstructorParameters(knownConstructorParameters),
                 ParameterConverters = method.ParameterConverters
             };
@@ -106,7 +106,7 @@ public class FluentModelFactory(Compilation compilation)
                         var normalizedConverter = NormalizedConverterMethod(converter, fluentBuilderMethod);
                         return fluentBuilderMethod with
                         {
-                            SourceParameterSymbol = normalizedConverter.Parameters.First(),
+                            FluentParameter = new FluentParameter(normalizedConverter.Parameters.First()),
                             ParameterConverter = normalizedConverter,
                             ReturnStep = fluentBuilderMethod.ReturnStep?.Clone()
                         };
@@ -119,9 +119,7 @@ public class FluentModelFactory(Compilation compilation)
         return fluentBuilderStep;
     }
 
-    private static FluentStep? MaybeCreateStepContainingCreateMethod(
-        FluentStep? nextStep,
-        FluentConstructorContext constructorContext)
+    private static FluentStep? MaybeCreateStepContainingCreateMethod(FluentConstructorContext constructorContext)
     {
         if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
             return null;
@@ -131,7 +129,7 @@ public class FluentModelFactory(Compilation compilation)
             KnownConstructorParameters = new KnownConstructorParameters(constructorContext.Constructor.Parameters),
             FluentMethods =
             [
-                new FluentMethod("Create", nextStep, constructorContext.Constructor)
+                new FluentMethod("Create", constructorContext.Constructor)
                 {
                     KnownConstructorParameters = new KnownConstructorParameters(constructorContext.Constructor.Parameters)
                 }
@@ -206,8 +204,7 @@ public class FluentModelFactory(Compilation compilation)
             }
 
             if (mergedMethod.ReturnStep is not null && allReturnStepFluentMethods.Any())
-                mergedMethod.ReturnStep.FluentMethods =
-                    mergedMethod.ReturnStep.FluentMethods.AddRange(allReturnStepFluentMethods);
+                mergedMethod.ReturnStep.FluentMethods.AddRange(allReturnStepFluentMethods);
 
             mergedMethod.ParameterConverters = [..allConverters];
 

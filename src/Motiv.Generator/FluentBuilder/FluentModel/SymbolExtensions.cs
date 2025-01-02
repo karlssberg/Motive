@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
-using Motiv.Generator.Attributes;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.Generation;
 
@@ -18,9 +17,9 @@ public static class SymbolExtensions
 
         var attribute = parameterSymbol.GetAttributes().FirstOrDefault(a =>
             a.AttributeClass?.ToDisplayString(format) == TypeName.FluentMethodAttribute);
-        if (attribute is not null)
+        if (attribute is { ConstructorArguments.Length: 1 })
         {
-            return attribute.ConstructorArguments[0].Value?.ToString() ?? string.Empty;
+            return attribute.ConstructorArguments.First().Value?.ToString() ?? string.Empty;
         }
 
         return $"With{parameterSymbol.Name.Capitalize()}";

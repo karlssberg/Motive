@@ -6,18 +6,19 @@ namespace Motiv.Generator.FluentBuilder.Analysis;
 
 public record FluentConstructorContext
 {
+
     public FluentConstructorContext(
         string @namespace,
         IMethodSymbol constructor,
         ISymbol? symbol,
         FluentFactoryMetadata metadata,
-        ImmutableArray<FluentMethodContext> fluentMethodContexts)
+        Compilation compilation)
     {
         NameSpace = @namespace;
         Constructor = constructor;
         Options = metadata.Options;
         RootTypeFullName = metadata.RootTypeFullName;
-        FluentMethodContexts = fluentMethodContexts;
+        FluentMethodContexts = constructor.ToFluentMethodContexts(compilation);
         IsStatic = symbol switch
         {
             IMethodSymbol method => method.IsStatic,
@@ -54,4 +55,5 @@ public record FluentConstructorContext
     public IMethodSymbol Constructor { get; set; }
     public string RootTypeFullName { get; set; }
     public ImmutableArray<FluentMethodContext> FluentMethodContexts { get; set; }
+
 }

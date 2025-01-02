@@ -1664,37 +1664,22 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_1__Factory<T> Value1<T>(in System.Func<T, string> value1)
+                public static Step_0__Factory<T> Value1<T>(in System.Func<T, string> value1)
                 {
-                    return new Step_1__Factory<T>(value1);
+                    return new Step_0__Factory<T>(value1);
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory Value1(in string value1)
+                public static Step_1__Factory Value1(in string value1)
                 {
-                    return new Step_0__Factory(value1);
+                    return new Step_1__Factory(value1);
                 }
             }
 
-            public struct Step_0__Factory
-            {
-                private readonly string _value1__parameter;
-                public Step_0__Factory(in string value1)
-                {
-                    _value1__parameter = value1;
-                }
-
-                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassB<T> Create<T>(in System.Func<T, string> value2)
-                {
-                    return new MyClassB<T>(_value1__parameter, value2);
-                }
-            }
-
-            public struct Step_1__Factory<T>
+            public struct Step_0__Factory<T>
             {
                 private readonly System.Func<T, string> _value1__parameter;
-                public Step_1__Factory(in System.Func<T, string> value1)
+                public Step_0__Factory(in System.Func<T, string> value1)
                 {
                     _value1__parameter = value1;
                 }
@@ -1703,6 +1688,21 @@ public class FluentMethodCustomizationTests
                 public MyClassA<T> Create(in System.Func<T, string> value2)
                 {
                     return new MyClassA<T>(_value1__parameter, value2);
+                }
+            }
+
+            public struct Step_1__Factory
+            {
+                private readonly string _value1__parameter;
+                public Step_1__Factory(in string value1)
+                {
+                    _value1__parameter = value1;
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public MyClassB<T> Create<T>(in System.Func<T, string> value2)
+                {
+                    return new MyClassB<T>(_value1__parameter, value2);
                 }
             }
             """;

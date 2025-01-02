@@ -1,6 +1,8 @@
-﻿namespace Motiv.Generator.FluentBuilder.FluentModel;
+﻿using System.Collections;
 
-public class OrderedDictionary<TKey, TValue>
+namespace Motiv.Generator.FluentBuilder.FluentModel;
+
+public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 {
     private readonly Dictionary<TKey, TValue> _dictionary = new();
     private readonly List<TKey> _keys = [];
@@ -16,7 +18,19 @@ public class OrderedDictionary<TKey, TValue>
         }
     }
 
+    public bool Remove(KeyValuePair<TKey, TValue> item)
+    {
+        _keys.Remove(item.Key);
+        return _dictionary.Remove(item.Key);
+    }
+
     public int Count => _dictionary.Count;
+    public bool IsReadOnly => ((IDictionary<TKey, TValue>)_dictionary).IsReadOnly;
+
+    public ICollection<TKey> Keys => _dictionary.Keys;
+
+    ICollection<TValue> IDictionary<TKey, TValue>.Values => _dictionary.Values;
+
     public IEnumerable<TValue> Values => _keys.Select(key => _dictionary[key]);
 
     public void Add(TKey key, TValue value)
@@ -51,9 +65,36 @@ public class OrderedDictionary<TKey, TValue>
         return _dictionary.ContainsKey(key);
     }
 
+    public void Add(KeyValuePair<TKey, TValue> item)
+    {
+        _dictionary.Add(item.Key, item.Value);
+        _keys.Add(item.Key);
+    }
+
     public void Clear()
     {
         _dictionary.Clear();
         _keys.Clear();
+    }
+
+    public bool Contains(KeyValuePair<TKey, TValue> item)
+    {
+        return _dictionary.Contains(item);
+    }
+
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        ((IDictionary<TKey, TValue>)_dictionary).CopyTo(array, arrayIndex);
+
+    }
+
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+        return _dictionary.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)_dictionary).GetEnumerator();
     }
 }

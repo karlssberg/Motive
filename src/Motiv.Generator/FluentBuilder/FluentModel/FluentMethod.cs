@@ -4,8 +4,12 @@ using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSymbol Constructor)
+public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSymbol? Constructor = null)
 {
+    public FluentMethod(string MethodName, IMethodSymbol? Constructor) : this(MethodName, null, Constructor)
+    {
+    }
+
 #if DEBUG
     public int InstanceId => RuntimeHelpers.GetHashCode(this);
 
@@ -17,11 +21,13 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
 
     public string MethodName { get; } = MethodName;
 
-    public IParameterSymbol? SourceParameterSymbol { get; set; }
+    public IParameterSymbol? SourceParameterSymbol => FluentParameter?.ParameterSymbol;
+
+    public FluentParameter? FluentParameter { get; set; }
 
     public FluentStep? ReturnStep { get; set; } = ReturnStep;
 
-    public IMethodSymbol Constructor { get; set; } = Constructor;
+    public IMethodSymbol? Constructor { get; set; } = Constructor;
 
     public KnownConstructorParameters KnownConstructorParameters { get; set; } = new();
 

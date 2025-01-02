@@ -1,6 +1,8 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Motiv.Generator.Attributes;
 
 namespace Motiv.Generator.FluentBuilder.Generation;
 
@@ -200,5 +202,33 @@ public static class SymbolExtensions
           if (!exclusionSet.Contains(item.ToDisplayString()))
             yield return item;
        }
+   }
+
+   public static ImmutableArray<IMethodSymbol> GetFluentMethodOverloads(
+       this Compilation compilation,
+       IParameterSymbol sourceParameter)
+   {
+       var typeConstant = sourceParameter
+           .GetAttributes()
+           .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
+           .Select(attr => attr.NamedArguments
+               .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
+               .Value)
+           .FirstOrDefault();
+
+       // has overloads?
+       if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
+           return ImmutableArray<IMethodSymbol>.Empty;
+
+       return
+       [
+           ..typeSymbol
+               .GetMembers()
+               .OfType<IMethodSymbol>()
+               .Where(method => method.Parameters.Length == 1)
+               .Where(method => compilation.IsAssignable(method.ReturnType.OriginalDefinition, sourceParameter.Type))
+               .Where(method => method.GetAttributes().Any(a =>
+                   a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
+       ];
    }
 }

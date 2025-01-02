@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace Motiv.Generator.FluentBuilder.Generation;
+namespace Motiv.Generator.FluentBuilder;
 
 public static class EnumerableExtensions
 {
@@ -39,5 +39,15 @@ public static class EnumerableExtensions
                 yield return type;
             }
         }
+    }
+
+    public static IList<T> AddRange<T>(this IList<T> source, IEnumerable<T> values)
+    {
+        foreach (var value in values)
+        {
+            source.Add(value);
+        }
+
+        return source;
     }
 }

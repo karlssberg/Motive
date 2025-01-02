@@ -7,7 +7,7 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 public class KnownConstructorParameters : IEquatable<KnownConstructorParameters>, IEnumerable<IParameterSymbol>
 {
     private ImmutableArray<IParameterSymbol> ParameterSymbols { get; }
-    private IEnumerable<(string Type, string NamespaceKind)> ParameterSymbolsPrecomputed { get; }
+    private (string Type, string Name)[] ParameterSymbolsPrecomputed { get; }
 
     private readonly int _hashCode;
 
@@ -22,12 +22,16 @@ public class KnownConstructorParameters : IEquatable<KnownConstructorParameters>
     {
         ImmutableArray<IParameterSymbol> parameterSymbolsArray = [..parameterSymbols];
         ParameterSymbols = parameterSymbolsArray;
-        ParameterSymbolsPrecomputed = parameterSymbolsArray.Select(p => (Type: p.Type.ToDisplayString(), NamespaceKind: p.GetFluentMethodName()));
+        ParameterSymbolsPrecomputed = parameterSymbolsArray.Select(p => (Type: p.Type.ToDisplayString(), Name: p.GetFluentMethodName())).ToArray();
         _hashCode = parameterSymbolsArray
             .Select(p => (p.Type, Name: p.GetFluentMethodName()))
             .Aggregate(
                 101, (left, right) =>
                     left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
+    }
+
+    public KnownConstructorParameters(IEnumerable<FluentParameter> fluentParameters) : this(fluentParameters.Select(fp => fp.ParameterSymbol))
+    {
     }
 
     public IEnumerator<IParameterSymbol> GetEnumerator()
