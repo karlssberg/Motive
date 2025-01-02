@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using Motiv.Generator.FluentBuilder.Analysis;
+﻿using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Generation;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
@@ -24,23 +22,4 @@ public static class SymbolExtensions
 
         return $"With{parameterSymbol.Name.Capitalize()}";
     }
-
-    public static ImmutableArray<FluentMethodContext> GetFluentMethodContexts(
-        this Compilation compilation,
-        IMethodSymbol constructor
-        )
-    {
-        return
-        [
-            ..constructor.Parameters.ToFluentMethodContexts(compilation)
-        ];
-    }
-
-    private static ImmutableArray<FluentMethodContext> ToFluentMethodContexts(
-        this IEnumerable<IParameterSymbol> source,
-        Compilation compilation) =>
-        // accumulate
-        source
-            .Aggregate(ImmutableArray<FluentMethodContext>.Empty, (accumulator, parameter) =>
-                accumulator.Add(new FluentMethodContext(accumulator, parameter, compilation)));
 }

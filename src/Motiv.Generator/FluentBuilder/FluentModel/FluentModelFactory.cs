@@ -197,10 +197,10 @@ public class FluentModelFactory(Compilation compilation)
         var trie = new Trie<FluentParameter, ConstructorMetadata>();
         foreach (var constructorContext in fluentConstructorContexts)
         {
-            var fluentParameters = compilation
-                .GetFluentMethodContexts(constructorContext.Constructor)
-                .Select(ctx => new FluentParameter(ctx.SourceParameter))
-                .ToImmutableArray();
+            var fluentParameters =
+                constructorContext.Constructor.Parameters
+                    .Select(parameter => new FluentParameter(parameter))
+                    .ToImmutableArray();
 
             trie.Insert(
                 fluentParameters,

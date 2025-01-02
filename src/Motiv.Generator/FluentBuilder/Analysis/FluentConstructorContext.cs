@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
-using Motiv.Generator.FluentBuilder.FluentModel;
+﻿using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
