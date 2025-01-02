@@ -13,12 +13,8 @@ public static class FluentRootFactoryMethodDeclaration
     public static MethodDeclarationSyntax Create(
         FluentMethod method)
     {
-        var identifierNameSyntaxes = method.KnownConstructorParameters
-            .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
-            .AppendIfNotNull(
-                method.SourceParameterSymbol is not null
-                ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
-                : null);
+        var identifierNameSyntaxes = method.FluentParameters
+            .Select(parameter => IdentifierName(parameter.ParameterSymbol.Name.ToCamelCase()));
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
             method,
@@ -37,16 +33,18 @@ public static class FluentRootFactoryMethodDeclaration
                     Token(SyntaxKind.PublicKeyword)))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (method.SourceParameterSymbol is not null)
+        if (method.FluentParameters.Length > 0)
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
-                    ParameterList(SingletonSeparatedList(
-                        Parameter(
-                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                            .WithType(
-                                IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+                    ParameterList(SeparatedList(
+                        method.FluentParameters
+                            .Select(parameter =>
+                                Parameter(
+                                        Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
+                                    .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                                    .WithType(
+                                        IdentifierName(parameter.ParameterSymbol.Type.ToString()))))));
         }
 
         if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))

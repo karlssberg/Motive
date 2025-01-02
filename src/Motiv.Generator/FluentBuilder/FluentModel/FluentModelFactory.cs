@@ -8,46 +8,34 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public class FluentModelFactory(Compilation compilation)
 {
-    private OrderedDictionary<KnownConstructorParameters, FluentStep> _steps = new();
-
-    public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(string fullname,
+    public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(
+        string fullname,
         ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
-        _steps = new OrderedDictionary<KnownConstructorParameters, FluentStep>();
+        var usings = GetUsingStatements(fluentConstructorContexts);
 
-        ImmutableArray<INamespaceSymbol> usings =
-        [
-            ..fluentConstructorContexts
-                .SelectMany(ctx => ctx.Constructor.Parameters)
-                .Select(parameter => parameter.Type)
-                .Select(type => type.ContainingNamespace)
-                .Concat(fluentConstructorContexts.Select(ctx => ctx.Constructor.ContainingType.ContainingNamespace))
-                .DistinctBy(ns => ns.ToDisplayString())
-                .OrderBy(ns => ns.ToDisplayString())
-        ];
+        var stepTrie = CreateFluentStepTrie(fluentConstructorContexts);
 
-        var startingFluentSteps = GetStartingFluentSteps(fluentConstructorContexts);
+        var rootFluentStep = ConvertNodeToFluentStep(stepTrie.Root);
 
-        var mergedFluentBuilderSteps = MergeFluentSteps(startingFluentSteps).ToImmutableArray();
+        var childFluentSteps = rootFluentStep?.FluentMethods
+            .Select(m => m.ReturnStep)
+            .OfType<FluentStep>() ?? [];
 
-        var fluentBuilderSteps = _steps.Values
-            .Except(startingFluentSteps)
-            .Reverse()
-            .Select((step, index) =>
-            {
-                step.Name = $"Step_{index}__{fullname.Replace(".", "_")}";
-                return step;
-            })
-            .ToImmutableArray();
-
-        var fluentBuilderMethods = mergedFluentBuilderSteps
-            .SelectMany(step => step.FluentMethods)
-            .ToImmutableArray();
+        var fluentBuilderSteps =
+            GetDescendentFluentSteps(childFluentSteps)
+                .DistinctBy(step => step.KnownConstructorParameters)
+                .Select((step, index) =>
+                {
+                    step.Name = $"Step_{index}__{fullname.Replace(".", "_")}";
+                    return step;
+                })
+                .ToImmutableArray();
 
         var sampleConstructorContext = fluentConstructorContexts.First();
         return new FluentFactoryCompilationUnit(
             fullname,
-            [..fluentBuilderMethods],
+            [..rootFluentStep?.FluentMethods ?? []],
             fluentBuilderSteps,
             usings)
         {
@@ -58,111 +46,170 @@ public class FluentModelFactory(Compilation compilation)
         };
     }
 
-    private static ImmutableArray<FluentStep> GetStartingFluentSteps(
-        ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
+    private static IEnumerable<FluentStep> GetDescendentFluentSteps(IEnumerable<FluentStep> fluentSteps)
     {
-        return
-        [
-            ..fluentConstructorContexts
-                .Select(constructorContext => constructorContext.FluentMethodContexts
-                    .Reverse()
-                    .Aggregate(default(FluentStep?), (nextStep, method) =>
-                        CreateFluentBuilderStep(method, nextStep, constructorContext)))
-                .Where(step => step is not null)
-        ];
-    }
-
-    private static FluentStep? CreateFluentBuilderStep(
-        FluentMethodContext method,
-        FluentStep? methodReturnStep,
-        FluentConstructorContext constructorContext)
-    {
-        var knownConstructorParameters =
-            method
-                .PriorMethodContexts
-                .Select(methodContext => methodContext.SourceParameter)
-                .ToImmutableArray();
-
-        var fluentBuilderMethod =
-            new FluentMethod(
-                method.Name,
-                methodReturnStep ?? MaybeCreateStepContainingCreateMethod(constructorContext),
-                constructorContext.Constructor)
-            {
-                FluentParameter = new FluentParameter(method.SourceParameter),
-                KnownConstructorParameters = new KnownConstructorParameters(knownConstructorParameters),
-                ParameterConverters = method.ParameterConverters
-            };
-
-        var fluentBuilderStep = new FluentStep
+        foreach (var fluentStep in fluentSteps)
         {
-            KnownConstructorParameters = new KnownConstructorParameters(knownConstructorParameters),
-            FluentMethods =
-            [
-                fluentBuilderMethod,
-                ..fluentBuilderMethod.ParameterConverters
-                    .Select<IMethodSymbol, FluentMethod>(converter =>
-                    {
-                        var normalizedConverter = NormalizedConverterMethod(converter, fluentBuilderMethod);
-                        return fluentBuilderMethod with
-                        {
-                            FluentParameter = new FluentParameter(normalizedConverter.Parameters.First()),
-                            ParameterConverter = normalizedConverter,
-                            ReturnStep = fluentBuilderMethod.ReturnStep?.Clone()
-                        };
-                    })
-            ]
-        };
+            yield return fluentStep;
 
-        if (fluentBuilderMethod.ReturnStep is not null) fluentBuilderMethod.ReturnStep.Parent = fluentBuilderStep;
+            var childSteps = fluentStep.FluentMethods
+                .Select(m => m.ReturnStep)
+                .OfType<FluentStep>();
 
-        return fluentBuilderStep;
+            foreach (var underlyingFluentStep in GetDescendentFluentSteps(childSteps))
+                yield return underlyingFluentStep;
+        }
     }
 
-    private static FluentStep? MaybeCreateStepContainingCreateMethod(FluentConstructorContext constructorContext)
+    private FluentStep? ConvertNodeToFluentStep(Trie<FluentParameter, ConstructorMetadata>.Node node)
     {
-        if (constructorContext.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod))
+        FluentMethod[] fluentMethods =
+        [
+            ..ConvertNodeToFluentMethods(node),
+            ..ConvertNodeToCreationMethods(node)
+        ];
+
+        if (fluentMethods.Length == 0)
             return null;
 
-        return new FluentStep
+        var fluentStep = new FluentStep
         {
-            KnownConstructorParameters = new KnownConstructorParameters(constructorContext.Constructor.Parameters),
-            FluentMethods =
-            [
-                new FluentMethod("Create", constructorContext.Constructor)
+            Name = "Step",
+            KnownConstructorParameters = new ParameterSequence(node.Key),
+            FluentMethods = fluentMethods
+        };
+
+        var methodReturnSteps = fluentMethods
+            .Select(m => m.ReturnStep)
+            .OfType<FluentStep>();
+
+        foreach (var methodReturnStep in methodReturnSteps) methodReturnStep.Parent = fluentStep;
+
+        return fluentStep;
+    }
+
+    private IEnumerable<FluentMethod> ConvertNodeToFluentMethods(Trie<FluentParameter, ConstructorMetadata>.Node node)
+    {
+        FluentMethod[] intermediateStepMethods =
+        [
+            ..
+            from child in node.Children.Values
+            let nextStep = ConvertNodeToFluentStep(child)
+            let fluentParameters = child.EncounteredKeyParts
+            from intermediateStepMethod in CreateIntermediateStepMethod(node, fluentParameters, nextStep, child.Values)
+            select intermediateStepMethod
+        ];
+
+        foreach (var intermediateStepMethod in intermediateStepMethods)
+        {
+            yield return intermediateStepMethod;
+
+            var overloadedFluentMethods =
+                from converter in intermediateStepMethod.ParameterConverters
+                let normalizedConverter = NormalizedConverterMethod(converter, intermediateStepMethod)
+                let fluentParameters = normalizedConverter.Parameters.Select(p => new FluentParameter(p)).ToImmutableArray()
+                where !HasMethodSignatureClash(intermediateStepMethod, fluentParameters)
+                select intermediateStepMethod with
                 {
-                    KnownConstructorParameters = new KnownConstructorParameters(constructorContext.Constructor.Parameters)
-                }
-            ]
+                    FluentParameters = fluentParameters,
+                    ParameterConverter = normalizedConverter,
+                    ReturnStep = intermediateStepMethod.ReturnStep
+                };
+
+            foreach (var overloadedFluentMethod in overloadedFluentMethods) yield return overloadedFluentMethod;
+        }
+
+        yield break;
+
+        bool HasMethodSignatureClash(FluentMethod intermediateStepMethod, ImmutableArray<FluentParameter> fluentParameters)
+        {
+            return intermediateStepMethods
+                .Any(m =>
+                {
+                    var existingParameterSequence = m.FluentParameters.Select(m => m.ParameterSymbol.Type);
+                    var overloadedParameterSequence = fluentParameters.Select(p => p.ParameterSymbol.Type);
+
+                    return existingParameterSequence.SequenceEqual(overloadedParameterSequence, SymbolEqualityComparer.Default);
+                });
+        }
+    }
+
+    private IEnumerable<FluentMethod> ConvertNodeToCreationMethods(Trie<FluentParameter, ConstructorMetadata>.Node node)
+    {
+        if (!node.IsEnd) yield break;
+
+        var createMethods =
+            from value in node.Values
+            where value.Constructor.Parameters.Length == node.Key.Length
+            where !value.Options.HasFlag(FluentFactoryGeneratorOptions.NoCreateMethod)
+            select new FluentMethod("Create", value.Constructor)
+            {
+                KnownConstructorParameters = new ParameterSequence(value.Constructor.Parameters)
+            };
+
+        foreach (var createMethod in createMethods) yield return createMethod;
+    }
+
+    private IEnumerable<FluentMethod> CreateIntermediateStepMethod(
+        Trie<FluentParameter, ConstructorMetadata>.Node node,
+        ICollection<FluentParameter> fluentParameterInstances,
+        FluentStep? nextStep,
+        IList<ConstructorMetadata> constructorMetadata)
+    {
+        var fluentParameter = fluentParameterInstances.First();
+        var constructor = nextStep is null
+            ? constructorMetadata.First().Constructor
+            : null;
+
+        ImmutableArray<IMethodSymbol> parameterConverters =
+        [
+            ..fluentParameterInstances
+                .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
+                .Distinct(SymbolEqualityComparer.Default)
+                .OfType<IMethodSymbol>()
+        ];
+
+        var knownConstructorParameters = new ParameterSequence(node.Key.Select(p => p.ParameterSymbol));
+        var parameter = new FluentParameter(fluentParameter.ParameterSymbol);
+
+        if (nextStep is null)
+        {
+            yield return new FluentMethod(fluentParameter.Name, constructor)
+            {
+                FluentParameters = [parameter],
+                KnownConstructorParameters = knownConstructorParameters,
+                ParameterConverters = parameterConverters
+            };
+            yield break;
+        }
+
+        yield return new FluentMethod(fluentParameter.Name, nextStep, constructor)
+        {
+            FluentParameters = [parameter],
+            KnownConstructorParameters = knownConstructorParameters,
+            ParameterConverters = parameterConverters
         };
     }
 
-    private IEnumerable<FluentStep> MergeFluentSteps(IEnumerable<FluentStep> fluentBuilderSteps)
+    private Trie<FluentParameter, ConstructorMetadata> CreateFluentStepTrie(
+        ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
-        var groupedSteps = fluentBuilderSteps
-            .GroupBy(step => step.KnownConstructorParameters);
-
-        foreach (var group in groupedSteps)
+        var trie = new Trie<FluentParameter, ConstructorMetadata>();
+        foreach (var constructorContext in fluentConstructorContexts)
         {
-            var mergedStep = group.First();
-            var mergeableMethods = group.SelectMany(s => s.FluentMethods);
-            mergedStep.FluentMethods = [..MergeFluentMethods(mergeableMethods)];
+            var fluentParameters = compilation
+                .GetFluentMethodContexts(constructorContext.Constructor)
+                .Select(ctx => new FluentParameter(ctx.SourceParameter))
+                .ToImmutableArray();
 
-            // update parent reference
-            foreach (var method in mergedStep.FluentMethods.Where(method => method.ReturnStep is not null))
-                method.ReturnStep!.Parent = mergedStep;
-
-            // if exists
-            if (_steps.TryGetValue(mergedStep.KnownConstructorParameters, out var step))
-            {
-                yield return step;
-                yield break;
-            }
-
-            // remember the merged step
-            _steps.Add(mergedStep.KnownConstructorParameters, mergedStep);
-            yield return mergedStep;
+            trie.Insert(
+                fluentParameters,
+                new ConstructorMetadata(
+                    constructorContext.Constructor,
+                    constructorContext.Options));
         }
+
+        return trie;
     }
 
     private static IMethodSymbol NormalizedConverterMethod(IMethodSymbol converter, FluentMethod method)
@@ -177,84 +224,24 @@ public class FluentModelFactory(Compilation compilation)
         return normalizedMethod;
     }
 
-    private IEnumerable<FluentMethod> MergeFluentMethods(IEnumerable<FluentMethod> fluentMethods)
+    private record ConstructorMetadata(
+        IMethodSymbol Constructor,
+        FluentFactoryGeneratorOptions Options)
     {
-        var groups = fluentMethods
-            .GroupBy(method => method, FluentMethod.FluentMethodComparer);
-
-        foreach (var group in groups)
-        {
-            var mergedMethod = CreateMergeMethod(group)!;
-
-            var allConverters = new List<IMethodSymbol>();
-            var allReturnStepFluentMethods = new List<FluentMethod>();
-
-            var allAreOverloads  = group.All(m => m.OverloadParameter is not null);
-            foreach (var nextMethod in group)
-            {
-                if (nextMethod.ReturnStep is not null
-                    && nextMethod.ReturnStep.KnownConstructorParameters
-                        .Equals(mergedMethod.ReturnStep?.KnownConstructorParameters))
-                    allReturnStepFluentMethods.AddRange(nextMethod.ReturnStep.FluentMethods);
-
-                allConverters.AddRange(
-                    nextMethod
-                        .ParameterConverters
-                        .Where(c => !compilation.IsAssignable(c.Parameters.FirstOrDefault()?.Type, nextMethod.SourceParameterSymbol?.Type) ));
-            }
-
-            if (mergedMethod.ReturnStep is not null && allReturnStepFluentMethods.Any())
-                mergedMethod.ReturnStep.FluentMethods.AddRange(allReturnStepFluentMethods);
-
-            mergedMethod.ParameterConverters = [..allConverters];
-
-            var returnSteps = group
-                .Where(m => allAreOverloads || m.OverloadParameter is null)
-                .Select(m => m.ReturnStep)
-                .OfType<FluentStep>()
-                .ToImmutableArray();
-
-            var mergedReturnSteps = MergeFluentSteps(returnSteps).ToArray();
-
-            if (mergedReturnSteps.Length > 1)
-            {
-                var sameName = mergedReturnSteps.Select(s => s.Name).Distinct().Count() == 1;
-                var sameKnownParameters = mergedReturnSteps.Select(s => s.KnownConstructorParameters).Distinct().Count() == 1;
-
-                var parameters =
-                    string.Join("\n\n",
-                        mergedReturnSteps.Select(s => string.Join(" -> ", s.KnownConstructorParameters)));
-                throw new FluentException(
-                    $"""
-                    When merging fluent methods, {mergedReturnSteps.Length} return step were discovered when only one was expected.
-                    The following methods were found:
-                      Same Name: {sameName} ({string.Join(", ", mergedReturnSteps.Select(s => $"\"{s.Name}\"").Distinct())})
-                      Same Known Parameters: {sameKnownParameters}
-
-                      {parameters}
-                    """);
-            }
-
-            mergedMethod.ReturnStep = mergedReturnSteps.FirstOrDefault();
-
-            yield return mergedMethod;
-        }
+        public IMethodSymbol Constructor { get; } = Constructor;
+        public FluentFactoryGeneratorOptions Options { get; } = Options;
     }
 
-    private static FluentMethod? CreateMergeMethod(IEnumerable<FluentMethod> fluentMethods)
+    private static ImmutableArray<INamespaceSymbol> GetUsingStatements(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
-        var firstMethod = default(FluentMethod?);
-        foreach (var fluentMethod in fluentMethods)
-        {
-            if (fluentMethod.ParameterConverter is null)
-                return fluentMethod;
-
-            if (firstMethod is null)
-                firstMethod = fluentMethod;
-        }
-
-        return firstMethod is null
-            ? null
-            : firstMethod with {};
+        return [
+            ..fluentConstructorContexts
+                .SelectMany(ctx => ctx.Constructor.Parameters)
+                .Select(parameter => parameter.Type)
+                .Select(type => type.ContainingNamespace)
+                .Concat(fluentConstructorContexts.Select(ctx => ctx.Constructor.ContainingType.ContainingNamespace))
+                .DistinctBy(ns => ns.ToDisplayString())
+                .OrderBy(ns => ns.ToDisplayString())
+        ];
     }
 }

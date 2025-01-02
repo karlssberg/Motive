@@ -35,7 +35,7 @@ public class Trie<TKey, TValue>
     }
 
     // Function to search for a sequence in the trie
-    public bool Search(IEnumerable<TKey> key)
+    public bool Contains(IEnumerable<TKey> key)
     {
         // Start from the root node
         var curr = Root;
@@ -44,12 +44,12 @@ public class Trie<TKey, TValue>
         foreach (var k in key)
         {
             // Move to the next node
-            if (!curr.Children.ContainsKey(k))
+            if (!curr.Children.TryGetValue(k, out var child))
             {
                 return false;
             }
 
-            curr = curr.Children[k];
+            curr = child;
         }
 
         // Return true if the end of the sequence is reached
@@ -105,3 +105,7 @@ public class Trie<TKey, TValue>
     }
 }
 
+public class Trie<TKey> : Trie<TKey, object?>
+{
+    public new void Insert(IEnumerable<TKey> key) => base.Insert(key, null);
+}

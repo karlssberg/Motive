@@ -31,14 +31,14 @@ public class MultipleFluentMethodTests
 
                 public class MethodVariants
                 {
-                    [FluentMethod]
+                    [FluentMethodTemplate]
                     public static T WithValue<T>(in T value)
                     {
                         return value;
                     }
 
-                    [FluentMethod("WithFunction")]
-                    public static T WithValue<T>(in Func<T> function)
+                    [FluentMethodTemplate]
+                    public static T WithFunction<T>(in Func<T> function)
                     {
                         return function();
                     }

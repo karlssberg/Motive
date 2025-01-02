@@ -20,7 +20,7 @@ public class FluentStep
     /// The known constructor parameters up until this step.
     /// Potentially more parameters are required to satisfy a constructor signature.
     /// </summary>
-    public KnownConstructorParameters KnownConstructorParameters { get; set; } = [];
+    public ParameterSequence KnownConstructorParameters { get; set; } = [];
 
     public IList<FluentMethod> FluentMethods { get; set; } = [];
 

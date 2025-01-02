@@ -58,7 +58,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                     .SelectMany(builderContexts => builderContexts)
                     .GroupBy(builderContext => builderContext.RootTypeFullName)
                     .Select(group =>
-                        new TrieFluentModelFactory(compilation).CreateFluentFactoryCompilationUnit(group.Key, [..group]));
+                        new FluentModelFactory(compilation).CreateFluentFactoryCompilationUnit(group.Key, [..group]));
             })
             .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
@@ -118,8 +118,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                                 nameSpace,
                                 constructor,
                                 alreadyDeclaredRootType,
-                                metadata,
-                                compilation)
+                                metadata)
                         ],
                         INamedTypeSymbol type => CreateFluentConstructorContexts(type, nameSpace,
                             alreadyDeclaredRootType!, metadata),
@@ -142,8 +141,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                         nameSpace,
                         primaryCtor,
                         alreadyDeclaredRootType,
-                        metadata,
-                        compilation)
+                        metadata)
                 ];
 
             return
@@ -154,8 +152,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                             nameSpace,
                             ctor,
                             alreadyDeclaredRootType,
-                            metadata,
-                            compilation))
+                            metadata))
             ];
         }
     }

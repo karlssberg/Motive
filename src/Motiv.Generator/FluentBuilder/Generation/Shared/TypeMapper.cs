@@ -52,27 +52,4 @@ public static class TypeMapper
 
         return method.Construct(typeArgs.ToArray());
     }
-
-    // Extension method to help with substitution
-    public static ITypeSymbol ReplaceTypeParameters(
-             this ITypeSymbol type,
-             ImmutableDictionary<ITypeParameterSymbol, ITypeSymbol> substitutions)
-         {
-             if (type is ITypeParameterSymbol typeParam &&
-                 substitutions.TryGetValue(typeParam, out var replacement))
-             {
-                 return replacement;
-             }
-
-             if (type is INamedTypeSymbol namedType && namedType.IsGenericType)
-             {
-                 var originalDefinition = namedType.OriginalDefinition;
-                 var newTypeArgs = originalDefinition.TypeArguments
-                     .Select(t => t.ReplaceTypeParameters(substitutions))
-                     .ToArray();
-                 return originalDefinition.Construct(newTypeArgs);
-             }
-
-             return type;
-         }
 }

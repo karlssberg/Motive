@@ -11,14 +11,12 @@ public record FluentConstructorContext
         string @namespace,
         IMethodSymbol constructor,
         ISymbol? symbol,
-        FluentFactoryMetadata metadata,
-        Compilation compilation)
+        FluentFactoryMetadata metadata)
     {
         NameSpace = @namespace;
         Constructor = constructor;
         Options = metadata.Options;
         RootTypeFullName = metadata.RootTypeFullName;
-        FluentMethodContexts = constructor.ToFluentMethodContexts(compilation);
         IsStatic = symbol switch
         {
             IMethodSymbol method => method.IsStatic,
@@ -54,6 +52,4 @@ public record FluentConstructorContext
     public string NameSpace { get; set; }
     public IMethodSymbol Constructor { get; set; }
     public string RootTypeFullName { get; set; }
-    public ImmutableArray<FluentMethodContext> FluentMethodContexts { get; set; }
-
 }

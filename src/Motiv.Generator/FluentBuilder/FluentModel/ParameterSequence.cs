@@ -4,21 +4,21 @@ using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public class KnownConstructorParameters : IEquatable<KnownConstructorParameters>, IEnumerable<IParameterSymbol>
+public class ParameterSequence : IEquatable<ParameterSequence>, IEnumerable<IParameterSymbol>
 {
     private ImmutableArray<IParameterSymbol> ParameterSymbols { get; }
     private (string Type, string Name)[] ParameterSymbolsPrecomputed { get; }
 
     private readonly int _hashCode;
 
-    public KnownConstructorParameters()
+    public ParameterSequence()
     {
         ParameterSymbols = [];
         ParameterSymbolsPrecomputed = [];
         _hashCode = 101;
     }
 
-    public KnownConstructorParameters(IEnumerable<IParameterSymbol> parameterSymbols)
+    public ParameterSequence(IEnumerable<IParameterSymbol> parameterSymbols)
     {
         ImmutableArray<IParameterSymbol> parameterSymbolsArray = [..parameterSymbols];
         ParameterSymbols = parameterSymbolsArray;
@@ -30,7 +30,7 @@ public class KnownConstructorParameters : IEquatable<KnownConstructorParameters>
                     left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
     }
 
-    public KnownConstructorParameters(IEnumerable<FluentParameter> fluentParameters) : this(fluentParameters.Select(fp => fp.ParameterSymbol))
+    public ParameterSequence(IEnumerable<FluentParameter> fluentParameters) : this(fluentParameters.Select(fp => fp.ParameterSymbol))
     {
     }
 
@@ -54,27 +54,27 @@ public class KnownConstructorParameters : IEquatable<KnownConstructorParameters>
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals(obj as KnownConstructorParameters);
+        return Equals(obj as ParameterSequence);
     }
 
-    public bool Equals(KnownConstructorParameters? other)
+    public bool Equals(ParameterSequence? other)
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
         return ParameterSymbolsPrecomputed.SequenceEqual(other.ParameterSymbolsPrecomputed);
     }
 
-    public static implicit operator ImmutableArray<IParameterSymbol> (KnownConstructorParameters knownConstructorParameters)
+    public static implicit operator ImmutableArray<IParameterSymbol> (ParameterSequence knownConstructorParameters)
     {
         return knownConstructorParameters.ParameterSymbols;
     }
 
-    public static bool operator ==(KnownConstructorParameters left, KnownConstructorParameters right)
+    public static bool operator ==(ParameterSequence left, ParameterSequence right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(KnownConstructorParameters left, KnownConstructorParameters right)
+    public static bool operator !=(ParameterSequence left, ParameterSequence right)
     {
         return !(left == right);
     }

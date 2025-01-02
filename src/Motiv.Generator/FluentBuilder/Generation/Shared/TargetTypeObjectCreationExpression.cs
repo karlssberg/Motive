@@ -46,10 +46,15 @@ public static class TargetTypeObjectCreationExpression
     {
         var argumentList = arguments.ToList();
         var parameterConverterMethod = method.ParameterConverter!;
+
+        var fieldArgumentsIndex = argumentList.Count - method.FluentParameters.Length;
+        var fieldSourcedArguments = argumentList.Take(fieldArgumentsIndex);
+        var methodParameterSourcedArguments = argumentList.Skip(fieldArgumentsIndex);
+
         IEnumerable<ArgumentSyntax> argNodes =
         [
-            ..argumentList.Take(argumentList.Count - 1),
-            Argument(ParameterConverterInvocationExpression.Create(method, parameterConverterMethod, argumentList.Last()))
+            ..fieldSourcedArguments,
+            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments))
         ];
 
         return ObjectCreationExpression(name)

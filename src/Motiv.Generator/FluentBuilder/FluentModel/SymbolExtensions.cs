@@ -25,9 +25,10 @@ public static class SymbolExtensions
         return $"With{parameterSymbol.Name.Capitalize()}";
     }
 
-    public static ImmutableArray<FluentMethodContext> ToFluentMethodContexts(
-        this IMethodSymbol constructor,
-        Compilation compilation)
+    public static ImmutableArray<FluentMethodContext> GetFluentMethodContexts(
+        this Compilation compilation,
+        IMethodSymbol constructor
+        )
     {
         return
         [
@@ -35,9 +36,10 @@ public static class SymbolExtensions
         ];
     }
 
-    public static ImmutableArray<FluentMethodContext> ToFluentMethodContexts(
+    private static ImmutableArray<FluentMethodContext> ToFluentMethodContexts(
         this IEnumerable<IParameterSymbol> source,
         Compilation compilation) =>
+        // accumulate
         source
             .Aggregate(ImmutableArray<FluentMethodContext>.Empty, (accumulator, parameter) =>
                 accumulator.Add(new FluentMethodContext(accumulator, parameter, compilation)));

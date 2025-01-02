@@ -225,10 +225,10 @@ public static class SymbolExtensions
            ..typeSymbol
                .GetMembers()
                .OfType<IMethodSymbol>()
-               .Where(method => method.Parameters.Length == 1)
+               .Where(method => method.IsStatic)
                .Where(method => compilation.IsAssignable(method.ReturnType.OriginalDefinition, sourceParameter.Type))
                .Where(method => method.GetAttributes().Any(a =>
-                   a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
+                   a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterOverloadAttribute))
        ];
    }
 }

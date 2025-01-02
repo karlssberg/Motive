@@ -21,15 +21,17 @@ public record FluentMethod(string MethodName, FluentStep? ReturnStep, IMethodSym
 
     public string MethodName { get; } = MethodName;
 
-    public IParameterSymbol? SourceParameterSymbol => FluentParameter?.ParameterSymbol;
+    public IParameterSymbol? SourceParameterSymbol => FluentParameters
+        .Select(p => p.ParameterSymbol)
+        .FirstOrDefault();
 
-    public FluentParameter? FluentParameter { get; set; }
+    public ImmutableArray<FluentParameter> FluentParameters { get; set; } = [];
 
     public FluentStep? ReturnStep { get; set; } = ReturnStep;
 
     public IMethodSymbol? Constructor { get; set; } = Constructor;
 
-    public KnownConstructorParameters KnownConstructorParameters { get; set; } = new();
+    public ParameterSequence KnownConstructorParameters { get; set; } = new();
 
     public ImmutableArray<IMethodSymbol> ParameterConverters { get; set; } = ImmutableArray<IMethodSymbol>.Empty;
 

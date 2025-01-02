@@ -2,8 +2,12 @@
 
 public static class TypeName
 {
-    public const string FluentConstructorAttribute = "Motiv.Generator.Attributes.FluentConstructorAttribute";
-    public const string FluentFactoryAttribute = "Motiv.Generator.Attributes.FluentFactoryAttribute";
-    public const string FluentMethodAttribute = "Motiv.Generator.Attributes.FluentMethodAttribute";
-    public const string FluentParameterConverterAttribute = "Motiv.Generator.Attributes.FluentParameterConverterAttribute";
+    private const string AttributesNamespace = "Motiv.Generator.Attributes.";
+
+    public const string FluentConstructorAttribute = AttributesNamespace + nameof(Attributes.FluentConstructorAttribute);
+    public const string FluentFactoryAttribute = AttributesNamespace + nameof(Attributes.FluentFactoryAttribute);
+    public const string FluentMethodAttribute = AttributesNamespace + nameof(Attributes.FluentMethodAttribute);
+    public const string FluentParameterOverloadAttribute = AttributesNamespace + nameof(Attributes.FluentParameterOverloadAttribute);
+    public const string MultipleFluentMethodsAttribute = AttributesNamespace + nameof(Attributes.MultipleFluentMethodsAttribute);
+    public const string FluentMethodTemplateAttribute = AttributesNamespace + nameof(Attributes.FluentMethodTemplateAttribute);
 }

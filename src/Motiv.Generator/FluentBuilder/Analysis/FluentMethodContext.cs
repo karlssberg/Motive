@@ -12,11 +12,7 @@ public class FluentMethodContext(
     Compilation compilation)
     : IEquatable<FluentMethodContext>
 {
-    public string Name => SourceParameter.GetFluentMethodName();
     public IParameterSymbol SourceParameter { get; } = sourceParameter;
-
-    public ImmutableArray<IMethodSymbol> ParameterConverters { get; } =
-        GetMethodOverloads(sourceParameter, compilation);
 
     public ImmutableArray<FluentMethodContext> PriorMethodContexts { get; } = priorMethodContexts;
 
@@ -36,7 +32,6 @@ public class FluentMethodContext(
         return Equals((FluentMethodContext)obj);
     }
 
-
     public override int GetHashCode()
     {
         unchecked
@@ -45,33 +40,5 @@ public class FluentMethodContext(
                 SymbolEqualityComparer.Default.GetHashCode(SourceParameter) * 397,
                 (prev, current) => prev ^ (current.GetHashCode() * 397));
         }
-    }
-
-    private static ImmutableArray<IMethodSymbol> GetMethodOverloads(
-        IParameterSymbol sourceParameter,
-        Compilation compilation)
-    {
-        var typeConstant = sourceParameter
-            .GetAttributes()
-            .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
-            .Select(attr => attr.NamedArguments
-                .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
-                .Value)
-            .FirstOrDefault();
-
-        // has overloads?
-        if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
-            return ImmutableArray<IMethodSymbol>.Empty;
-
-        return
-        [
-            ..typeSymbol
-                .GetMembers()
-                .OfType<IMethodSymbol>()
-                .Where(method => method.Parameters.Length == 1)
-                .Where(method => compilation.IsAssignable(method.ReturnType.OriginalDefinition, sourceParameter.Type))
-                .Where(method => method.GetAttributes().Any(a =>
-                    a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterConverterAttribute))
-        ];
     }
 }

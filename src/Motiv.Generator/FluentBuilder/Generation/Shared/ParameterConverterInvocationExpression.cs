@@ -1,16 +1,14 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 
 public static class ParameterConverterInvocationExpression
 {
-    public static InvocationExpressionSyntax Create(FluentMethod method, IMethodSymbol parameterConverterMethod, ArgumentSyntax argument)
+    public static InvocationExpressionSyntax Create(IMethodSymbol parameterConverterMethod, IEnumerable<ArgumentSyntax> arguments)
     {
-
         SimpleNameSyntax identifierName = parameterConverterMethod.IsGenericMethod
             ? GenericName(parameterConverterMethod.Name)
                 .WithTypeArgumentList(
@@ -25,7 +23,7 @@ public static class ParameterConverterInvocationExpression
                     SyntaxKind.SimpleMemberAccessExpression,
                     ParseTypeName(parameterConverterMethod.ContainingType.ToDisplayString()),
                     identifierName))
-            .WithArgumentList(ArgumentList(SingletonSeparatedList(argument)));
+            .WithArgumentList(ArgumentList(SeparatedList(arguments)));
 
         return invocationExpression;
     }

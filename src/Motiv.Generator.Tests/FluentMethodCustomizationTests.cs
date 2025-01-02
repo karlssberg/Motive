@@ -80,7 +80,7 @@ public class FluentMethodCustomizationTests
 
             public static class Converter
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<IEnumerable<T1>, T2, T3> Convert<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
@@ -146,7 +146,7 @@ public class FluentMethodCustomizationTests
 
             public static class Converter
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static IEnumerable<IEnumerable<T>> Convert<T>(T value)
                 {
                     return [[value]];
@@ -472,68 +472,132 @@ public class FluentMethodCustomizationTests
     }
 
     [Fact]
-        public async Task Should_add_overloaded_methods()
-        {
-            const string code =
-                """
-                using System;
-                using Motiv.Generator.Attributes;
+    public async Task Should_add_overloaded_methods()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
 
-                [FluentFactory]
-                public static partial class Factory;
+            [FluentFactory]
+            public static partial class Factory;
 
-                public class MyClass<T>
-                {
-                    [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-                    public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
-                    {
-                        Value = value;
-                    }
-
-                    public T Value { get; set; }
-                }
-
-                public static class Overloads
-                {
-                    [FluentParameterConverter]
-                    public static T Convert<T>(Func<T> factory)
-                    {
-                        return factory();
-                    }
-                }
-
-                """;
-
-            const string expected =
-                """
-                public static partial class Factory
-                {
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyClass<T> Create<T>(in T value)
-                    {
-                        return new MyClass<T>(value);
-                    }
-
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyClass<T> Create<T>(in System.Func<T> factory)
-                    {
-                        return new MyClass<T>(Overloads.Convert<T>(factory));
-                    }
-                }
-                """;
-
-            await new VerifyCS.Test
+            public class MyClass<T>
             {
-                TestState =
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
                 {
-                    Sources = { code },
-                    GeneratedSources =
-                    {
-                        (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
-                    }
+                    Value = value;
                 }
-            }.RunAsync();
-        }
+
+                public T Value { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterOverload]
+                public static T Convert<T>(Func<T> factory)
+                {
+                    return factory();
+                }
+            }
+
+            """;
+
+        const string expected =
+            """
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass<T> Create<T>(in T value)
+                {
+                    return new MyClass<T>(value);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass<T> Create<T>(in System.Func<T> factory)
+                {
+                    return new MyClass<T>(Overloads.Convert<T>(factory));
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_add_overloaded_methods_containing_multiple_parameters()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            [FluentFactory]
+            public static partial class Factory;
+
+            public class MyClass<T>
+            {
+                [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+                public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
+                {
+                    Value = value;
+                }
+
+                public T Value { get; set; }
+            }
+
+            public static class Overloads
+            {
+                [FluentParameterOverload]
+                public static T Convert<T>(Func<T> factory, string value)
+                {
+                    return factory();
+                }
+            }
+
+            """;
+
+        const string expected =
+            """
+            public static partial class Factory
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass<T> Create<T>(in T value)
+                {
+                    return new MyClass<T>(value);
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static MyClass<T> Create<T>(in System.Func<T> factory, in string value)
+                {
+                    return new MyClass<T>(Overloads.Convert<T>(factory, value));
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
 
     [Fact]
     public async Task Should_apply_a_generic_converter_to_concrete_types()
@@ -563,7 +627,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static T Convert<T>(Func<T> factory)
                 {
                     return factory();
@@ -654,7 +718,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static T Convert<T>(Func<T> factory)
                 {
                     return factory();
@@ -746,7 +810,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static TResult Convert<TResult>(Func<string, string, TResult> function)
                 {
                     // We are not interested in the string values - just that
@@ -856,7 +920,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
@@ -928,7 +992,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
@@ -1044,7 +1108,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
@@ -1172,13 +1236,13 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
 
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
@@ -1295,13 +1359,13 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
 
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
@@ -1412,13 +1476,13 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
 
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
@@ -1529,7 +1593,7 @@ public class FluentMethodCustomizationTests
 
             public static class OverloadsA
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
@@ -1538,7 +1602,7 @@ public class FluentMethodCustomizationTests
 
             public static class OverloadsB
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
@@ -1649,7 +1713,7 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterConverter]
+                [FluentParameterOverload]
                 public static Func<T1, T2> Convert<T1, T2>(T2 value)
                 {
                     return _ => value;
