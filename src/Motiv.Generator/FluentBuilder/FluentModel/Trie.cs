@@ -21,16 +21,17 @@ public class Trie<TKey, TValue>
             if (!curr.Children.ContainsKey(keyPart))
             {
                 curr.Children.Add(keyPart, new Node(currKey));
-
             }
 
             // Move to the next node
             curr = curr.Children[keyPart];
             curr.Values.Add(value);
+            curr.EncounteredKeyParts.Add(keyPart);
         }
 
         // Mark the end of the sequence
         curr.IsEnd = true;
+        curr.EndValues.Add(value);
     }
 
     // Function to search for a sequence in the trie
@@ -97,6 +98,10 @@ public class Trie<TKey, TValue>
         public OrderedDictionary<TKey, Node> Children { get; } = new();
         public bool IsEnd { get; set; } = false;
         public IList<TValue> Values { get; } = new List<TValue>();
+
+        public IList<TValue> EndValues { get; } = new List<TValue>();
+
+        public ICollection<TKey> EncounteredKeyParts { get; } = [];
     }
 }
 

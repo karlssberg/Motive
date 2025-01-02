@@ -95,14 +95,14 @@ public class TrieFluentModelFactory(Compilation compilation)
             ..
             from child in node.Children.Values
             let nextStep = ConvertNodeToFluentStep(child)
-            let fluentParameter = child.Key.Last()
-            select CreateFluentMethod(fluentParameter, nextStep, child.Values)
+            let fluentParameters = child.EncounteredKeyParts
+            select CreateFluentMethod(fluentParameters, nextStep, child.Values)
         ];
-
-        var intermediateStepMethodsLookup = new HashSet<(string, ITypeSymbol)>(intermediateStepMethods
-            .Select(m => m.FluentParameter)
-            .OfType<FluentParameter>()
-            .Select(p => (p.Name, p.ParameterSymbol.Type)));
+        var intermediateStepMethodsLookup = new HashSet<(string, ITypeSymbol)>(
+            intermediateStepMethods
+                .Select(m => m.FluentParameter)
+                .OfType<FluentParameter>()
+                .Select(p => (p.Name, p.ParameterSymbol.Type)));
 
         foreach (var intermediateStepMethod in intermediateStepMethods)
         {
@@ -126,10 +126,12 @@ public class TrieFluentModelFactory(Compilation compilation)
         yield break;
 
         FluentMethod CreateFluentMethod(
-            FluentParameter fluentParameter,
+            ICollection<FluentParameter> fluentParameterInstances,
             FluentStep? nextStep,
             IList<ConstructorMetadata> constructorMetadata)
         {
+
+            var fluentParameter = fluentParameterInstances.First();
             var constructor = nextStep is null
                 ? constructorMetadata.First().Constructor
                 : null;
@@ -140,7 +142,13 @@ public class TrieFluentModelFactory(Compilation compilation)
                 {
                     FluentParameter = new FluentParameter(fluentParameter.ParameterSymbol),
                     KnownConstructorParameters = new KnownConstructorParameters(node.Key.Select(p => p.ParameterSymbol)),
-                    ParameterConverters = compilation.GetFluentMethodOverloads(fluentParameter.ParameterSymbol)
+                    ParameterConverters =
+                    [
+                        ..fluentParameterInstances
+                            .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
+                            .Distinct(SymbolEqualityComparer.Default)
+                            .OfType<IMethodSymbol>()
+                    ]
                 };
             }
 
@@ -148,7 +156,13 @@ public class TrieFluentModelFactory(Compilation compilation)
             {
                 FluentParameter = new FluentParameter(fluentParameter.ParameterSymbol),
                 KnownConstructorParameters = new KnownConstructorParameters(node.Key.Select(p => p.ParameterSymbol)),
-                ParameterConverters = compilation.GetFluentMethodOverloads(fluentParameter.ParameterSymbol)
+                ParameterConverters =
+                [
+                    ..fluentParameterInstances
+                        .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
+                        .Distinct(SymbolEqualityComparer.Default)
+                        .OfType<IMethodSymbol>()
+                ]
             };
         }
     }
@@ -184,7 +198,8 @@ public class TrieFluentModelFactory(Compilation compilation)
                 fluentParameters,
                 new ConstructorMetadata(
                     constructorContext.Constructor,
-                    constructorContext.Options));
+                    constructorContext.Options,
+                    fluentParameters));
         }
 
         return trie;
@@ -204,10 +219,12 @@ public class TrieFluentModelFactory(Compilation compilation)
 
     private record ConstructorMetadata(
         IMethodSymbol Constructor,
-        FluentFactoryGeneratorOptions Options)
+        FluentFactoryGeneratorOptions Options,
+        ImmutableArray<FluentParameter> FluentParameters)
     {
         public IMethodSymbol Constructor { get; } = Constructor;
         public FluentFactoryGeneratorOptions Options { get; } = Options;
+        public ImmutableArray<FluentParameter> FluentParameters { get; } = FluentParameters;
     }
 
     private static ImmutableArray<INamespaceSymbol> GetUsingStatements(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
