@@ -177,11 +177,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                     return FluentFactoryMetadata.Invalid;
 
                 var typeArg = attribute.ConstructorArguments.FirstOrDefault();
-                if (typeArg.IsNull)
-                    return FluentFactoryMetadata.Invalid;
-
-                // Ensure the argument is a typeof() expression
-                if (typeArg.Value is not ITypeSymbol typeSymbol)
+                if (typeArg.IsNull || typeArg.Value is not ITypeSymbol typeSymbol)
                     return FluentFactoryMetadata.Invalid;
 
                 // Grab the options flags symbol

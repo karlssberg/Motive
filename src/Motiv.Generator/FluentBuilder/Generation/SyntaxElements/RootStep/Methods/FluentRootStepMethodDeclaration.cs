@@ -44,13 +44,10 @@ public static class FluentRootStepMethodDeclaration
                                 IdentifierName(method.SourceParameterSymbol.Type.ToDisplayString())))));
         }
 
-        if (!(method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? false))
+        if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
             return methodDeclaration;
 
-        var parameterConverterTypeArguments = method.ParameterConverter?.TypeArguments ?? ImmutableArray<ITypeSymbol>.Empty;
-        var typeParameterSyntaxes = method.SourceParameterSymbol.Type
-            .GetGenericTypeParameters()
-            .Union(parameterConverterTypeArguments.OfType<ITypeParameterSymbol>())
+        var typeParameterSyntaxes = method.TypeParameters
             .Select(symbol => symbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 

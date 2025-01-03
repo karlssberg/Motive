@@ -13,7 +13,7 @@ public static class FluentStepCreationExpression
     {
         var name = StepNameSyntax.Create(method.ReturnStep!);
 
-        if (method.OverloadParameter is not null && method.ParameterConverter is not null)
+        if (method.ParameterConverter is not null)
         {
             return CreateMethodOverloadExpression(method, arguments, name);
         }

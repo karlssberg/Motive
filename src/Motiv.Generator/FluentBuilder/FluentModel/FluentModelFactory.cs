@@ -100,28 +100,20 @@ public class FluentModelFactory(Compilation compilation)
             select intermediateStepMethod
         ];
 
-        foreach (var intermediateStepMethod in intermediateStepMethods)
+        foreach (var intermediateStepMethodGroup in intermediateStepMethods.GroupBy(m => m, FluentMethod.FluentMethodSignatureComparer))
         {
+            var intermediateStepMethod = intermediateStepMethodGroup.FirstOrDefault(m => m.ParameterConverter is null)
+                                         ?? intermediateStepMethodGroup.First();
             yield return intermediateStepMethod;
 
-            var overloadedFluentMethods =
-                from converter in intermediateStepMethod.ParameterConverters
-                let normalizedConverter = NormalizedConverterMethod(converter, intermediateStepMethod)
-                let fluentParameters = normalizedConverter.Parameters.Select(p => new FluentParameter(p)).ToImmutableArray()
-                where !HasMethodSignatureClash(intermediateStepMethod, fluentParameters)
-                select intermediateStepMethod with
-                {
-                    FluentParameters = fluentParameters,
-                    ParameterConverter = normalizedConverter,
-                    ReturnStep = intermediateStepMethod.ReturnStep
-                };
+            var overloadedFluentMethods = CreateOverloadedFluentMethods(intermediateStepMethod);
 
             foreach (var overloadedFluentMethod in overloadedFluentMethods) yield return overloadedFluentMethod;
         }
 
         yield break;
 
-        bool HasMethodSignatureClash(FluentMethod intermediateStepMethod, ImmutableArray<FluentParameter> fluentParameters)
+        bool HasMethodSignatureClash(ImmutableArray<FluentParameter> fluentParameters)
         {
             return intermediateStepMethods
                 .Any(m =>
@@ -131,6 +123,25 @@ public class FluentModelFactory(Compilation compilation)
 
                     return existingParameterSequence.SequenceEqual(overloadedParameterSequence, SymbolEqualityComparer.Default);
                 });
+        }
+
+        IEnumerable<FluentMethod> CreateOverloadedFluentMethods(FluentMethod intermediateStepMethod)
+        {
+            return from converter in intermediateStepMethod.ParameterConverters
+                let normalizedConverter = NormalizedConverterMethod(converter, intermediateStepMethod)
+                let fluentParameters = normalizedConverter.Parameters.Select(p => new FluentParameter(p)).ToImmutableArray()
+                where !HasMethodSignatureClash(fluentParameters)
+                select new FluentMethod(
+                    intermediateStepMethod.MethodName,
+                    intermediateStepMethod.ReturnStep,
+                    intermediateStepMethod.Constructor,
+                    normalizedConverter)
+                {
+                    FluentParameters = fluentParameters,
+                    ReturnStep = intermediateStepMethod.ReturnStep,
+                    ParameterConverters = intermediateStepMethod.ParameterConverters,
+                    KnownConstructorParameters = intermediateStepMethod.KnownConstructorParameters
+                };
         }
     }
 
@@ -156,39 +167,64 @@ public class FluentModelFactory(Compilation compilation)
         FluentStep? nextStep,
         IList<ConstructorMetadata> constructorMetadata)
     {
-        var fluentParameter = fluentParameterInstances.First();
         var constructor = nextStep is null
             ? constructorMetadata.First().Constructor
             : null;
 
-        ImmutableArray<IMethodSymbol> parameterConverters =
-        [
-            ..fluentParameterInstances
-                .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
-                .Distinct(SymbolEqualityComparer.Default)
-                .OfType<IMethodSymbol>()
-        ];
+        var fluentParameter = fluentParameterInstances.First();
+        var multipleFluentMethodSymbols = compilation
+            .GetMultipleFluentMethodSymbols(fluentParameter.ParameterSymbol)
+            .ToArray();
 
-        var knownConstructorParameters = new ParameterSequence(node.Key.Select(p => p.ParameterSymbol));
-        var parameter = new FluentParameter(fluentParameter.ParameterSymbol);
+        if (multipleFluentMethodSymbols.Length > 0)
+        {
+            foreach (var fluentMethodSymbol in multipleFluentMethodSymbols)
+            {
+                yield return new FluentMethod(fluentMethodSymbol.Name, nextStep, constructor, fluentMethodSymbol)
+                {
+                    FluentParameters = [..fluentMethodSymbol.Parameters.Select(p => new FluentParameter(p))],
+                    KnownConstructorParameters = CreateKnownConstructorParameters()
+                };
+            }
+            yield break;
+        }
 
         if (nextStep is null)
         {
             yield return new FluentMethod(fluentParameter.Name, constructor)
             {
-                FluentParameters = [parameter],
-                KnownConstructorParameters = knownConstructorParameters,
-                ParameterConverters = parameterConverters
+                FluentParameters = [new FluentParameter(fluentParameter.ParameterSymbol)],
+                KnownConstructorParameters = CreateKnownConstructorParameters(),
+                ParameterConverters = CreateParameterConverters()
             };
             yield break;
         }
 
         yield return new FluentMethod(fluentParameter.Name, nextStep, constructor)
         {
-            FluentParameters = [parameter],
-            KnownConstructorParameters = knownConstructorParameters,
-            ParameterConverters = parameterConverters
+            FluentParameters = [new FluentParameter(fluentParameter.ParameterSymbol)],
+            KnownConstructorParameters = CreateKnownConstructorParameters(),
+            ParameterConverters = CreateParameterConverters()
         };
+
+        yield break;
+
+        ImmutableArray<IMethodSymbol> CreateParameterConverters()
+        {
+            ImmutableArray<IMethodSymbol> immutableArray =
+            [
+                ..fluentParameterInstances
+                    .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
+                    .Distinct(SymbolEqualityComparer.Default)
+                    .OfType<IMethodSymbol>()
+            ];
+            return immutableArray;
+        }
+
+        ParameterSequence CreateKnownConstructorParameters()
+        {
+            return new ParameterSequence(node.Key.Select(p => p.ParameterSymbol));
+        }
     }
 
     private Trie<FluentParameter, ConstructorMetadata> CreateFluentStepTrie(
