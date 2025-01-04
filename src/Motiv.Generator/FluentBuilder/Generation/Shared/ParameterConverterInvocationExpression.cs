@@ -16,7 +16,7 @@ public static class ParameterConverterInvocationExpression
                         parameterConverterMethod.TypeArguments
                             .Select(t => IdentifierName(t.ToDisplayString()))))
                 )
-            : IdentifierName(parameterConverterMethod.ToDisplayString());
+            : IdentifierName(parameterConverterMethod.Name);
 
         var invocationExpression = InvocationExpression(
                 MemberAccessExpression(

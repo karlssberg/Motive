@@ -501,4 +501,162 @@ public class MultipleFluentMethodTests
             }
         }.RunAsync();
     }
+
+    [Fact]
+    public async Task Should_support_multiple_methods_containing_overload_methods()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            namespace Test.Namespace
+            {
+                [FluentFactory]
+                public static partial class Factory;
+
+                public class MyBuildTargetA<T>
+                {
+                    [FluentConstructor(typeof(Factory))]
+                    public MyBuildTargetA(
+                        [MultipleFluentMethods(typeof(NumberMethods))]int number,
+                        [MultipleFluentMethods(typeof(AsMethods))]T data)
+                    {
+                        Number = number;
+                        Data = data;
+                    }
+
+                    public int Number { get; set; }
+                    public T Data { get; set; }
+                }
+
+                public class NumberMethods
+                {
+                    [FluentMethodTemplate]
+                    public static int Number()
+                    {
+                        return default(int);
+                    }
+
+                    [FluentMethodTemplate]
+                    public static int Number(in Func<int> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static int Number(in Func<string, int> function, in string value)
+                    {
+                        return function(value);
+                    }
+                }
+
+                public class AsMethods
+                {
+                    [FluentMethodTemplate]
+                    public static T As<T>()
+                    {
+                        return default(T);
+                    }
+
+                    [FluentMethodTemplate]
+                    public static T As<T>(in Func<T> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static T As<T>(in Func<string, T> function, in string value)
+                    {
+                        return function(value);
+                    }
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System;
+
+            namespace Test.Namespace
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory Number()
+                    {
+                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number());
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory Number(in System.Func<int> function)
+                    {
+                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory Number(in System.Func<string, int> function, in string value)
+                    {
+                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number(function, value));
+                    }
+                }
+
+                public struct Step_0__Test_Namespace_Factory
+                {
+                    private readonly int _number__parameter;
+                    public Step_0__Test_Namespace_Factory(in int number)
+                    {
+                        _number__parameter = number;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T> As<T>()
+                    {
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>());
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<T> function)
+                    {
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<string, T> function, in string value)
+                    {
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>(function, value));
+                    }
+                }
+
+                public struct Step_1__Test_Namespace_Factory<T>
+                {
+                    private readonly int _number__parameter;
+                    private readonly T _data__parameter;
+                    public Step_1__Test_Namespace_Factory(in int number, in T data)
+                    {
+                        _number__parameter = number;
+                        _data__parameter = data;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTargetA<T> Create()
+                    {
+                        return new MyBuildTargetA<T>(_number__parameter, _data__parameter);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Namespace.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
 }

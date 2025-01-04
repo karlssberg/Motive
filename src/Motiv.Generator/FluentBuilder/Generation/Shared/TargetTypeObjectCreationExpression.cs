@@ -29,7 +29,7 @@ public static class TargetTypeObjectCreationExpression
                         distinctTypeArguments
                             .Select(t => IdentifierName(t.ToDisplayString())))));
 
-        if (method.OverloadParameter is not null && method.ParameterConverter is not null)
+        if (method.ParameterConverter is not null)
         {
             return CreateMethodOverloadExpression(method, arguments, name);
         }

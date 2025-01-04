@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -30,16 +29,18 @@ public static class FluentStepMethodDeclaration
                     Token(SyntaxKind.PublicKeyword)))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (method.SourceParameterSymbol is not null)
+        if (method.FluentParameters.Length > 0)
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
-                    ParameterList(SingletonSeparatedList(
-                        Parameter(
-                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                            .WithType(
-                                IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+                    ParameterList(SeparatedList(
+                        method.FluentParameters
+                            .Select(parameter =>
+                                Parameter(
+                                        Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
+                                    .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                                    .WithType(
+                                        IdentifierName(parameter.ParameterSymbol.Type.ToString()))))));
         }
 
         if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
@@ -63,9 +64,9 @@ public static class FluentStepMethodDeclaration
         return step.KnownConstructorParameters
             .Select(parameter =>
                 Argument(IdentifierName(parameter.Name.ToParameterFieldName())))
-            .AppendIfNotNull(
-                method.SourceParameterSymbol is not null
-                    ? Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))
-                    : null);
+            .Concat(
+                method.FluentParameters.Select(p => p.ParameterSymbol.Name.ToCamelCase())
+                    .Select(IdentifierName)
+                    .Select(Argument));
     }
 }

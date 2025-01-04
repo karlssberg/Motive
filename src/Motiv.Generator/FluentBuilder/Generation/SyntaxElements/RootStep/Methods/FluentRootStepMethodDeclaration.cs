@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -15,10 +14,7 @@ public static class FluentRootStepMethodDeclaration
     {
         var returnObjectExpression = FluentStepCreationExpression.Create(
             method,
-                method.SourceParameterSymbol is null
-                    ? Array.Empty<ArgumentSyntax>()
-                    : [Argument(IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase()))]
-                );
+            method.FluentParameters.Select(p => Argument(IdentifierName(p.ParameterSymbol.Name.ToCamelCase()))));
 
         var methodDeclaration =  MethodDeclaration(
                 returnObjectExpression.Type,
@@ -36,12 +32,12 @@ public static class FluentRootStepMethodDeclaration
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
-                    ParameterList(SingletonSeparatedList(
-                        Parameter(
-                                Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
-                            .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                            .WithType(
-                                IdentifierName(method.SourceParameterSymbol.Type.ToDisplayString())))));
+                    ParameterList(
+                        SeparatedList(
+                            method.FluentParameters.Select(parameter =>
+                                Parameter(Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
+                                    .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
+                                    .WithType(ParseTypeName(parameter.ParameterSymbol.Type.ToDisplayString()))))));
         }
 
         if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)

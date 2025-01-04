@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -18,7 +17,7 @@ public static class FluentRootFactoryMethodDeclaration
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
             method,
-            method.Constructor.ContainingType,
+            method.Constructor!.ContainingType,
             identifierNameSyntaxes);
 
         var methodDeclaration = MethodDeclaration(
