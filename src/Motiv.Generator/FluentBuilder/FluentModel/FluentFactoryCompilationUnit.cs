@@ -4,20 +4,20 @@ using Microsoft.CodeAnalysis;
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public record FluentFactoryCompilationUnit(
-    string FullName,
+    INamedTypeSymbol RootType,
     ImmutableArray<FluentMethod> FluentMethods,
     ImmutableArray<FluentStep> FluentSteps,
     ImmutableArray<INamespaceSymbol> Usings)
 {
-    public string Name { get; } = GetName(FullName);
+    public string Name { get; } = RootType.Name;
 
-    public string Namespace { get; } = GetNamespace(FullName);
+    public string Namespace { get; } = RootType.ContainingNamespace.ToDisplayString();
 
     public ImmutableArray<FluentMethod> FluentMethods { get; set; } = FluentMethods;
 
     public ImmutableArray<FluentStep> FluentSteps { get; set; } = FluentSteps;
 
-    public string FullName { get; } = FullName;
+    public INamedTypeSymbol RootType { get; } = RootType;
 
     public ImmutableArray<INamespaceSymbol> Usings { get; set; } = Usings;
 

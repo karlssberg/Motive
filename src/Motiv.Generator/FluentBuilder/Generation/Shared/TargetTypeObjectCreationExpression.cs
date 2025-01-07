@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -12,22 +11,9 @@ public static class TargetTypeObjectCreationExpression
     public static ObjectCreationExpressionSyntax Create(
         FluentMethod method,
         INamedTypeSymbol constructorType,
-        IEnumerable<IdentifierNameSyntax> constructorArguments)
+        IEnumerable<ArgumentSyntax> arguments)
     {
-        var arguments = constructorArguments
-            .Select(Argument);
-
-        var distinctTypeArguments = constructorType.TypeArguments
-            .DistinctBy(type => type.ToDisplayString())
-            .ToImmutableArray();
-
-        TypeSyntax name = distinctTypeArguments.Length == 0
-            ? IdentifierName(constructorType.Name)
-            : GenericName(Identifier(constructorType.Name))
-                .WithTypeArgumentList(
-                    TypeArgumentList(SeparatedList<TypeSyntax>(
-                        distinctTypeArguments
-                            .Select(t => IdentifierName(t.ToDisplayString())))));
+        var name = IdentifierName(constructorType.ToDynamicDisplayString(method.RootNamespace));
 
         if (method.ParameterConverter is not null)
         {
@@ -54,7 +40,7 @@ public static class TargetTypeObjectCreationExpression
         IEnumerable<ArgumentSyntax> argNodes =
         [
             ..fieldSourcedArguments,
-            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments))
+            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments, method.RootNamespace))
         ];
 
         return ObjectCreationExpression(name)

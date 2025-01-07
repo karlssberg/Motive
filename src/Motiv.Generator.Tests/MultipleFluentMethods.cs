@@ -56,13 +56,13 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory<T> WithValue<T>(in T value)
                     {
-                        return new Step_0__Test_Namespace_Factory<T>(Test.Namespace.MethodVariants.WithValue<T>(value));
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithValue<T>(value));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<T> function)
                     {
-                        return new Step_0__Test_Namespace_Factory<T>(Test.Namespace.MethodVariants.WithFunction<T>(function));
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithFunction<T>(function));
                     }
                 }
 
@@ -167,13 +167,13 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory<T> WithDefaultValue<T>()
                     {
-                        return new Step_0__Test_Namespace_Factory<T>(Test.Namespace.MethodVariants.WithDefaultValue<T>());
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<T> function)
                     {
-                        return new Step_0__Test_Namespace_Factory<T>(Test.Namespace.MethodVariants.WithFunction<T>(function));
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithFunction<T>(function));
                     }
                 }
 
@@ -304,13 +304,13 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithDefaultValue<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.MethodVariants.WithDefaultValue<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<T> function)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.MethodVariants.WithFunction<T>(function));
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithFunction<T>(function));
                     }
                 }
 
@@ -443,7 +443,7 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithDefaultValue<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.MethodVariants.WithDefaultValue<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -585,19 +585,19 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory Number()
                     {
-                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number());
+                        return new Step_0__Test_Namespace_Factory(NumberMethods.Number());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory Number(in System.Func<int> function)
                     {
-                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number(function));
+                        return new Step_0__Test_Namespace_Factory(NumberMethods.Number(function));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static Step_0__Test_Namespace_Factory Number(in System.Func<string, int> function, in string value)
                     {
-                        return new Step_0__Test_Namespace_Factory(Test.Namespace.NumberMethods.Number(function, value));
+                        return new Step_0__Test_Namespace_Factory(NumberMethods.Number(function, value));
                     }
                 }
 
@@ -612,19 +612,19 @@ public class MultipleFluentMethodTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<T> function)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>(function));
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>(function));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<string, T> function, in string value)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, Test.Namespace.AsMethods.As<T>(function, value));
+                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>(function, value));
                     }
                 }
 
@@ -642,6 +642,100 @@ public class MultipleFluentMethodTests
                     public MyBuildTargetA<T> Create()
                     {
                         return new MyBuildTargetA<T>(_number__parameter, _data__parameter);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Namespace.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task Should_ensure_that_generic_parameters_used_inside_multiple_fluent_methdos_are_converted_to_those_used_in_the_fluent_constructor()
+    {
+        const string code =
+            """
+            using System;
+            using System.Threading.Tasks;
+            using Motiv.Generator.Attributes;
+
+            namespace Test.Namespace
+            {
+                [FluentFactory]
+                public static partial class Factory;
+
+                public class MyBuildTarget<T>
+                {
+                    [FluentConstructor(typeof(Factory))]
+                    public MyBuildTarget(
+                        [MultipleFluentMethods(typeof(MethodVariants))]Task<T> data)
+                    {
+                        Data = data;
+                    }
+
+                    public Task<T> Data { get; set; }
+                }
+
+                public class MethodVariants
+                {
+                    [FluentMethodTemplate]
+                    public static Task<TAlternative> WithValue<TAlternative>(in Task<TAlternative> value)
+                    {
+                        return value;
+                    }
+
+                    [FluentMethodTemplate]
+                    public static Task<TAlternative> WithFunction<TAlternative>(in Func<Task<TAlternative>, Task<TAlternative>> function, Task<TAlternative> defaultTask)
+                    {
+                        return function(defaultTask);
+                    }
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            using System.Threading.Tasks;
+
+            namespace Test.Namespace
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory<T> WithValue<T>(in System.Threading.Tasks.Task<T> value)
+                    {
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithValue<T>(value));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<System.Threading.Tasks.Task<T>, System.Threading.Tasks.Task<T>> function, in System.Threading.Tasks.Task<T> defaultTask)
+                    {
+                        return new Step_0__Test_Namespace_Factory<T>(MethodVariants.WithFunction<T>(function, defaultTask));
+                    }
+                }
+
+                public struct Step_0__Test_Namespace_Factory<T>
+                {
+                    private readonly System.Threading.Tasks.Task<T> _data__parameter;
+                    public Step_0__Test_Namespace_Factory(in System.Threading.Tasks.Task<T> data)
+                    {
+                        _data__parameter = data;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTarget<T> Create()
+                    {
+                        return new MyBuildTarget<T>(_data__parameter);
                     }
                 }
             }

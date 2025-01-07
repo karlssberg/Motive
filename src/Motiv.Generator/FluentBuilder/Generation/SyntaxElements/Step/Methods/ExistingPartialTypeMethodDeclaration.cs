@@ -5,21 +5,19 @@ using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
-namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.RootStep.Methods;
+namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 
-public static class FluentRootFactoryMethodDeclaration
+public static class ExistingPartialTypeMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method)
+        FluentMethod method,
+        FluentStep step)
     {
-        var identifierNameSyntaxes = method.FluentParameters
-            .Select(parameter => IdentifierName(parameter.ParameterSymbol.Name.ToCamelCase()))
-            .Select(Argument);
+        var stepActivationArgs = CreateStepConstructorArguments(method, step);
 
-        var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
-            method,
-            method.TargetConstructor!.ContainingType,
-            identifierNameSyntaxes);
+        var returnObjectExpression = method.TargetConstructor is not null
+            ? TargetTypeObjectCreationExpression.Create(method, method.TargetConstructor.ContainingType, stepActivationArgs)
+            : FluentStepCreationExpression.Create(method, CreateStepConstructorArguments(method, step));
 
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
@@ -51,14 +49,36 @@ public static class FluentRootFactoryMethodDeclaration
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.TypeParameters
+            .Except(step.KnownConstructorParameters.SelectMany(parameter => parameter.Type.GetGenericTypeParameters()))
             .Select(symbol => symbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
-        if (typeParameterSyntaxes.Length == 0)
-            return methodDeclaration;
-
-        return methodDeclaration
-            .WithTypeParameterList(
+        return typeParameterSyntaxes.Length == 0
+            ? methodDeclaration
+            : methodDeclaration.WithTypeParameterList(
                 TypeParameterList(SeparatedList([..typeParameterSyntaxes])));
+    }
+
+    private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(
+        FluentMethod method,
+        FluentStep step)
+    {
+        return step.KnownConstructorParameters
+            .Select(parameter =>
+            {
+                var foundMember = step.ParameterStoreMembers.TryGetValue(parameter, out var member)
+                    ? member
+                    : null;
+
+                ExpressionSyntax node = foundMember is null
+                    ? DefaultExpression(ParseTypeName(parameter.Type.ToDynamicDisplayString(method.RootNamespace)))
+                    : MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(foundMember.Name));
+
+                return Argument(node);
+            })
+            .Concat(method.FluentParameters
+                .Select(p => p.ParameterSymbol.Name.ToCamelCase())
+                .Select(IdentifierName)
+                .Select(Argument));
     }
 }

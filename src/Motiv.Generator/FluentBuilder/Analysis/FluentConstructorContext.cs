@@ -1,53 +1,40 @@
 ﻿using Microsoft.CodeAnalysis;
+using Motiv.Generator.FluentBuilder.FluentModel;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
 public record FluentConstructorContext
 {
-
     public FluentConstructorContext(
-        string @namespace,
         IMethodSymbol constructor,
-        ISymbol? symbol,
-        FluentFactoryMetadata metadata)
+        INamedTypeSymbol rootSymbol,
+        FluentFactoryMetadata metadata,
+        SemanticModel semanticModel)
     {
-        NameSpace = @namespace;
         Constructor = constructor;
         Options = metadata.Options;
         RootTypeFullName = metadata.RootTypeFullName;
-        IsStatic = symbol switch
-        {
-            IMethodSymbol method => method.IsStatic,
-            INamedTypeSymbol type => type.IsStatic,
-            _ => true
-        };
-
-        IsRecord = symbol switch
-        {
-            IMethodSymbol method => method.ContainingType.IsRecord,
-            INamedTypeSymbol type => type.IsRecord,
-            _ => false
-        };
-
-        TypeKind =  symbol switch
-        {
-            IMethodSymbol method => method.ContainingType.TypeKind,
-            INamedTypeSymbol type => type.TypeKind,
-            _ => TypeKind.Class
-        };
-
-        Accessibility = symbol?.DeclaredAccessibility ?? Accessibility.Public;
+        IsStatic = rootSymbol.IsStatic;
+        IsRecord = rootSymbol.IsRecord;
+        TypeKind = rootSymbol.TypeKind;
+        Accessibility = rootSymbol.DeclaredAccessibility;
+        ParameterStores = ConstructorAnalyzer.FindStoringMembers(Constructor, semanticModel);
+        RootType = rootSymbol;
     }
 
-    public FluentFactoryGeneratorOptions Options { get; set; }
+    public INamedTypeSymbol RootType { get; set; }
 
-    public bool IsRecord { get; set; }
+    public IReadOnlyDictionary<IParameterSymbol,IPropertySymbol?> ParameterStores { get; set; } =
+        new Dictionary<IParameterSymbol, IPropertySymbol?>(FluentParameterComparer.Default);
 
-    public Accessibility Accessibility { get; set; }
+    public FluentFactoryGeneratorOptions Options { get; }
 
-    public bool IsStatic { get; set; }
-    public TypeKind TypeKind { get; set; }
-    public string NameSpace { get; set; }
-    public IMethodSymbol Constructor { get; set; }
-    public string RootTypeFullName { get; set; }
+    public bool IsRecord { get; }
+
+    public Accessibility Accessibility { get; }
+
+    public bool IsStatic { get; }
+    public TypeKind TypeKind { get; }
+    public IMethodSymbol Constructor { get; }
+    public string RootTypeFullName { get; }
 }

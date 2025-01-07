@@ -27,7 +27,7 @@ public record FluentMethod
 
     public FluentStep? ReturnStep { get; set; }
 
-    public IMethodSymbol? Constructor { get; set; }
+    public IMethodSymbol? TargetConstructor { get; set; }
 
     public ParameterSequence KnownConstructorParameters { get; set; } = new();
 
@@ -39,27 +39,32 @@ public record FluentMethod
 
     private readonly Lazy<ImmutableArray<ITypeParameterSymbol>> _typeParameters;
 
-    public FluentMethod(string MethodName,
+    public FluentMethod(
+        string MethodName,
         FluentStep? ReturnStep,
-        IMethodSymbol? Constructor = null,
+        INamespaceSymbol RootNamespace,
+        IMethodSymbol? TargetConstructor = null,
         IMethodSymbol? ParameterConverter = null)
     {
         this.MethodName = MethodName;
+        this.RootNamespace = RootNamespace;
         this.ReturnStep = ReturnStep;
-        this.Constructor = Constructor;
+        this.TargetConstructor = TargetConstructor;
         this.ParameterConverter = ParameterConverter;
         _typeParameters = new Lazy<ImmutableArray<ITypeParameterSymbol>>(GetTypeParameters);
     }
 
     public FluentMethod(
         string MethodName,
-        IMethodSymbol? Constructor,
+        INamespaceSymbol rootNamespace,
+        IMethodSymbol? constructor,
         IMethodSymbol? ParameterConverter = null)
-        : this(MethodName, null, Constructor, ParameterConverter)
+        : this(MethodName, null, rootNamespace, constructor, ParameterConverter)
     {
     }
 
     public ImmutableArray<ITypeParameterSymbol> TypeParameters => _typeParameters.Value;
+    public INamespaceSymbol RootNamespace { get; set; }
 
     private ImmutableArray<ITypeParameterSymbol> GetTypeParameters()
     {
@@ -107,7 +112,7 @@ public record FluentMethod
     {
         MethodName = this.MethodName;
         ReturnStep = this.ReturnStep;
-        Constructor = this.Constructor;
+        Constructor = this.TargetConstructor;
         ParameterConverter = this.ParameterConverter;
     }
 }

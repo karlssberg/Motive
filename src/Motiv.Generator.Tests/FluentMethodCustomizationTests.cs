@@ -105,7 +105,7 @@ public class FluentMethodCustomizationTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T1, T2, T3> SetValue<T1, T2, T3>(in T3 value)
                     {
-                        return new MyBuildTarget<T1, T2, T3>(Test.Converter.Convert<T1, T2, T3>(value));
+                        return new MyBuildTarget<T1, T2, T3>(Converter.Convert<T1, T2, T3>(value));
                     }
                 }
             }
@@ -171,7 +171,7 @@ public class FluentMethodCustomizationTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T> SetValue<T>(in T value)
                     {
-                        return new MyBuildTarget<T>(Test.Converter.Convert<T>(value));
+                        return new MyBuildTarget<T>(Converter.Convert<T>(value));
                     }
                 }
             }

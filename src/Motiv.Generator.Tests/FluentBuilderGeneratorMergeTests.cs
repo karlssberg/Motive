@@ -268,9 +268,9 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget<T1, T2> WithValue2<T2>(in T2 value2)
+                    public TestA.MyBuildTarget<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                        return new TestA.MyBuildTarget<T1, T2>(_value1__parameter, value2);
                     }
                 }
 
@@ -283,9 +283,9 @@ public class FluentBuilderGeneratorMergeTests
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public MyBuildTarget WithValue2(in string value2)
+                    public TestB.MyBuildTarget WithValue2(in string value2)
                     {
-                        return new MyBuildTarget(_value1__parameter, value2);
+                        return new TestB.MyBuildTarget(_value1__parameter, value2);
                     }
                 }
             }

@@ -552,7 +552,7 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
     }
 
     [Fact]
-    public async Task Should_merge_generated_when_applied_to_record_constructors_with_divergence_from_the_second_step()
+    public async Task Should_merge_generated_when_applied_to_record_constructors_with_divergence_from_the_second_step_when_no_create_methods_are_requested()
     {
         const string code =
             """
@@ -564,15 +564,22 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             [FluentFactory]
             public static partial class Shape;
 
-            [FluentConstructor(typeof(Shape))]
-            public record Rectangle(int Width, int Height)
+            [FluentConstructor(typeof(Shape), Options = FluentOptions.NoCreateMethod)]
+            public partial record Square(int Width)
             {
                 public int Width { get; set; } = Width;
-                public int Height { get; set; } = Height;
             }
 
-            [FluentConstructor(typeof(Shape))]
-            public record Cuboid(int Width, int Height, int Depth)
+            [FluentConstructor(typeof(Shape), Options = FluentOptions.NoCreateMethod)]
+            public partial class Rectangle(int width, int height)
+            {
+                public int Width { get; set; } = width;
+
+                public int Height { get; set; } = height;
+            }
+
+            [FluentConstructor(typeof(Shape), Options = FluentOptions.NoCreateMethod)]
+            public partial record Cuboid(int Width, int Height, int Depth)
             {
                 public int Width { get; set; } = Width;
                 public int Height { get; set; } = Height;
@@ -589,66 +596,27 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                 public static partial class Shape
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static Step_0__Test_Shape WithWidth(in int width)
+                    public static Square WithWidth(in int width)
                     {
-                        return new Step_0__Test_Shape(width);
+                        return new Square(width);
                     }
                 }
 
-                public struct Step_0__Test_Shape
+                public partial record Square
                 {
-                    private readonly int _width__parameter;
-                    public Step_0__Test_Shape(in int width)
-                    {
-                        _width__parameter = width;
-                    }
-
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_1__Test_Shape WithHeight(in int height)
+                    public Rectangle WithHeight(in int height)
                     {
-                        return new Step_1__Test_Shape(_width__parameter, height);
+                        return new Rectangle(this.Width, height);
                     }
                 }
 
-                public struct Step_1__Test_Shape
+                public partial class Rectangle
                 {
-                    private readonly int _width__parameter;
-                    private readonly int _height__parameter;
-                    public Step_1__Test_Shape(in int width, in int height)
-                    {
-                        _width__parameter = width;
-                        _height__parameter = height;
-                    }
-
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Step_2__Test_Shape WithDepth(in int depth)
+                    public Cuboid WithDepth(in int depth)
                     {
-                        return new Step_2__Test_Shape(_width__parameter, _height__parameter, depth);
-                    }
-
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Rectangle Create()
-                    {
-                        return new Rectangle(_width__parameter, _height__parameter);
-                    }
-                }
-
-                public struct Step_2__Test_Shape
-                {
-                    private readonly int _width__parameter;
-                    private readonly int _height__parameter;
-                    private readonly int _depth__parameter;
-                    public Step_2__Test_Shape(in int width, in int height, in int depth)
-                    {
-                        _width__parameter = width;
-                        _height__parameter = height;
-                        _depth__parameter = depth;
-                    }
-
-                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public Cuboid Create()
-                    {
-                        return new Cuboid(_width__parameter, _height__parameter, _depth__parameter);
+                        return new Cuboid(this.Width, this.Height, depth);
                     }
                 }
             }

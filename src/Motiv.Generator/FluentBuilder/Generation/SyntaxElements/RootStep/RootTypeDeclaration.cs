@@ -9,60 +9,54 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.RootStep;
 
 public static class RootTypeDeclaration
 {
+    private static readonly SymbolDisplayFormat NameOnlyFormat = new SymbolDisplayFormat(
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes)
+
+    .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.IncludeNullableReferenceTypeModifier);
     public static TypeDeclarationSyntax Create(FluentFactoryCompilationUnit file)
     {
         var rootMethodDeclarations = GetRootMethodDeclarations(file);
 
+        var identifier = IdentifierName(file.RootType.ToDisplayString(NameOnlyFormat)).Identifier;
         TypeDeclarationSyntax typeDeclaration = file.TypeKind switch
         {
-            TypeKind.Class when file.IsRecord =>
-                RecordDeclaration(SyntaxKind.RecordDeclaration, Token(SyntaxKind.RecordKeyword),file.Name)
-                    .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
-                    .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken))
-                    .WithModifiers(
-                        TokenList(GetRootTypeModifiers(file)))
-                    .WithMembers(
-                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
-
-            TypeKind.Class =>
-                ClassDeclaration(file.Name)
-                    .WithModifiers(
-                        TokenList(GetRootTypeModifiers(file)))
-                    .WithMembers(
-                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
-
             TypeKind.Struct when file.IsRecord  =>
-                RecordDeclaration(SyntaxKind.RecordStructDeclaration, Token(SyntaxKind.StructKeyword), Identifier(file.Name))
+                RecordDeclaration(SyntaxKind.RecordStructDeclaration, Token(SyntaxKind.StructKeyword), identifier)
                     .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
                     .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken))
                     .WithModifiers(
-                        TokenList(GetRootTypeModifiers(file).Append(Token(SyntaxKind.RecordKeyword))))
-                    .WithMembers(
-                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
+                        TokenList(GetRootTypeModifiers(file).Append(Token(SyntaxKind.RecordKeyword)))),
 
             TypeKind.Struct =>
-                StructDeclaration(file.Name)
+                StructDeclaration(identifier)
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file))),
+
+            TypeKind.Class when file.IsRecord =>
+                RecordDeclaration(SyntaxKind.RecordDeclaration, Token(SyntaxKind.RecordKeyword), identifier)
+                    .WithOpenBraceToken(Token(SyntaxKind.OpenBraceToken))
+                    .WithCloseBraceToken(Token(SyntaxKind.CloseBraceToken))
+                    .WithModifiers(
+                        TokenList(GetRootTypeModifiers(file))),
+
+            _ =>
+                ClassDeclaration(identifier)
                     .WithModifiers(
                         TokenList(GetRootTypeModifiers(file)))
-                    .WithMembers(
-                        List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>())),
-
-            _ => ClassDeclaration(file.Name)
         };
 
-        return typeDeclaration;
+        return typeDeclaration.WithMembers(
+            List(rootMethodDeclarations.OfType<MemberDeclarationSyntax>()));
     }
 
     private static IEnumerable<SyntaxToken> GetRootTypeModifiers(FluentFactoryCompilationUnit file)
     {
-        yield return Token(file.Accessibility switch
+        foreach (var syntaxKind in file.Accessibility.AccessibilityToSyntaxKind())
         {
-            Accessibility.Public => SyntaxKind.PublicKeyword,
-            Accessibility.Protected => SyntaxKind.ProtectedKeyword,
-            Accessibility.Internal => SyntaxKind.InternalKeyword,
-            Accessibility.Private => SyntaxKind.PrivateKeyword,
-            _ => SyntaxKind.PublicKeyword
-        });
+            yield return Token(syntaxKind);
+        }
         if (file.IsStatic)
         {
             yield return Token(SyntaxKind.StaticKeyword);

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -9,18 +9,25 @@ public static class StepNameSyntax
 {
     public static NameSyntax Create(FluentStep step)
     {
+        var rootTypeContainingNamespace = step.RootType.ContainingNamespace;
         var distinctGenericParameters = step.GenericConstructorParameters
             .SelectMany(t => t.Type.GetGenericTypeArguments())
-            .DistinctBy(symbol => symbol.ToDisplayString())
-            .ToImmutableArray();
+            .DistinctBy(symbol => symbol.ToDynamicDisplayString(rootTypeContainingNamespace))
+            .ToArray();
 
-        return distinctGenericParameters.Length > 0
-            ? GenericName(Identifier(step.Name))
+        var name = step.ExistingStepConstructor?.ContainingType.ToDynamicDisplayString(rootTypeContainingNamespace);
+        return CreateNameSyntax(name ?? step.Name, distinctGenericParameters, rootTypeContainingNamespace);
+    }
+
+    private static NameSyntax CreateNameSyntax(string name, ICollection<ITypeSymbol> distinctGenericParameters, INamespaceSymbol rootNamespace)
+    {
+        return distinctGenericParameters.Count > 0
+            ? GenericName(Identifier(name))
                 .WithTypeArgumentList(
                     TypeArgumentList(SeparatedList<TypeSyntax>(
                         distinctGenericParameters
-                            .Select(arg => IdentifierName(arg.ToDisplayString()))))
+                            .Select(arg => IdentifierName(arg.ToDynamicDisplayString(rootNamespace)))))
                 )
-            : IdentifierName(step.Name);
+            : IdentifierName(name);
     }
 }

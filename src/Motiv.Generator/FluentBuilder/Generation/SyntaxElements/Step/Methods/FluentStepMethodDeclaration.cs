@@ -40,7 +40,7 @@ public static class FluentStepMethodDeclaration
                                         Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
                                     .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
                                     .WithType(
-                                        IdentifierName(parameter.ParameterSymbol.Type.ToString()))))));
+                                        IdentifierName(parameter.ParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace)))))));
         }
 
         if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)

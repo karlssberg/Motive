@@ -37,7 +37,7 @@ public static class FluentRootStepMethodDeclaration
                             method.FluentParameters.Select(parameter =>
                                 Parameter(Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
                                     .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
-                                    .WithType(ParseTypeName(parameter.ParameterSymbol.Type.ToDisplayString()))))));
+                                    .WithType(ParseTypeName(parameter.ParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace)))))));
         }
 
         if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)

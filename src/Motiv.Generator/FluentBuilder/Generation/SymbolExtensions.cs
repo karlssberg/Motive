@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -8,6 +9,20 @@ namespace Motiv.Generator.FluentBuilder.Generation;
 
 public static class SymbolExtensions
 {
+    private static readonly SymbolDisplayFormat FullyQualifiedWithGlobalFormat = new (
+        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+    );
+
+    private static readonly SymbolDisplayFormat FullyQualifiedFormat = new (
+        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+    );
+
     public static bool IsOpenGenericType(this IParameterSymbol parameter)
     {
         return parameter.Type switch
@@ -102,7 +117,7 @@ public static class SymbolExtensions
         };
     }
 
-   public static bool IsAssignable(this Compilation compilation, ITypeSymbol? parameterType, ITypeSymbol? argumentType)
+    public static bool IsAssignable(this Compilation compilation, ITypeSymbol? parameterType, ITypeSymbol? argumentType)
     {
         if (parameterType is null || argumentType is null)
             return false;
@@ -180,7 +195,7 @@ public static class SymbolExtensions
         }
     }
 
-   public static IEnumerable<ITypeParameterSymbol> Union(
+    public static IEnumerable<ITypeParameterSymbol> Union(
        this IEnumerable<ITypeParameterSymbol> first,
        IEnumerable<ITypeParameterSymbol> second)
    {
@@ -191,7 +206,7 @@ public static class SymbolExtensions
    }
 
 
-   public static IEnumerable<ITypeParameterSymbol> Except(
+    public static IEnumerable<ITypeParameterSymbol> Except(
        this IEnumerable<ITypeParameterSymbol> collection,
        IEnumerable<ITypeParameterSymbol> exclusions)
    {
@@ -230,5 +245,110 @@ public static class SymbolExtensions
                .Where(method => method.GetAttributes().Any(a =>
                    a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterOverloadAttribute))
        ];
+   }
+
+   public static IEnumerable<SyntaxKind> AccessibilityToSyntaxKind(this Accessibility accessibility) =>
+       accessibility switch
+       {
+           Accessibility.Public => [SyntaxKind.PublicKeyword],
+           Accessibility.Private => [SyntaxKind.PrivateKeyword],
+           Accessibility.Protected => [SyntaxKind.ProtectedKeyword],
+           Accessibility.Internal => [SyntaxKind.InternalKeyword],
+           Accessibility.ProtectedOrInternal => [SyntaxKind.ProtectedKeyword, SyntaxKind.InternalKeyword], // Note: This will need both protected and internal
+           Accessibility.ProtectedAndInternal => [SyntaxKind.PrivateKeyword, SyntaxKind.ProtectedKeyword],
+           _ => [SyntaxKind.None]
+       };
+
+   // public static string ToDynamicDisplayString(this ITypeSymbol typeSymbol, INamespaceSymbol namespaceSymbol)
+   // {
+   //     if (typeSymbol.SpecialType != SpecialType.None)
+   //         return typeSymbol.ToDisplayString(NameFormat);
+   //     if (typeSymbol is ITypeParameterSymbol typeParameter)
+   //         return typeParameter.Name;
+   //
+   //     var typeSymbolNamespaceParts = typeSymbol.ContainingNamespace.ToDisplayParts();
+   //     var namespaceSymbolParts = namespaceSymbol.ToDisplayParts();
+   //
+   //     var sb = new StringBuilder();
+   //     var isCommonPrefixMode = true;
+   //     for (var i = 0; i < typeSymbolNamespaceParts.Length; i++)
+   //     {
+   //         var typePart = i < typeSymbolNamespaceParts.Length ? typeSymbolNamespaceParts[i].ToString() : null;
+   //         var namespacePart = i < namespaceSymbolParts.Length ? namespaceSymbolParts[i].ToString() : null;
+   //
+   //         if (isCommonPrefixMode && typePart == namespacePart)
+   //             continue;
+   //
+   //         isCommonPrefixMode = false;
+   //         sb.Append(typePart);
+   //
+   //     }
+   //
+   //     var serializedMinimalNamespace = sb.ToString();
+   //
+   //     return serializedMinimalNamespace == string.Empty
+   //         ? typeSymbol.ToDisplayString(NameFormat)
+   //         : $"{serializedMinimalNamespace}.{typeSymbol.ToDisplayString(NameFormat)}";
+   // }
+
+   private static readonly SymbolDisplayFormat NameFormat = new(
+         typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+         genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+         miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+    );
+
+   public static string ToFullyQualifiedDisplayString(this ITypeSymbol typeSymbol)
+   {
+       return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+   }
+
+   public static string ToDynamicDisplayString(this ITypeSymbol typeSymbol, INamespaceSymbol currentNamespace)
+   {
+       switch (typeSymbol)
+       {
+           case null:
+               return string.Empty;
+           // Handle named type symbols (regular classes, structs, interfaces)
+           case INamedTypeSymbol namedType:
+           {
+               // Get the base name without namespace
+               var baseName = GetBaseTypeName(namedType, currentNamespace);
+
+               // If it's not a generic type, return the base name
+               if (!namedType.IsGenericType)
+                   return baseName;
+
+               // Handle generic type parameters
+               var typeArguments = namedType.TypeArguments;
+               if (!typeArguments.Any())
+                   return baseName;
+
+               // Process each type argument recursively
+               var processedTypeArgs = typeArguments.Select(arg => arg.ToDynamicDisplayString(currentNamespace));
+
+               // Combine the base name with processed type arguments
+               return $"{baseName.Split('<')[0]}<{string.Join(", ", processedTypeArgs)}>";
+           }
+           // Handle array types
+           case IArrayTypeSymbol arrayType:
+               return $"{arrayType.ElementType.ToDynamicDisplayString(currentNamespace)}[]";
+           default:
+               // Handle other type symbols (like type parameters)
+               return typeSymbol.Name;
+       }
+   }
+
+   private static string GetBaseTypeName(INamedTypeSymbol typeSymbol, INamespaceSymbol currentNamespace)
+   {
+       var fullName = typeSymbol.ContainingType != null
+           ? $"{typeSymbol.ContainingType.ToDynamicDisplayString(currentNamespace)}.{typeSymbol.Name}"
+           : typeSymbol.ToDisplayString();
+
+       var namespaceName = currentNamespace.ToDisplayString();
+
+       // Remove namespace prefix if it matches current namespace
+       return typeSymbol.ToDisplayString().StartsWith(namespaceName)
+           ? fullName.Substring(namespaceName.Length).TrimStart('.')
+           : fullName;
    }
 }

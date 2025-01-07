@@ -1,4 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.Generation;
 using static Motiv.Generator.FluentBuilder.TypeName;
 
@@ -6,6 +8,14 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public static class SymbolExtensions
 {
+    public static bool IsPartial(this ITypeSymbol typeSymbol)
+    {
+        return typeSymbol.DeclaringSyntaxReferences
+            .Select(r => r.GetSyntax())
+            .OfType<TypeDeclarationSyntax>()
+            .Any(c => c.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword)));
+    }
+
     public static string GetFluentMethodName(this IParameterSymbol parameterSymbol)
     {
         var attribute = parameterSymbol.GetAttribute(FluentMethodAttribute);

@@ -56,9 +56,9 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 var (builderContextsCollection, compilation) = tuple;
                 return builderContextsCollection
                     .SelectMany(builderContexts => builderContexts)
-                    .GroupBy(builderContext => builderContext.RootTypeFullName)
+                    .GroupBy(builderContext => builderContext.RootType, SymbolEqualityComparer.Default)
                     .Select(group =>
-                        new FluentModelFactory(compilation).CreateFluentFactoryCompilationUnit(group.Key, [..group]));
+                        new FluentModelFactory(compilation).CreateFluentFactoryCompilationUnit((INamedTypeSymbol)group.Key!, [..group]));
             })
             .WithTrackingName("ConstructorModelsToFluentBuilderFiles");
 
@@ -74,7 +74,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
 
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        context.AddSource($"{builder.FullName}.g.cs", source);
+        context.AddSource($"{builder.RootType.ToDisplayString()}.g.cs", source);
     }
 
     private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorContexts(
@@ -93,18 +93,13 @@ public class FluentFactoryGenerator : IIncrementalGenerator
 
         return
         [
-            ..GetFluentFactoryMetadata(symbol, semanticModel)
+            ..GetFluentFactoryMetadata(symbol)
                 .Select(metadata =>
                 {
                     var attributePresent = metadata.AttributePresent;
                     var rootTypeFullName = metadata.RootTypeFullName;
                     if (!attributePresent || string.IsNullOrWhiteSpace(rootTypeFullName))
                         return [];
-
-                    var lastIndexOf = rootTypeFullName.LastIndexOf('.');
-                    var nameSpace = lastIndexOf == -1
-                        ? rootTypeFullName
-                        : rootTypeFullName.Substring(0, lastIndexOf);
 
                     var alreadyDeclaredRootType = semanticModel.Compilation.GetTypeByMetadataName(rootTypeFullName);
                     if (!IsRootTypeDecoratedWithAttribute(alreadyDeclaredRootType))
@@ -115,13 +110,15 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                         IMethodSymbol constructor =>
                         [
                             new FluentConstructorContext(
-                                nameSpace,
                                 constructor,
-                                alreadyDeclaredRootType,
-                                metadata)
+                                alreadyDeclaredRootType!,
+                                metadata,
+                                semanticModel)
                         ],
-                        INamedTypeSymbol type => CreateFluentConstructorContexts(type, nameSpace,
-                            alreadyDeclaredRootType!, metadata),
+                        INamedTypeSymbol type => CreateFluentConstructorContexts(
+                            type,
+                            alreadyDeclaredRootType!,
+                            metadata),
                         _ => []
                     };
                 })
@@ -129,8 +126,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
 
         ImmutableArray<FluentConstructorContext> CreateFluentConstructorContexts(
             INamedTypeSymbol type,
-            string nameSpace,
-            ISymbol alreadyDeclaredRootType,
+            INamedTypeSymbol alreadyDeclaredRootType,
             FluentFactoryMetadata metadata)
         {
             var primaryCtor = type.Constructors.FirstOrDefault(c => c.Parameters.Length > 0);
@@ -138,10 +134,10 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 return
                 [
                     new FluentConstructorContext(
-                        nameSpace,
                         primaryCtor,
                         alreadyDeclaredRootType,
-                        metadata)
+                        metadata,
+                        semanticModel)
                 ];
 
             return
@@ -149,10 +145,10 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                 ..type.Constructors
                     .Select(ctor =>
                         new FluentConstructorContext(
-                            nameSpace,
                             ctor,
                             alreadyDeclaredRootType,
-                            metadata))
+                            metadata,
+                            semanticModel))
             ];
         }
     }
@@ -165,8 +161,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
                    .Any(attr => attr.AttributeClass?.ToDisplayString() == TypeName.FluentFactoryAttribute);
     }
 
-    private static IEnumerable<FluentFactoryMetadata> GetFluentFactoryMetadata(ISymbol symbol,
-        SemanticModel semanticModel)
+    private static IEnumerable<FluentFactoryMetadata> GetFluentFactoryMetadata(ISymbol symbol)
     {
         return symbol.GetAttributes()
             .Where(a => a.AttributeClass?.ToDisplayString() == TypeName.FluentConstructorAttribute)

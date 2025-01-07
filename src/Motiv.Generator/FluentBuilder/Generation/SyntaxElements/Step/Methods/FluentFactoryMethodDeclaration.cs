@@ -20,7 +20,8 @@ public static class FluentFactoryMethodDeclaration
             .AppendIfNotNull(
                 method.SourceParameterSymbol is not null
                     ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
-                    : null);
+                    : null)
+            .Select(Argument);
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
             method,
@@ -47,7 +48,7 @@ public static class FluentFactoryMethodDeclaration
                             Identifier(method.SourceParameterSymbol.Name.ToCamelCase()))
                         .WithModifiers(TokenList(Token(SyntaxKind.InKeyword)))
                         .WithType(
-                            IdentifierName(method.SourceParameterSymbol.Type.ToString())))));
+                            IdentifierName(method.SourceParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace))))));
         }
 
         if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)

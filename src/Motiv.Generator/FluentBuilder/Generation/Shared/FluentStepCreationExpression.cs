@@ -38,7 +38,7 @@ public static class FluentStepCreationExpression
         IEnumerable<ArgumentSyntax> argNodes =
         [
             ..fieldSourcedArguments,
-            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments))
+            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments, method.RootNamespace))
         ];
 
         return ObjectCreationExpression(name)
