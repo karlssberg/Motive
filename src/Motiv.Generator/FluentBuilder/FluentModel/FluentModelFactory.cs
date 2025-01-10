@@ -221,9 +221,6 @@ public class FluentModelFactory(Compilation compilation)
         FluentStep? nextStep,
         IList<ConstructorMetadata> constructorMetadataList)
     {
-        // TODO: sort out merging of steps' return type and object creation metadata since when using no-create-method, an
-        // existing type being used as a step and a target type needs to have metadata merged  to ensure both targets
-        // can be reached.
         var constructorMetadata = MergeConstructorMetadata(node, constructorMetadataList);
         var constructor = nextStep is null
             ? constructorMetadata.Constructor
