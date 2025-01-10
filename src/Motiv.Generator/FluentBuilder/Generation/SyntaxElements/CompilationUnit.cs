@@ -50,9 +50,9 @@ public static class CompilationUnit
             .SelectMany(tuple => MaybeEncapsulateInNamespace(tuple.namespaces, tuple.declarations))
             .ToArray();
 
-        return memberDeclarations.Length > 0
+        return DoFluentStepsShareTheRootNamespace()
             ? memberDeclarations
-            : MaybeEncapsulateInNamespace(file.RootType.ContainingNamespace, [rootType]);
+            : [..MaybeEncapsulateInNamespace(file.RootType.ContainingNamespace, [rootType]), ..memberDeclarations];
 
         IEnumerable<TypeDeclarationSyntax> CreateTypeDeclarations(
             IEnumerable<FluentStep> fluentSteps)
@@ -75,6 +75,17 @@ public static class CompilationUnit
                     NamespaceDeclaration(ParseName(namespaces.ToDisplayString()))
                         .WithMembers(List([..declarations.OfType<MemberDeclarationSyntax>()]))
                 ];
+        }
+
+        bool DoFluentStepsShareTheRootNamespace()
+        {
+            var rootNamespace = file.RootType.ContainingNamespace;
+            return
+                file.FluentSteps.Any(
+                    step => step.ExistingStepConstructor is null
+                            || SymbolEqualityComparer.Default.Equals(
+                                 step.ExistingStepConstructor.ContainingNamespace,
+                                 rootNamespace));
         }
     }
 }

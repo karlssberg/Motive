@@ -10,24 +10,27 @@ public static class StepNameSyntax
     public static NameSyntax Create(FluentStep step)
     {
         var rootTypeContainingNamespace = step.RootType.ContainingNamespace;
-        var distinctGenericParameters = step.GenericConstructorParameters
-            .SelectMany(t => t.Type.GetGenericTypeArguments())
-            .DistinctBy(symbol => symbol.ToDynamicDisplayString(rootTypeContainingNamespace))
-            .ToArray();
 
         var name = step.ExistingStepConstructor?.ContainingType.ToDynamicDisplayString(rootTypeContainingNamespace);
-        return CreateNameSyntax(name ?? step.Name, distinctGenericParameters, rootTypeContainingNamespace);
+        return name is not null
+            ? ParseName(name)
+            : CreateNameSyntax(step, rootTypeContainingNamespace);
     }
 
-    private static NameSyntax CreateNameSyntax(string name, ICollection<ITypeSymbol> distinctGenericParameters, INamespaceSymbol rootNamespace)
+    private static NameSyntax CreateNameSyntax(FluentStep step, INamespaceSymbol rootNamespace)
     {
-        return distinctGenericParameters.Count > 0
-            ? GenericName(Identifier(name))
+        var distinctGenericParameters = step.GenericConstructorParameters
+            .SelectMany(t => t.Type.GetGenericTypeArguments())
+            .DistinctBy(symbol => symbol.ToDynamicDisplayString(rootNamespace))
+            .ToArray();
+
+        return distinctGenericParameters.Length > 0
+            ? GenericName(Identifier(step.Name))
                 .WithTypeArgumentList(
                     TypeArgumentList(SeparatedList<TypeSyntax>(
                         distinctGenericParameters
                             .Select(arg => IdentifierName(arg.ToDynamicDisplayString(rootNamespace)))))
                 )
-            : IdentifierName(name);
+            : IdentifierName(step.Name);
     }
 }

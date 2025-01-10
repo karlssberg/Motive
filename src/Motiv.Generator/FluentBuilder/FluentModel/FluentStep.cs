@@ -36,6 +36,8 @@ public class FluentStep(INamedTypeSymbol rootType)
         return string.Join(", ", KnownConstructorParameters.Select(p => p.ToDisplayString()));
     }
 
+    public string Identifier => ExistingStepConstructor?.ContainingType.Name ?? Name;
+
     public bool IsEndStep { get; set; }
     public TypeKind TypeKind { get; set; }
     public bool IsRecord { get; set; }

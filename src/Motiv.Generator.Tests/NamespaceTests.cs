@@ -205,15 +205,15 @@ public class NamespaceTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static NamespaceB.MyBuildTargetB<T>WithDefaultValue<T>()
+                    public static NamespaceB.MyBuildTargetB<T> WithDefaultValue<T>()
                     {
                         return new NamespaceB.MyBuildTargetB<T>(MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static NamespaceB.MyBuildTargetB<T> WithFunction<T>(in T value)
+                    public static NamespaceB.MyBuildTargetB<T> WithValue<T>(in T data)
                     {
-                        return new NamespaceB.MyBuildTargetB<T>(MethodVariants.WithValue<T>(value));
+                        return new NamespaceB.MyBuildTargetB<T>(MethodVariants.WithValue<T>(data));
                     }
                 }
             }
@@ -225,7 +225,7 @@ public class NamespaceTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public NamespaceA.MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new Test.NamespaceA.MyBuildTargetA<T>(this.Data, value);
+                        return new NamespaceA.MyBuildTargetA<T>(this.Data, value);
                     }
                 }
             }

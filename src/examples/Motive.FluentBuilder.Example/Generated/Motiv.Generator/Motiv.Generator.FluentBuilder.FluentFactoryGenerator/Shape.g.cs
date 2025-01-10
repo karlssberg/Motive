@@ -3,19 +3,34 @@
 public partial class Shape
 {
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public static Step_0__Shape WithWidth(in int width)
+    public static Shape WithWidth(in int width)
     {
-        return new Step_0__Shape(width);
+        return new Shape(width);
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public static Step_0__Shape WithRadius(in int radius)
+    public static Shape WithRadius(in int radius)
     {
-        return new Step_0__Shape(radius);
+        return new Shape(radius);
     }
 }
 
-public struct Step_0__Shape
+public partial class Shape
+{
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public static Shape WithWidth(in int width)
+    {
+        return new Shape(width);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public static Shape WithRadius(in int radius)
+    {
+        return new Shape(radius);
+    }
+}
+
+public struct Shape
 {
     private readonly int _width__parameter;
     public Step_0__Shape(in int width)
@@ -24,19 +39,19 @@ public struct Step_0__Shape
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public Shape WithHeight(in int height)
+    {
+        return new Shape(_width__parameter, height);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public Square Create()
     {
         return new Square(_width__parameter);
     }
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Step_1__Shape WithHeight(in int height)
-    {
-        return new Step_1__Shape(_width__parameter, height);
-    }
 }
 
-public struct Step_1__Shape
+public struct Shape
 {
     private readonly int _width__parameter;
     private readonly int _height__parameter;
@@ -47,19 +62,19 @@ public struct Step_1__Shape
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public Shape WithDepth(in int depth)
+    {
+        return new Shape(_width__parameter, _height__parameter, depth);
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public Rectangle Create()
     {
         return new Rectangle(_width__parameter, _height__parameter);
     }
-
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Step_2__Shape WithDepth(in int depth)
-    {
-        return new Step_2__Shape(_width__parameter, _height__parameter, depth);
-    }
 }
 
-public struct Step_2__Shape
+public struct Shape
 {
     private readonly int _width__parameter;
     private readonly int _height__parameter;
@@ -75,5 +90,20 @@ public struct Step_2__Shape
     public Cuboid Create()
     {
         return new Cuboid(_width__parameter, _height__parameter, _depth__parameter);
+    }
+}
+
+public struct Shape
+{
+    private readonly int _radius__parameter;
+    public Step_3__Shape(in int radius)
+    {
+        _radius__parameter = radius;
+    }
+
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public Circle Create()
+    {
+        return new Circle(_radius__parameter);
     }
 }

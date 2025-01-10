@@ -3,13 +3,22 @@
 public partial record Square
 {
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public static Step_0__Square WithWidth(in int width)
+    public static Square WithWidth(in int width)
     {
-        return new Step_0__Square(width);
+        return new Square(width);
     }
 }
 
-public struct Step_0__Square
+public partial record Square
+{
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public static Square WithWidth(in int width)
+    {
+        return new Square(width);
+    }
+}
+
+public struct Square
 {
     private readonly int _width__parameter;
     public Step_0__Square(in int width)

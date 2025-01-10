@@ -19,11 +19,9 @@ public static class ExistingPartialTypeStepDeclaration
 
         var name = StepNameSyntax.Create(step);
 
-        var identifier = name is GenericNameSyntax genericName
-            ? genericName.Identifier
-            : ((SimpleNameSyntax)name).Identifier;
+        var identifier = name;
 
-        var typeDeclaration = CreateTypeDeclarationSyntax(step, identifier)
+        var typeDeclaration = CreateTypeDeclarationSyntax(step, IdentifierName(step.Identifier).Identifier)
             .WithMembers(List<MemberDeclarationSyntax>([
                 ..methodDeclarationSyntaxes,
             ]));

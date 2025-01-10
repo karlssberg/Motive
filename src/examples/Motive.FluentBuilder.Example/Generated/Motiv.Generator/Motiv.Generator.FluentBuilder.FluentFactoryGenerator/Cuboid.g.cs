@@ -3,13 +3,22 @@
 public partial record Cuboid
 {
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public static Step_0__Cuboid WithWidth(in int width)
+    public static Cuboid WithWidth(in int width)
     {
-        return new Step_0__Cuboid(width);
+        return new Cuboid(width);
     }
 }
 
-public struct Step_0__Cuboid
+public partial record Cuboid
+{
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+    public static Cuboid WithWidth(in int width)
+    {
+        return new Cuboid(width);
+    }
+}
+
+public struct Cuboid
 {
     private readonly int _width__parameter;
     public Step_0__Cuboid(in int width)
@@ -18,13 +27,13 @@ public struct Step_0__Cuboid
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Step_1__Cuboid WithHeight(in int height)
+    public Cuboid WithHeight(in int height)
     {
-        return new Step_1__Cuboid(_width__parameter, height);
+        return new Cuboid(_width__parameter, height);
     }
 }
 
-public struct Step_1__Cuboid
+public struct Cuboid
 {
     private readonly int _width__parameter;
     private readonly int _height__parameter;
@@ -35,13 +44,13 @@ public struct Step_1__Cuboid
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Step_2__Cuboid WithDepth(in int depth)
+    public Cuboid WithDepth(in int depth)
     {
-        return new Step_2__Cuboid(_width__parameter, _height__parameter, depth);
+        return new Cuboid(_width__parameter, _height__parameter, depth);
     }
 }
 
-public struct Step_2__Cuboid
+public struct Cuboid
 {
     private readonly int _width__parameter;
     private readonly int _height__parameter;

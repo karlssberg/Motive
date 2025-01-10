@@ -11,7 +11,7 @@ public sealed class FluentParameterComparer : IEqualityComparer<IParameterSymbol
         if (ReferenceEquals(x, y)) return true;
         if (x is null || y is null) return false;
 
-        return SymbolEqualityComparer.Default.Equals(x.Type, y.Type)
+        return x.Type.Name == y.Type.Name
                && x.Name == y.Name;
     }
 
@@ -21,7 +21,7 @@ public sealed class FluentParameterComparer : IEqualityComparer<IParameterSymbol
 
         unchecked
         {
-            return (SymbolEqualityComparer.Default.GetHashCode(obj.Type) * 397) ^ obj.Name.GetHashCode();
+            return (obj.Type.Name.GetHashCode() * 397) ^ obj.Name.GetHashCode();
         }
     }
 }
