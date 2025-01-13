@@ -113,13 +113,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Func<T1, bool> _value1__parameter;
                     public Step_0__Test_Factory(in System.Func<T1, bool> value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> WithValue2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, value2);
                     }
                 }
             }
@@ -190,13 +190,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T1, T1>>, bool> _value1__parameter;
                     public Step_0__Test_Factory(in System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T1, T1>>, bool> value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> SetValue2<T2>(in System.Func<System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<T2, T2>>, bool> value2)
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, value2);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, value2);
                     }
                 }
             }
@@ -272,13 +272,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Func<T1, bool> _value1__parameter;
                     public Step_0__Test_Factory(in System.Func<T1, bool> value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in System.Collections.Generic.IEnumerable<T2> value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -288,14 +288,14 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Collections.Generic.IEnumerable<T2> _value2__parameter;
                     public Step_1__Test_Factory(in System.Func<T1, bool> value1, in System.Collections.Generic.IEnumerable<T2> value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3> WithValue3<T3>(in System.Func<System.Func<T1, bool>, T3> value3)
                     {
-                        return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                        return new MyBuildTarget<T1, T2, T3>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
             }
@@ -368,13 +368,13 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Func<T1, T2> _value1__parameter;
                     public Step_0__Test_Factory(in System.Func<T1, T2> value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2, T3, T4> WithValue2<T3, T4>(in System.Func<T3, T4> value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2, T3, T4>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2, T3, T4>(this._value1__parameter, value2);
                     }
                 }
 
@@ -384,14 +384,14 @@ public class FluentBuilderGeneratorNestedGenericTests
                     private readonly System.Func<T3, T4> _value2__parameter;
                     public Step_1__Test_Factory(in System.Func<T1, T2> value1, in System.Func<T3, T4> value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3, T4, T5, T6> WithValue3<T5, T6>(in System.Func<T5, T6> value3)
                     {
-                        return new MyBuildTarget<T1, T2, T3, T4, T5, T6>(_value1__parameter, _value2__parameter, value3);
+                        return new MyBuildTarget<T1, T2, T3, T4, T5, T6>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
             }

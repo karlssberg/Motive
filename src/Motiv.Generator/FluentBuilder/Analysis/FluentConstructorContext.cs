@@ -18,14 +18,14 @@ public record FluentConstructorContext
         IsRecord = rootSymbol.IsRecord;
         TypeKind = rootSymbol.TypeKind;
         Accessibility = rootSymbol.DeclaredAccessibility;
-        ParameterStores = ConstructorAnalyzer.FindStoringMembers(Constructor, semanticModel);
+        ParameterStores = new ConstructorAnalyzer(semanticModel).FindStoringMembers(constructor);
         RootType = rootSymbol;
     }
 
     public INamedTypeSymbol RootType { get; set; }
 
-    public IReadOnlyDictionary<IParameterSymbol,IPropertySymbol?> ParameterStores { get; set; } =
-        new Dictionary<IParameterSymbol, IPropertySymbol?>(FluentParameterComparer.Default);
+    public IReadOnlyDictionary<IParameterSymbol,FluentParameterResolution> ParameterStores { get; set; } =
+        new Dictionary<IParameterSymbol, FluentParameterResolution>(FluentParameterComparer.Default);
 
     public FluentFactoryGeneratorOptions Options { get; }
 

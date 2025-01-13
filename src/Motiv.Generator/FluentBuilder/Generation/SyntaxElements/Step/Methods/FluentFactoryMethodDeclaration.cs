@@ -16,7 +16,11 @@ public static class FluentFactoryMethodDeclaration
         IMethodSymbol constructor)
     {
         var identifierNameSyntaxes = method.KnownConstructorParameters
-            .Select(p => IdentifierName(p.Name.ToParameterFieldName()))
+            .Select(ExpressionSyntax (p) =>
+                MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    ThisExpression(),
+                    IdentifierName(p.Name.ToParameterFieldName())))
             .AppendIfNotNull(
                 method.SourceParameterSymbol is not null
                     ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())

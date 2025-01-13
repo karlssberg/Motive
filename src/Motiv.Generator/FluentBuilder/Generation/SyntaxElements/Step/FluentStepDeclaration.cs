@@ -21,7 +21,8 @@ public static class FluentStepDeclaration
                 ? FluentFactoryMethodDeclaration.Create(method, step, method.TargetConstructor)
                 : FluentStepMethodDeclaration.Create(method, step));
 
-        var propertyDeclaration = FluentStepFieldDeclarations.Create(step);
+        var fieldDeclaration = step.KnownConstructorParameters
+            .Select(parameter => ParameterFieldDeclarations.Create(parameter, step.RootType.ContainingNamespace));
 
         var constructor = FluentStepConstructorDeclaration.Create(step);
 
@@ -36,7 +37,7 @@ public static class FluentStepDeclaration
                 TokenList(
                     Token(SyntaxKind.PublicKeyword)))
             .WithMembers(List<MemberDeclarationSyntax>([
-                ..propertyDeclaration,
+                ..fieldDeclaration,
                 constructor,
                 ..methodDeclarationSyntaxes,
             ]));

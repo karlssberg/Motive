@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.Attributes;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.Generation;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements;
 
 namespace Motiv.Generator.FluentBuilder;
@@ -74,7 +75,7 @@ public class FluentFactoryGenerator : IIncrementalGenerator
 
         context.CancellationToken.ThrowIfCancellationRequested();
 
-        context.AddSource($"{builder.RootType.ToDisplayString()}.g.cs", source);
+        context.AddSource($"{builder.RootType.ToFileName()}.g.cs", source);
     }
 
     private static ImmutableArray<IEnumerable<FluentConstructorContext>> CreateConstructorContexts(

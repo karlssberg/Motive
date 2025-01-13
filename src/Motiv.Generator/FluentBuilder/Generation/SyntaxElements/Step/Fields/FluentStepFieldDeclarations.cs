@@ -1,22 +1,32 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
 
-public static class FluentStepFieldDeclarations
+public static class ParameterFieldDeclarations
 {
-    public static IEnumerable<FieldDeclarationSyntax> Create(FluentStep step)
+    public static FieldDeclarationSyntax Create(IParameterSymbol parameter, INamespaceSymbol namespaceSymbol)
     {
-        return step.KnownConstructorParameters
-            .Select(parameter =>
-                FieldDeclaration(
-                        VariableDeclaration(ParseTypeName(parameter.Type.ToString()))
-                            .AddVariables(VariableDeclarator(
-                                Identifier(parameter.Name.ToParameterFieldName()))))
+        return FieldDeclaration(
+                    VariableDeclaration(ParseTypeName(parameter.Type.ToDynamicDisplayString(namespaceSymbol)))
+                        .AddVariables(VariableDeclarator(
+                            Identifier(parameter.Name.ToParameterFieldName()))))
                     .WithModifiers(TokenList(
                         Token(SyntaxKind.PrivateKeyword),
-                        Token(SyntaxKind.ReadOnlyKeyword))));
+                        Token(SyntaxKind.ReadOnlyKeyword)));
+    }
+
+    public static FieldDeclarationSyntax CreateWithInitialization(IParameterSymbol parameter, ExpressionSyntax expression, INamespaceSymbol namespaceSymbol)
+    {
+        return FieldDeclaration(
+                    VariableDeclaration(ParseTypeName(parameter.Type.ToDynamicDisplayString(namespaceSymbol)))
+                        .WithVariables(SingletonSeparatedList(
+                            VariableDeclarator(Identifier(parameter.Name.ToParameterFieldName()))
+                                .WithInitializer(EqualsValueClause(expression)))))
+                    .WithModifiers(TokenList(
+                        Token(SyntaxKind.PrivateKeyword),
+                        Token(SyntaxKind.ReadOnlyKeyword)));
     }
 }

@@ -330,33 +330,33 @@ public class FluentBuilderRootTypeTests
 
                 public struct Step_0__Test_Factory
                 {
-                    private readonly Test.MyParameterValue _value1__parameter;
+                    private readonly MyParameterValue _value1__parameter;
                     public Step_0__Test_Factory(in Test.MyParameterValue value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory WithValue2(in MyParameterValue value2)
                     {
-                        return new Step_1__Test_Factory(_value1__parameter, value2);
+                        return new Step_1__Test_Factory(this._value1__parameter, value2);
                     }
                 }
 
                 public struct Step_1__Test_Factory
                 {
-                    private readonly Test.MyParameterValue _value1__parameter;
-                    private readonly Test.MyParameterValue _value2__parameter;
+                    private readonly MyParameterValue _value1__parameter;
+                    private readonly MyParameterValue _value2__parameter;
                     public Step_1__Test_Factory(in Test.MyParameterValue value1, in Test.MyParameterValue value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget WithValue3(in MyParameterValue value3)
                     {
-                        return new MyBuildTarget(_value1__parameter, _value2__parameter, value3);
+                        return new MyBuildTarget(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
             }
@@ -423,33 +423,33 @@ public class FluentBuilderRootTypeTests
 
                 public struct Step_0__Test_Factory<T1, T2>
                 {
-                    private readonly Test.MyParameterValue<T1, T2> _value1__parameter;
+                    private readonly MyParameterValue<T1, T2> _value1__parameter;
                     public Step_0__Test_Factory(in Test.MyParameterValue<T1, T2> value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2(in MyParameterValue<T1, T2> value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
                 public struct Step_1__Test_Factory<T1, T2>
                 {
-                    private readonly Test.MyParameterValue<T1, T2> _value1__parameter;
-                    private readonly Test.MyParameterValue<T1, T2> _value2__parameter;
+                    private readonly MyParameterValue<T1, T2> _value1__parameter;
+                    private readonly MyParameterValue<T1, T2> _value2__parameter;
                     public Step_1__Test_Factory(in Test.MyParameterValue<T1, T2> value1, in Test.MyParameterValue<T1, T2> value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> WithValue3(in MyParameterValue<T1, T2> value3)
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter, value3);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
             }
@@ -529,16 +529,16 @@ public class FluentBuilderRootTypeTests
 
                 public struct Step_0__Test_Factory
                 {
-                    private readonly Test.MyParameterValue _value1__parameter;
+                    private readonly MyParameterValue _value1__parameter;
                     public Step_0__Test_Factory(in Test.MyParameterValue value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetB WithValue2(in MyParameterValue value2)
                     {
-                        return new MyBuildTargetB(_value1__parameter, value2);
+                        return new MyBuildTargetB(this._value1__parameter, value2);
                     }
                 }
 
@@ -553,20 +553,114 @@ public class FluentBuilderRootTypeTests
 
                 public struct Step_2__Test_Factory
                 {
-                    private readonly Test.MyParameterValue _value1__parameter;
-                    private readonly Test.MyParameterValue _value2__parameter;
-                    private readonly Test.MyParameterValue _value3__parameter;
+                    private readonly MyParameterValue _value1__parameter;
+                    private readonly MyParameterValue _value2__parameter;
+                    private readonly MyParameterValue _value3__parameter;
                     public Step_2__Test_Factory(in Test.MyParameterValue value1, in Test.MyParameterValue value2, in Test.MyParameterValue value3)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
-                        _value3__parameter = value3;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetA WithValue4(in MyParameterValue value4)
                     {
-                        return new MyBuildTargetA(_value1__parameter, _value2__parameter, _value3__parameter, value4);
+                        return new MyBuildTargetA(this._value1__parameter, this._value2__parameter, this._value3__parameter, value4);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
+    [Fact] public async Task Should_utilize_the_primary_constructor_parameters_of_partial_target_type_when_also_used_as_a_step_type()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            namespace Test;
+
+            [FluentFactory]
+            public partial record struct Factory;
+
+            [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+            public partial class MyBuildTargetA(in MyParameterValue value1, in MyParameterValue value2, MyParameterValue value3, MyParameterValue value4);
+
+            [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
+            public partial class MyBuildTargetB(in MyParameterValue value1, in MyParameterValue value2);
+
+            public record MyParameterValue();
+            """;
+
+        const string expected =
+            """
+            namespace Test
+            {
+                public partial record struct Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Factory WithValue1(in MyParameterValue value1)
+                    {
+                        return new Step_0__Test_Factory(value1);
+                    }
+                }
+
+                public struct Step_0__Test_Factory
+                {
+                    private readonly MyParameterValue _value1__parameter;
+                    public Step_0__Test_Factory(in Test.MyParameterValue value1)
+                    {
+                        this._value1__parameter = value1;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTargetB WithValue2(in MyParameterValue value2)
+                    {
+                        return new MyBuildTargetB(this._value1__parameter, value2);
+                    }
+                }
+
+                public partial class MyBuildTargetB
+                {
+                    private readonly MyParameterValue _value1__parameter = value1;
+                    private readonly MyParameterValue _value2__parameter = value2;
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_2__Test_Factory WithValue3(in MyParameterValue value3)
+                    {
+                        return new Step_2__Test_Factory(this._value1__parameter, this._value2__parameter, value3);
+                    }
+                }
+
+                public struct Step_2__Test_Factory
+                {
+                    private readonly MyParameterValue _value1__parameter;
+                    private readonly MyParameterValue _value2__parameter;
+                    private readonly MyParameterValue _value3__parameter;
+                    public Step_2__Test_Factory(in Test.MyParameterValue value1, in Test.MyParameterValue value2, in Test.MyParameterValue value3)
+                    {
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTargetA WithValue4(in MyParameterValue value4)
+                    {
+                        return new MyBuildTargetA(this._value1__parameter, this._value2__parameter, this._value3__parameter, value4);
                     }
                 }
             }

@@ -8,7 +8,7 @@ public static class StringExtensions
     public static string ToFileName(this INamedTypeSymbol namedTypeSymbol)
     {
         return namedTypeSymbol
-            .ToFullyQualifiedDisplayString()
+            .ToDisplayString()
             .Replace("<", "__")
             .Replace(">", "__")
             .Replace(',', '_');

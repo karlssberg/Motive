@@ -49,13 +49,13 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T _value__parameter;
                     public Step_0__Test_Namespace_Factory(in T value)
                     {
-                        _value__parameter = value;
+                        this._value__parameter = value;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T> Create()
                     {
-                        return new MyBuildTarget<T>(_value__parameter);
+                        return new MyBuildTarget<T>(this._value__parameter);
                     }
                 }
             }
@@ -121,13 +121,13 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -137,14 +137,14 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T2 _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in T2 value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value2__parameter);
                     }
                 }
             }
@@ -214,13 +214,13 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -230,14 +230,14 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T2 _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in T2 value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Factory<T1, T2, T3> WithValue3<T3>(in T3 value3)
                     {
-                        return new Step_2__Test_Factory<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                        return new Step_2__Test_Factory<T1, T2, T3>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
 
@@ -248,15 +248,15 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T3 _value3__parameter;
                     public Step_2__Test_Factory(in T1 value1, in T2 value2, in T3 value3)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
-                        _value3__parameter = value3;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3> Create()
                     {
-                        return new MyBuildTarget<T1, T2, T3>(_value1__parameter, _value2__parameter, _value3__parameter);
+                        return new MyBuildTarget<T1, T2, T3>(this._value1__parameter, this._value2__parameter, this._value3__parameter);
                     }
                 }
             }
@@ -330,13 +330,13 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -346,14 +346,14 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T2 _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in T2 value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Factory<T1, T2, T3> WithValue3<T3>(in T3 value3)
                     {
-                        return new Step_2__Test_Factory<T1, T2, T3>(_value1__parameter, _value2__parameter, value3);
+                        return new Step_2__Test_Factory<T1, T2, T3>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
 
@@ -364,15 +364,15 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T3 _value3__parameter;
                     public Step_2__Test_Factory(in T1 value1, in T2 value2, in T3 value3)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
-                        _value3__parameter = value3;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_3__Test_Factory<T1, T2, T3, T4> WithValue4<T4>(in T4 value4)
                     {
-                        return new Step_3__Test_Factory<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, value4);
+                        return new Step_3__Test_Factory<T1, T2, T3, T4>(this._value1__parameter, this._value2__parameter, this._value3__parameter, value4);
                     }
                 }
 
@@ -384,16 +384,16 @@ public class FluentBuilderGeneratorGenericTests
                     private readonly T4 _value4__parameter;
                     public Step_3__Test_Factory(in T1 value1, in T2 value2, in T3 value3, in T4 value4)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
-                        _value3__parameter = value3;
-                        _value4__parameter = value4;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
+                        this._value4__parameter = value4;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2, T3, T4> Create()
                     {
-                        return new MyBuildTarget<T1, T2, T3, T4>(_value1__parameter, _value2__parameter, _value3__parameter, _value4__parameter);
+                        return new MyBuildTarget<T1, T2, T3, T4>(this._value1__parameter, this._value2__parameter, this._value3__parameter, this._value4__parameter);
                     }
                 }
             }

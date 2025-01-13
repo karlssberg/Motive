@@ -71,13 +71,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly string _value1__parameter;
                     public Step_0__Test_Factory(in string value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget WithValue2(in string value2)
                     {
-                        return new MyBuildTarget(_value1__parameter, value2);
+                        return new MyBuildTarget(this._value1__parameter, value2);
                     }
                 }
             }
@@ -172,13 +172,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -188,14 +188,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T2 _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in T2 value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value2__parameter);
                     }
                 }
 
@@ -204,13 +204,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly string _string1__parameter;
                     public Step_2__Test_Factory(in string string1)
                     {
-                        _string1__parameter = string1;
+                        this._string1__parameter = string1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_3__Test_Factory WithString2(in string string2)
                     {
-                        return new Step_3__Test_Factory(_string1__parameter, string2);
+                        return new Step_3__Test_Factory(this._string1__parameter, string2);
                     }
                 }
 
@@ -220,14 +220,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly string _string2__parameter;
                     public Step_3__Test_Factory(in string string1, in string string2)
                     {
-                        _string1__parameter = string1;
-                        _string2__parameter = string2;
+                        this._string1__parameter = string1;
+                        this._string2__parameter = string2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_4__Test_Factory WithString3(in string string3)
                     {
-                        return new Step_4__Test_Factory(_string1__parameter, _string2__parameter, string3);
+                        return new Step_4__Test_Factory(this._string1__parameter, this._string2__parameter, string3);
                     }
                 }
 
@@ -238,15 +238,15 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly string _string3__parameter;
                     public Step_4__Test_Factory(in string string1, in string string2, in string string3)
                     {
-                        _string1__parameter = string1;
-                        _string2__parameter = string2;
-                        _string3__parameter = string3;
+                        this._string1__parameter = string1;
+                        this._string2__parameter = string2;
+                        this._string3__parameter = string3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Create()
                     {
-                        return new MyBuildTarget(_string1__parameter, _string2__parameter, _string3__parameter);
+                        return new MyBuildTarget(this._string1__parameter, this._string2__parameter, this._string3__parameter);
                     }
                 }
             }
@@ -328,19 +328,19 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1> WithValue2(in string value2)
                     {
-                        return new Step_1__Test_Factory<T1>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1>(this._value1__parameter, value2);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_3__Test_Factory<T1, T2> WithValue3<T2>(in T2 value3)
                     {
-                        return new Step_3__Test_Factory<T1, T2>(_value1__parameter, value3);
+                        return new Step_3__Test_Factory<T1, T2>(this._value1__parameter, value3);
                     }
                 }
 
@@ -350,14 +350,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly string _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in string value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Factory<T1, T2> WithValue3<T2>(in T2 value3)
                     {
-                        return new Step_2__Test_Factory<T1, T2>(_value1__parameter, _value2__parameter, value3);
+                        return new Step_2__Test_Factory<T1, T2>(this._value1__parameter, this._value2__parameter, value3);
                     }
                 }
 
@@ -368,15 +368,15 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T2 _value3__parameter;
                     public Step_2__Test_Factory(in T1 value1, in string value2, in T2 value3)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
-                        _value3__parameter = value3;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value3__parameter = value3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter, _value3__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value2__parameter, this._value3__parameter);
                     }
                 }
 
@@ -386,14 +386,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T2 _value3__parameter;
                     public Step_3__Test_Factory(in T1 value1, in T2 value3)
                     {
-                        _value1__parameter = value1;
-                        _value3__parameter = value3;
+                        this._value1__parameter = value1;
+                        this._value3__parameter = value3;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value3__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value3__parameter);
                     }
                 }
             }
@@ -476,13 +476,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T1 _value1__parameter;
                     public Step_0__Test_Factory(in T1 value1)
                     {
-                        _value1__parameter = value1;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory<T1, T2> WithValue2<T2>(in T2 value2)
                     {
-                        return new Step_1__Test_Factory<T1, T2>(_value1__parameter, value2);
+                        return new Step_1__Test_Factory<T1, T2>(this._value1__parameter, value2);
                     }
                 }
 
@@ -492,14 +492,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T2 _value2__parameter;
                     public Step_1__Test_Factory(in T1 value1, in T2 value2)
                     {
-                        _value1__parameter = value1;
-                        _value2__parameter = value2;
+                        this._value1__parameter = value1;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value1__parameter, _value2__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value1__parameter, this._value2__parameter);
                     }
                 }
 
@@ -508,13 +508,13 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T2 _value2__parameter;
                     public Step_2__Test_Factory(in T2 value2)
                     {
-                        _value2__parameter = value2;
+                        this._value2__parameter = value2;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_3__Test_Factory<T2, T1> WithValue1<T1>(in T1 value1)
                     {
-                        return new Step_3__Test_Factory<T2, T1>(_value2__parameter, value1);
+                        return new Step_3__Test_Factory<T2, T1>(this._value2__parameter, value1);
                     }
                 }
 
@@ -524,14 +524,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
                     private readonly T1 _value1__parameter;
                     public Step_3__Test_Factory(in T2 value2, in T1 value1)
                     {
-                        _value2__parameter = value2;
-                        _value1__parameter = value1;
+                        this._value2__parameter = value2;
+                        this._value1__parameter = value1;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T1, T2> Create()
                     {
-                        return new MyBuildTarget<T1, T2>(_value2__parameter, _value1__parameter);
+                        return new MyBuildTarget<T1, T2>(this._value2__parameter, this._value1__parameter);
                     }
                 }
             }

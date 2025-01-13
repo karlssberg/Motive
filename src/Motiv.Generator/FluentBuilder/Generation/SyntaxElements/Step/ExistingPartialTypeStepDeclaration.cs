@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
-using Motiv.Generator.FluentBuilder.Generation.Shared;
+using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -17,12 +17,19 @@ public static class ExistingPartialTypeStepDeclaration
         var methodDeclarationSyntaxes = step.FluentMethods
             .Select<FluentMethod, MethodDeclarationSyntax>(method => ExistingPartialTypeMethodDeclaration.Create(method, step));
 
-        var name = StepNameSyntax.Create(step);
-
-        var identifier = name;
+        var parameterFieldDeclaration = step.KnownConstructorParameters
+            .Where(parameter =>
+                step.ParameterStoreMembers.TryGetValue(parameter, out var parameterResolution)
+                && parameterResolution.ShouldInitializeFromPrimaryConstructor)
+            .Select(parameter =>
+                ParameterFieldDeclarations.CreateWithInitialization(
+                    parameter,
+                    IdentifierName(parameter.Name),
+                    step.ExistingStepConstructor!.ContainingNamespace));
 
         var typeDeclaration = CreateTypeDeclarationSyntax(step, IdentifierName(step.Identifier).Identifier)
             .WithMembers(List<MemberDeclarationSyntax>([
+                ..parameterFieldDeclaration,
                 ..methodDeclarationSyntaxes,
             ]));
 

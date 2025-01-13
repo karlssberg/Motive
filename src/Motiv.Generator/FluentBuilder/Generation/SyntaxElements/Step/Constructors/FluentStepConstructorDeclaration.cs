@@ -23,7 +23,7 @@ public static class FluentStepConstructorDeclaration
                         ExpressionStatement(
                             AssignmentExpression(
                                 SyntaxKind.SimpleAssignmentExpression,
-                                IdentifierName(p.Name.ToParameterFieldName()),
+                                MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression(), IdentifierName(p.Name.ToParameterFieldName())),
                                 IdentifierName(p.Name.ToCamelCase()))))
                     .ToArray<StatementSyntax>()  // Convert IEnumerable to array of statements
             ));

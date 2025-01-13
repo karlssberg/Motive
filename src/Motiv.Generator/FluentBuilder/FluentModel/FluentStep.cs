@@ -44,8 +44,8 @@ public class FluentStep(INamedTypeSymbol rootType)
 
     public IMethodSymbol? ExistingStepConstructor { get; set; }
 
-    public IReadOnlyDictionary<IParameterSymbol, IPropertySymbol?> ParameterStoreMembers { get; set; } =
-        new Dictionary<IParameterSymbol, IPropertySymbol?>(FluentParameterComparer.Default);
+    public IReadOnlyDictionary<IParameterSymbol, FluentParameterResolution> ParameterStoreMembers { get; set; } =
+        new Dictionary<IParameterSymbol, FluentParameterResolution>(FluentParameterComparer.Default);
 
     public INamedTypeSymbol RootType { get; } = rootType;
 }

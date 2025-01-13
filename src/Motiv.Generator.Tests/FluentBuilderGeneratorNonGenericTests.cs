@@ -51,13 +51,13 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly int _value__parameter;
                     public Step_0__Test_Factory(in int value)
                     {
-                        _value__parameter = value;
+                        this._value__parameter = value;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget Create()
                     {
-                        return new MyBuildTarget(_value__parameter);
+                        return new MyBuildTarget(this._value__parameter);
                     }
                 }
             }
@@ -126,13 +126,13 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget WithText(in string text)
                     {
-                        return new MyBuildTarget(_number__parameter, text);
+                        return new MyBuildTarget(this._number__parameter, text);
                     }
                 }
             }
@@ -205,13 +205,13 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory WithText(in string text)
                     {
-                        return new Step_1__Test_Factory(_number__parameter, text);
+                        return new Step_1__Test_Factory(this._number__parameter, text);
                     }
                 }
 
@@ -221,14 +221,14 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly string _text__parameter;
                     public Step_1__Test_Factory(in int number, in string text)
                     {
-                        _number__parameter = number;
-                        _text__parameter = text;
+                        this._number__parameter = number;
+                        this._text__parameter = text;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget WithId(in System.Guid id)
                     {
-                        return new MyBuildTarget(_number__parameter, _text__parameter, id);
+                        return new MyBuildTarget(this._number__parameter, this._text__parameter, id);
                     }
                 }
             }
@@ -307,13 +307,13 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Factory WithText(in string text)
                     {
-                        return new Step_1__Test_Factory(_number__parameter, text);
+                        return new Step_1__Test_Factory(this._number__parameter, text);
                     }
                 }
 
@@ -323,14 +323,14 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly string _text__parameter;
                     public Step_1__Test_Factory(in int number, in string text)
                     {
-                        _number__parameter = number;
-                        _text__parameter = text;
+                        this._number__parameter = number;
+                        this._text__parameter = text;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Factory WithId(in System.Guid id)
                     {
-                        return new Step_2__Test_Factory(_number__parameter, _text__parameter, id);
+                        return new Step_2__Test_Factory(this._number__parameter, this._text__parameter, id);
                     }
                 }
 
@@ -341,15 +341,15 @@ public class FluentBuilderGeneratorNonGenericTests
                     private readonly System.Guid _id__parameter;
                     public Step_2__Test_Factory(in int number, in string text, in System.Guid id)
                     {
-                        _number__parameter = number;
-                        _text__parameter = text;
-                        _id__parameter = id;
+                        this._number__parameter = number;
+                        this._text__parameter = text;
+                        this._id__parameter = id;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget WithRegex(in System.Text.RegularExpressions.Regex regex)
                     {
-                        return new MyBuildTarget(_number__parameter, _text__parameter, _id__parameter, regex);
+                        return new MyBuildTarget(this._number__parameter, this._text__parameter, this._id__parameter, regex);
                     }
                 }
             }

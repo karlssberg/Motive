@@ -10,13 +10,6 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 public class FluentModelFactory(Compilation compilation)
 {
 
-    private static readonly SymbolDisplayFormat FullyQualifiedFormat = new (
-        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
-    );
-
     public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(
         INamedTypeSymbol rootType,
         ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
@@ -38,13 +31,7 @@ public class FluentModelFactory(Compilation compilation)
                 {
                     if (step.IsExistingPartialType) return step;
 
-                    var name = rootType
-                        .ToDisplayString(FullyQualifiedFormat)
-                        .Replace(".", "_")
-                        .Replace(",", "_")
-                        .Replace("<", "__")
-                        .Replace(">", "__")
-                        .Replace(" ", "");
+                    var name = rootType.ToIdentifier();
                     step.Name = $"Step_{index}__{name}";
 
                     return step;
@@ -106,7 +93,7 @@ public class FluentModelFactory(Compilation compilation)
             IsEndStep = node.IsEnd,
             IsRecord = metadata?.Constructor.ContainingType.IsRecord ?? false,
             IsExistingPartialType = useExistingTypeAsStep,
-            ParameterStoreMembers = metadata?.ParameterStoreMembers ?? new Dictionary<IParameterSymbol, IPropertySymbol?>(FluentParameterComparer.Default),
+            ParameterStoreMembers = metadata?.ParameterStoreMembers ?? new Dictionary<IParameterSymbol, FluentParameterResolution>(FluentParameterComparer.Default),
             ExistingStepConstructor = useExistingTypeAsStep
                 ? metadata?.Constructor
                 : null
@@ -168,7 +155,7 @@ public class FluentModelFactory(Compilation compilation)
             return intermediateStepMethods
                 .Any(m =>
                 {
-                    var existingParameterSequence = m.FluentParameters.Select(m => m.ParameterSymbol.Type);
+                    var existingParameterSequence = m.FluentParameters.Select(mp => mp.ParameterSymbol.Type);
                     var overloadedParameterSequence = fluentParameters.Select(p => p.ParameterSymbol.Type);
 
                     return existingParameterSequence.SequenceEqual(overloadedParameterSequence, SymbolEqualityComparer.Default);
@@ -339,7 +326,7 @@ public class FluentModelFactory(Compilation compilation)
         public IList<IMethodSymbol> CandidateConstructors { get; set; } = [constructorContext.Constructor];
 
         public FluentFactoryGeneratorOptions Options { get; set;  } = constructorContext.Options;
-        public IReadOnlyDictionary<IParameterSymbol, IPropertySymbol?> ParameterStoreMembers { get; set; } = constructorContext.ParameterStores;
+        public IReadOnlyDictionary<IParameterSymbol, FluentParameterResolution> ParameterStoreMembers { get; set; } = constructorContext.ParameterStores;
 
         public INamedTypeSymbol RootType { get; } = constructorContext.RootType;
 

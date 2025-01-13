@@ -1,7 +1,17 @@
-﻿namespace Motiv.Generator.FluentBuilder.Generation;
+﻿using Microsoft.CodeAnalysis;
+
+namespace Motiv.Generator.FluentBuilder.Generation;
 
 public static class StringExtensions
 {
+
+    private static readonly SymbolDisplayFormat FullyQualifiedFormat = new (
+        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+    );
+
     public static string Capitalize(this string input) =>
         string.IsNullOrEmpty(input)
             ? input
@@ -15,5 +25,26 @@ public static class StringExtensions
     public static string ToParameterFieldName(this string name)
     {
         return $"_{name.ToCamelCase()}__parameter";
+    }
+
+    public static string ToIdentifier(this ITypeSymbol name)
+    {
+        return name
+            .ToDisplayString(FullyQualifiedFormat)
+            .Replace(".", "_")
+            .Replace(",", "_")
+            .Replace("<", "__")
+            .Replace(">", "__")
+            .Replace(" ", "");
+    }
+
+    public static string ToFileName(this ITypeSymbol name)
+    {
+        return name
+            .ToDisplayString()
+            .Replace(",", "_")
+            .Replace("<", "__")
+            .Replace(">", "__")
+            .Replace(" ", "");
     }
 }

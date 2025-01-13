@@ -71,13 +71,13 @@ public class MultipleFluentMethodTests
                     private readonly T _data__parameter;
                     public Step_0__Test_Namespace_Factory(in T data)
                     {
-                        _data__parameter = data;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T> Create()
                     {
-                        return new MyBuildTarget<T>(_data__parameter);
+                        return new MyBuildTarget<T>(this._data__parameter);
                     }
                 }
             }
@@ -182,19 +182,19 @@ public class MultipleFluentMethodTests
                     private readonly T _data__parameter;
                     public Step_0__Test_Namespace_Factory(in T data)
                     {
-                        _data__parameter = data;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new MyBuildTargetA<T>(_data__parameter, value);
+                        return new MyBuildTargetA<T>(this._data__parameter, value);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetB<T> WithValue(in string value)
                     {
-                        return new MyBuildTargetB<T>(_data__parameter, value);
+                        return new MyBuildTargetB<T>(this._data__parameter, value);
                     }
                 }
             }
@@ -298,19 +298,19 @@ public class MultipleFluentMethodTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Namespace_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithDefaultValue<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithDefaultValue<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<T> function)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithFunction<T>(function));
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, MethodVariants.WithFunction<T>(function));
                     }
                 }
 
@@ -320,20 +320,20 @@ public class MultipleFluentMethodTests
                     private readonly T _data__parameter;
                     public Step_1__Test_Namespace_Factory(in int number, in T data)
                     {
-                        _number__parameter = number;
-                        _data__parameter = data;
+                        this._number__parameter = number;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new MyBuildTargetA<T>(_number__parameter, _data__parameter, value);
+                        return new MyBuildTargetA<T>(this._number__parameter, this._data__parameter, value);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetB<T> WithValue(in string value)
                     {
-                        return new MyBuildTargetB<T>(_number__parameter, _data__parameter, value);
+                        return new MyBuildTargetB<T>(this._number__parameter, this._data__parameter, value);
                     }
                 }
             }
@@ -437,19 +437,19 @@ public class MultipleFluentMethodTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Namespace_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> WithDefaultValue<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, MethodVariants.WithDefaultValue<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, MethodVariants.WithDefaultValue<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Namespace_Factory<T> WithFunction<T>(in System.Func<T> nativeFunction)
                     {
-                        return new Step_2__Test_Namespace_Factory<T>(_number__parameter, nativeFunction);
+                        return new Step_2__Test_Namespace_Factory<T>(this._number__parameter, nativeFunction);
                     }
                 }
 
@@ -459,14 +459,14 @@ public class MultipleFluentMethodTests
                     private readonly T _data__parameter;
                     public Step_1__Test_Namespace_Factory(in int number, in T data)
                     {
-                        _number__parameter = number;
-                        _data__parameter = data;
+                        this._number__parameter = number;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new MyBuildTargetA<T>(_number__parameter, _data__parameter, value);
+                        return new MyBuildTargetA<T>(this._number__parameter, this._data__parameter, value);
                     }
                 }
 
@@ -476,14 +476,14 @@ public class MultipleFluentMethodTests
                     private readonly System.Func<T> _nativeFunction__parameter;
                     public Step_2__Test_Namespace_Factory(in int number, in System.Func<T> nativeFunction)
                     {
-                        _number__parameter = number;
-                        _nativeFunction__parameter = nativeFunction;
+                        this._number__parameter = number;
+                        this._nativeFunction__parameter = nativeFunction;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetB<T> WithValue(in string value)
                     {
-                        return new MyBuildTargetB<T>(_number__parameter, _nativeFunction__parameter, value);
+                        return new MyBuildTargetB<T>(this._number__parameter, this._nativeFunction__parameter, value);
                     }
                 }
             }
@@ -606,25 +606,25 @@ public class MultipleFluentMethodTests
                     private readonly int _number__parameter;
                     public Step_0__Test_Namespace_Factory(in int number)
                     {
-                        _number__parameter = number;
+                        this._number__parameter = number;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>()
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>());
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, AsMethods.As<T>());
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<T> function)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>(function));
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, AsMethods.As<T>(function));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_1__Test_Namespace_Factory<T> As<T>(in System.Func<string, T> function, in string value)
                     {
-                        return new Step_1__Test_Namespace_Factory<T>(_number__parameter, AsMethods.As<T>(function, value));
+                        return new Step_1__Test_Namespace_Factory<T>(this._number__parameter, AsMethods.As<T>(function, value));
                     }
                 }
 
@@ -634,14 +634,14 @@ public class MultipleFluentMethodTests
                     private readonly T _data__parameter;
                     public Step_1__Test_Namespace_Factory(in int number, in T data)
                     {
-                        _number__parameter = number;
-                        _data__parameter = data;
+                        this._number__parameter = number;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTargetA<T> Create()
                     {
-                        return new MyBuildTargetA<T>(_number__parameter, _data__parameter);
+                        return new MyBuildTargetA<T>(this._number__parameter, this._data__parameter);
                     }
                 }
             }
@@ -729,13 +729,13 @@ public class MultipleFluentMethodTests
                     private readonly System.Threading.Tasks.Task<T> _data__parameter;
                     public Step_0__Test_Namespace_Factory(in System.Threading.Tasks.Task<T> data)
                     {
-                        _data__parameter = data;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public MyBuildTarget<T> Create()
                     {
-                        return new MyBuildTarget<T>(_data__parameter);
+                        return new MyBuildTarget<T>(this._data__parameter);
                     }
                 }
             }

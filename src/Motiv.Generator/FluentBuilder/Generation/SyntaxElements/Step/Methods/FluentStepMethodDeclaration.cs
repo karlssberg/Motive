@@ -63,7 +63,11 @@ public static class FluentStepMethodDeclaration
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
-                Argument(IdentifierName(parameter.Name.ToParameterFieldName())))
+                Argument(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        ThisExpression(),
+                        IdentifierName(parameter.Name.ToParameterFieldName()))))
             .Concat(
                 method.FluentParameters.Select(p => p.ParameterSymbol.Name.ToCamelCase())
                     .Select(IdentifierName)

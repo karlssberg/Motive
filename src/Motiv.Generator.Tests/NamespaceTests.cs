@@ -100,19 +100,19 @@ public class NamespaceTests
                     private readonly T _data__parameter;
                     public Step_0__Test_Factory(in T data)
                     {
-                        _data__parameter = data;
+                        this._data__parameter = data;
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public NamespaceA.MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new NamespaceA.MyBuildTargetA<T>(_data__parameter, value);
+                        return new NamespaceA.MyBuildTargetA<T>(this._data__parameter, value);
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public NamespaceB.MyBuildTargetB<T> WithValue(in string value)
                     {
-                        return new NamespaceB.MyBuildTargetB<T>(_data__parameter, value);
+                        return new NamespaceB.MyBuildTargetB<T>(this._data__parameter, value);
                     }
                 }
             }

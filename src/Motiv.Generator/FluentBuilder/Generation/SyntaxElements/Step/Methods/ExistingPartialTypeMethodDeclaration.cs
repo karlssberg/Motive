@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
@@ -70,9 +71,17 @@ public static class ExistingPartialTypeMethodDeclaration
                     ? member
                     : null;
 
-                ExpressionSyntax node = foundMember is null
-                    ? DefaultExpression(ParseTypeName(parameter.Type.ToDynamicDisplayString(method.RootNamespace)))
-                    : MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(foundMember.Name));
+                ExpressionSyntax node = foundMember
+                    switch
+                    {
+                        { PropertySymbol: not null and var property } =>
+                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(property.Name)),
+                        { FieldSymbol: not null and var field } =>
+                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(field.Name)),
+                        { ShouldInitializeFromPrimaryConstructor: true } =>
+                            MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression(), IdentifierName(parameter.Name.ToParameterFieldName())),
+                        _ => DefaultExpression(ParseTypeName(parameter.Type.ToDynamicDisplayString(method.RootNamespace)))
+                    };
 
                 return Argument(node);
             })
