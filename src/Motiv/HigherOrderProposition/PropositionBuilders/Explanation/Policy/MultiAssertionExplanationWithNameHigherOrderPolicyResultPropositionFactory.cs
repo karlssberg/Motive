@@ -8,14 +8,13 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Policy;
 /// A factory for creating specifications based on a predicate and explanations for true and false conditions. This is particularly useful for handling edge-case scenarios where it would be impossible or impractical to create a specification that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
-[FluentConstructor(typeof(Motiv.Spec))]
-public readonly ref struct MultiAssertionExplanationWithNameHigherOrderPolicyResultPropositionFactory<TModel, TUnderlyingMetadata>(
-    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TUnderlyingMetadata>> resultResolver,
-    [FluentMethod("As")]Func<IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, bool> higherOrderPredicate,
-    [FluentMethod("WithCauses")]Func<bool, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>> causeSelector,
-    [FluentMethod("WhenTrue")]string trueBecause,
-    [FluentMethod("WhenFalse")]Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, IEnumerable<string>> falseBecause)
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the specification.</typeparam>
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiAssertionExplanationWithNameHigherOrderPolicyResultPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
+    [MultipleFluentMethods(typeof(HigherOrderPredicatePolicyMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false, and names it with the propositional statement provided.
@@ -26,15 +25,15 @@ public readonly ref struct MultiAssertionExplanationWithNameHigherOrderPolicyRes
     public SpecBase<IEnumerable<TModel>, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new HigherOrderFromPolicyResultMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        return new HigherOrderFromPolicyResultMultiMetadataProposition<TModel, string, TMetadata>(
             resultResolver,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(statement),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 
     /// <summary>
@@ -43,13 +42,13 @@ public readonly ref struct MultiAssertionExplanationWithNameHigherOrderPolicyRes
     /// </summary>
     /// <returns>An instance of <see cref="SpecBase{TModel, TMetadata}" />.</returns>
     public SpecBase<IEnumerable<TModel>, string> Create() =>
-        new HigherOrderFromPolicyResultMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        new HigherOrderFromPolicyResultMultiMetadataProposition<TModel, string, TMetadata>(
             resultResolver,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(trueBecause),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
 }

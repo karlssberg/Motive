@@ -1,5 +1,4 @@
-﻿using Motiv.Generator.Attributes;
-using Motiv.Shared;
+﻿using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition;
 

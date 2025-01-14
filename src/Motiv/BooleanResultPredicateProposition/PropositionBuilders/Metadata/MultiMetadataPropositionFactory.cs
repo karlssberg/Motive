@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Metadata;
 
@@ -6,21 +7,22 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Metadata;
 /// A builder for creating propositions using a predicate function that returns a <see cref="BooleanResultBase{TMetadata}"/>.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
-public readonly ref struct MultiMetadataPropositionFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>> spec,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, IEnumerable<TMetadata>> whenTrue,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, IEnumerable<TMetadata>> whenFalse)
+/// <typeparam name="TReplacementMetadata">The type of the metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> spec,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
-    public SpecBase<TModel, TMetadata> Create(string statement)
+    public SpecBase<TModel, TReplacementMetadata> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new BooleanResultPredicateMultiMetadataProposition<TModel, TMetadata, TUnderlyingMetadata>(
+        return new BooleanResultPredicateMultiMetadataProposition<TModel, TReplacementMetadata, TMetadata>(
             spec,
             whenTrue,
             whenFalse,

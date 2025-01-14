@@ -8,12 +8,12 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// This is particularly useful for handling edge-case scenarios where it would be impossible or impractical to create a proposition that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-public readonly ref struct ExplanationPropositionFactory<TModel, TUnderlyingMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TUnderlyingMetadata> spec,
-    [FluentMethod("WhenTrue")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> trueBecause,
-    [FluentMethod("WhenFalse")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> falseBecause)
+public readonly partial struct ExplanationPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
@@ -22,7 +22,7 @@ public readonly ref struct ExplanationPropositionFactory<TModel, TUnderlyingMeta
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
     public PolicyBase<TModel, string> Create(string statement) =>
-        new SpecDecoratorExplanationProposition<TModel, TUnderlyingMetadata>(
+        new SpecDecoratorExplanationProposition<TModel, TMetadata>(
             spec,
             trueBecause,
             falseBecause,

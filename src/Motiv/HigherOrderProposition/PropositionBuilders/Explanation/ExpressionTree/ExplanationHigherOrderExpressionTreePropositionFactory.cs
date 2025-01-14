@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
-using Motiv.ExpressionTreeProposition;
+using Motiv.Generator.Attributes;
 using Motiv.HigherOrderProposition.ExpressionTree;
+using Motiv.Shared;
+using SpecDescription = Motiv.ExpressionTreeProposition.SpecDescription;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 
@@ -8,13 +10,13 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Expressio
 /// A factory for creating specifications based on a predicate and explanations for true and false conditions. This is particularly useful for handling edge-case scenarios where it would be impossible or impractical to create a specification that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
-public readonly ref struct ExplanationHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
-    Expression<Func<TModel, TPredicateResult>> expression,
-    Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
-    Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause,
-    Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> falseBecause,
-    Func<bool, IEnumerable<BooleanResult<TModel, string>>, IEnumerable<BooleanResult<TModel, string>>> causeSelector)
+/// <typeparam name="TPredicateResult">The predicate type.</typeparam>
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
+    [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
+    [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false, and names it with the propositional statement provided.
@@ -27,10 +29,10 @@ public readonly ref struct ExplanationHigherOrderExpressionTreePropositionFactor
         statement.ThrowIfNullOrWhitespace(nameof(statement));
         return new HigherOrderFromBooleanResultExplanationExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause,
             falseBecause,
             new SpecDescription(statement),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 }

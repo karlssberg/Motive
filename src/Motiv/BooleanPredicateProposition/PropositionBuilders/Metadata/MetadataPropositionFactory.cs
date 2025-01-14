@@ -1,3 +1,4 @@
+using Motiv.Generator.Attributes;
 using Motiv.Shared;
 
 namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Metadata;
@@ -7,10 +8,11 @@ namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Metadata;
 /// </summary>
 /// <typeparam name="TModel">The type of the model the proposition is for.</typeparam>
 /// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
-public readonly ref struct MetadataPropositionFactory<TModel, TMetadata>(
-    Func<TModel, bool> predicate,
-    Func<TModel, TMetadata> whenTrue,
-    Func<TModel, TMetadata> whenFalse)
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MetadataPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, bool> predicate,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, TMetadata> whenTrue,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, TMetadata> whenFalse)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.

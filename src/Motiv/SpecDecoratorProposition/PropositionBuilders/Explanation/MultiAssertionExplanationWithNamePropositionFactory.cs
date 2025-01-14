@@ -7,12 +7,12 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// A factory for creating propositions based on the supplied proposition and explanation factories.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-public readonly ref struct MultiAssertionExplanationWithNamePropositionFactory<TModel, TUnderlyingMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TUnderlyingMetadata> spec,
-    [FluentMethod("WhenTrue")]string trueBecause,
-    [FluentMethod("WhenFalse")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, IEnumerable<string>> falseBecause)
+public readonly partial struct MultiAssertionExplanationWithNamePropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
@@ -21,11 +21,11 @@ public readonly ref struct MultiAssertionExplanationWithNamePropositionFactory<T
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
     public SpecBase<TModel, string> Create(string statement) =>
-        new SpecDecoratorMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        new SpecDecoratorMultiMetadataProposition<TModel, string, TMetadata>(
             spec,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<TModel, BooleanResultBase<TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(statement.ThrowIfNullOrWhitespace(nameof(statement)), spec.Description));
 
@@ -35,11 +35,11 @@ public readonly ref struct MultiAssertionExplanationWithNamePropositionFactory<T
     /// </summary>
     /// <returns>A proposition for the model.</returns>
     public SpecBase<TModel, string> Create() =>
-        new SpecDecoratorMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        new SpecDecoratorMultiMetadataProposition<TModel, string, TMetadata>(
             spec,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<TModel, BooleanResultBase<TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(trueBecause, spec.Description));
 }

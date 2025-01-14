@@ -15,8 +15,8 @@ internal static class PropositionExtensions
         {
             true when PropositionContains('¬') => $"({propositionStatement})",
             true => propositionStatement,
-            false when PropositionContains('¬') => $"¬({propositionStatement})",
-            false => $"¬{propositionStatement}"
+            false when PropositionContains('¬') => $"({propositionStatement})".AsUnsatisfied(),
+            false => propositionStatement.AsUnsatisfied()
         };
 
         bool PropositionContains(char ch) => propositionStatement.Contains(ch);

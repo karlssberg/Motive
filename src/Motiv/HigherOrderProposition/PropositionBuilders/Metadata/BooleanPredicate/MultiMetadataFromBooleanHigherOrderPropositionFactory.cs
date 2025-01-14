@@ -1,4 +1,5 @@
-﻿using Motiv.HigherOrderProposition.BooleanPredicate;
+﻿using Motiv.Generator.Attributes;
+using Motiv.HigherOrderProposition.BooleanPredicate;
 using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanPredicate;
@@ -10,12 +11,12 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanPredi
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TMetadata">The type of the metadata associated with the specification.</typeparam>
-public readonly ref struct MultiMetadataFromBooleanHigherOrderPropositionFactory<TModel, TMetadata>(
-    Func<TModel, bool> resultResolver,
-    Func<IEnumerable<ModelResult<TModel>>, bool> higherOrderPredicate, 
-    Func<HigherOrderBooleanEvaluation<TModel>, IEnumerable<TMetadata>> whenTrue, 
-    Func<HigherOrderBooleanEvaluation<TModel>, IEnumerable<TMetadata>> whenFalse,
-    Func<bool, IEnumerable<ModelResult<TModel>>, IEnumerable<ModelResult<TModel>>> causeSelector)
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiMetadataFromBooleanHigherOrderPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, bool> resultResolver,
+    [MultipleFluentMethods(typeof(HigherOrderBooleanPredicateSpecMethods))]HigherOrderSpecBooleanPredicateOperation<TModel> higherOrderOperation,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanEvaluation<TModel>, IEnumerable<TMetadata>> whenTrue,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanEvaluation<TModel>, IEnumerable<TMetadata>> whenFalse)
 {
     /// <summary>Creates a specification and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the specification represents.</param>
@@ -26,10 +27,10 @@ public readonly ref struct MultiMetadataFromBooleanHigherOrderPropositionFactory
         statement.ThrowIfNullOrWhitespace(nameof(statement));
         return new HigherOrderFromBooleanPredicateMultiMetadataProposition<TModel,TMetadata>(
             resultResolver,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             whenTrue,
             whenFalse,
             new SpecDescription(statement),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 }

@@ -10,29 +10,28 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Spec;
 /// specification that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
-[FluentConstructor(typeof(Motiv.Spec))]
-public readonly ref struct ExplanationWithNameHigherOrderPropositionFactory<TModel, TUnderlyingMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TUnderlyingMetadata> spec,
-    [FluentMethod("As")]Func<IEnumerable<BooleanResult<TModel, TUnderlyingMetadata>>, bool> higherOrderPredicate,
-    [FluentMethod("WithCauses")]Func<bool, IEnumerable<BooleanResult<TModel, TUnderlyingMetadata>>,
-        IEnumerable<BooleanResult<TModel, TUnderlyingMetadata>>> causeSelector,
-    [FluentMethod("WhenTrue")]string trueBecause,
-    [FluentMethod("WhenFalse")]Func<HigherOrderBooleanResultEvaluation<TModel, TUnderlyingMetadata>, string> falseBecause)
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the specification.</typeparam>
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationWithNameHigherOrderPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
+    [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
 {
+
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false. The propositional statement
     /// will be obtained from the .WhenTrue() assertion.
     /// </summary>
     /// <returns>An instance of <see cref="SpecBase{TModel, TMetadata}" />.</returns>
     public PolicyBase<IEnumerable<TModel>, string> Create() =>
-        new HigherOrderFromBooleanResultExplanationProposition<TModel, TUnderlyingMetadata>(
+        new HigherOrderFromBooleanResultExplanationProposition<TModel, TMetadata>(
             spec.IsSatisfiedBy,
-            higherOrderPredicate,
-            trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, TUnderlyingMetadata>, string>(),
+            higherOrderOperation.HigherOrderPredicate,
+            trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(),
             falseBecause,
             new SpecDescription(trueBecause, spec.Description),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
 
     /// <summary>
     /// Creates a specification with descriptive assertions, but using the supplied proposition to succinctly explain
@@ -44,12 +43,12 @@ public readonly ref struct ExplanationWithNameHigherOrderPropositionFactory<TMod
     public PolicyBase<IEnumerable<TModel>, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new HigherOrderFromBooleanResultExplanationProposition<TModel, TUnderlyingMetadata>(
+        return new HigherOrderFromBooleanResultExplanationProposition<TModel, TMetadata>(
             spec.IsSatisfiedBy,
-            higherOrderPredicate,
-            trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, TUnderlyingMetadata>, string>(),
+            higherOrderOperation.HigherOrderPredicate,
+            trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(),
             falseBecause,
             new SpecDescription(statement, spec.Description),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 }

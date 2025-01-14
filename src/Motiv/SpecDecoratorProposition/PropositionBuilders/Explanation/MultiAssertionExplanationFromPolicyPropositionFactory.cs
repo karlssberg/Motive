@@ -9,12 +9,12 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// a proposition that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-public readonly ref struct MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TUnderlyingMetadata>(
-    [FluentMethod("Build")]PolicyBase<TModel, TUnderlyingMetadata> policy,
-    [FluentMethod("WhenTrue")]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, IEnumerable<string>> trueBecause,
-    [FluentMethod("WhenFalse")]Func<TModel, PolicyResultBase<TUnderlyingMetadata>, IEnumerable<string>> falseBecause)
+public readonly partial struct MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]PolicyBase<TModel, TMetadata> policy,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>> trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
@@ -23,7 +23,7 @@ public readonly ref struct MultiAssertionExplanationFromPolicyPropositionFactory
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
     public SpecBase<TModel, string> Create(string statement) =>
-        new PolicyDecoratorMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        new PolicyDecoratorMultiMetadataProposition<TModel, string, TMetadata>(
             policy,
             trueBecause,
             falseBecause,

@@ -5,22 +5,22 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <Authors>Daniel Karlsson</Authors>
-        <TargetFrameworks>net8.0;netstandard2.0;net9.0</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Motiv.xml</DocumentationFile>
         <PackageId>Motiv</PackageId>
         <Title>Motiv</Title>
         <Description>Transform the way you work with boolean logic by forming them from discrete propositions. This enables you to dynamically generate custom output, such as providing explanations about the causes behind a result.</Description>
-        <Copyright>Copyright (c) 2024 Daniel Karlsson</Copyright>
+        <Copyright>Copyright (c) 2025 Daniel Karlsson</Copyright>
         <PackageProjectUrl>https://karlssberg.github.io/Motiv</PackageProjectUrl>
         <PackageLicense>LICENSE</PackageLicense>
         <RepositoryUrl>https://github.com/karlssberg/Motiv</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageTags>SpecificationPattern, DecisionMaking, Explanations, DesignPatterns, RulesEngine, BusinessLogic, Compliance, AuditTrails, RiskManagement, CSharp, .NET,  Developers, Architects, ProductManagement, Advanced, Intermediate, Propositions</PackageTags>
+        <PackageTags>Boolean Logic, Decision Making, Explainability, Visibility, Boolean Blindness, Specification Pattern</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <Version>7.4.3</Version>
+        <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -174,18 +174,6 @@
         <Compile Update="SpecDecoratorProposition\PropositionBuilders\Explanation\ExplanationPropositionFactory.cs">
           <DependentUpon>FalseAssertionPropositionBuilder.cs</DependentUpon>
         </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Metadata\MetadataPropositionFactory.cs">
-          <DependentUpon>FalseMetadataPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\MultiAssertionExplanationWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\MultiAssertionExplanationPropositionFactory.cs">
-          <DependentUpon>FalseAssertionExplanationPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\ExplanationWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
         <Compile Update="BasicProposition\PropositionBuilders\Explanation\ExplanationWithNamePropositionFactory.cs">
           <DependentUpon>FalseAssertionWithNamePropositionBuilder.cs</DependentUpon>
         </Compile>
@@ -200,27 +188,6 @@
         </Compile>
         <Compile Update="BasicProposition\PropositionBuilders\Metadata\MetadataWithNamePropositionFactory.cs">
           <DependentUpon>FalseMetadataPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanPredicateProposition\PropositionBuilders\Explanation\ExplanationWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanPredicateProposition\PropositionBuilders\Explanation\ExplanationPropositionFactory.cs">
-          <DependentUpon>FalseAssertionPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanPredicateProposition\PropositionBuilders\Metadata\MetadataPropositionFactory.cs">
-          <DependentUpon>FalseMetadataPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanPredicateProposition\PropositionBuilders\Explanation\MultiAssertionExplanationWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\ExplanationPropositionFactory.cs">
-          <DependentUpon>FalseAssertionExplanationPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanPredicateProposition\PropositionBuilders\Metadata\MultiMetadataPropositionFactory.cs">
-          <DependentUpon>FalseMultiMetadataPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Metadata\MultiMetadataPropositionFactory.cs">
-          <DependentUpon>FalseMultiMetadataPropositionBuilder.cs</DependentUpon>
         </Compile>
         <Compile Update="SpecDecoratorProposition\PropositionBuilders\Metadata\MultiMetadataPropositionFactory.cs">
           <DependentUpon>FalseMultiMetadataPropositionBuilder.cs</DependentUpon>
@@ -240,24 +207,6 @@
         <Compile Update="SpecDecoratorProposition\PropositionBuilders\Explanation\MultiAssertionExplanationFromPolicyPropositionFactory.cs">
           <DependentUpon>FalseAssertionPolicyBuilder.cs</DependentUpon>
         </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\ExplanationFromPolicyWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionFromPolicyResultWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\MultiAssertionExplanationFromPolicyResultWithNamePropositionFactory.cs">
-          <DependentUpon>FalseAssertionFromPolicyResultWithNamePropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\ExplanationFromPolicyResultPropositionFactory.cs">
-          <DependentUpon>FalseAssertionExplanationFromPolicyResultPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Explanation\MultiAssertionExplanationFromPolicyPropositionFactory.cs">
-          <DependentUpon>FalseAssertionExplanationFromPolicyResultPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Metadata\MetadataFromPolicyResultPropositionFactory.cs">
-          <DependentUpon>FalseMetadataFromPolicyResultPropositionBuilder.cs</DependentUpon>
-        </Compile>
-        <Compile Update="BooleanResultPredicateProposition\PropositionBuilders\Metadata\MultiMetadataFromPolicyResultPropositionFactory.cs">
-          <DependentUpon>FalseMultiMetadataFromPolicyResultPropositionBuilder.cs</DependentUpon>
-        </Compile>
         <Compile Update="ExpressionTrees\SpecTransformerOptions.cs">
           <DependentUpon>ExpressionTreeTransformer.cs</DependentUpon>
         </Compile>
@@ -273,6 +222,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Generated\Motiv.Generator\" />
       <Folder Include="Generated\Motiv.Generator\Motiv.Generator.FluentBuilder.FluentFactoryGenerator\" />
     </ItemGroup>
 

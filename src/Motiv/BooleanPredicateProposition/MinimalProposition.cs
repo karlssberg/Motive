@@ -34,6 +34,6 @@ internal sealed class MinimalProposition<TModel>(
 
     private static string GetFalseAssertion(string proposition) =>
         proposition.ContainsReservedCharacters()
-            ? $"¬({proposition})"
-            : $"¬{proposition}";
+            ? $"({proposition})".AsUnsatisfied()
+            : proposition.AsUnsatisfied();
 }

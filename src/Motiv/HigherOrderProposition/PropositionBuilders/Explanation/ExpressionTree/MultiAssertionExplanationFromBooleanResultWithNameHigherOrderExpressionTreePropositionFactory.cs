@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
-using Motiv.ExpressionTreeProposition;
+using Motiv.Generator.Attributes;
 using Motiv.HigherOrderProposition.ExpressionTree;
+using Motiv.Shared;
+using SpecDescription = Motiv.ExpressionTreeProposition.SpecDescription;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 
@@ -9,12 +11,12 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Expressio
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TPredicateResult">The return type of the predicate function.</typeparam>
-public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
-    Expression<Func<TModel, TPredicateResult>> expression,
-    Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
-    string trueBecause,
-    Func<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>> falseBecause,
-    Func<bool, IEnumerable<BooleanResult<TModel, string>>, IEnumerable<BooleanResult<TModel, string>>> causeSelector)
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiAssertionExplanationFromBooleanResultWithNameHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
+    [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
+    [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false, and names it with the propositional statement provided.
@@ -27,13 +29,13 @@ public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHig
         statement.ThrowIfNullOrWhitespace(nameof(statement));
         return new HigherOrderFromBooleanResultMultiMetadataExpressionTreeProposition<TModel, string, TPredicateResult>(
             expression,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause
                 .ToEnumerable()
                 .ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(statement),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 
     /// <summary>
@@ -44,11 +46,11 @@ public readonly ref struct MultiAssertionExplanationFromBooleanResultWithNameHig
     public SpecBase<IEnumerable<TModel>, string> Create() =>
         new HigherOrderFromBooleanResultMultiMetadataExpressionTreeProposition<TModel, string, TPredicateResult>(
             expression,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause
                 .ToEnumerable()
                 .ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(trueBecause),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
 }

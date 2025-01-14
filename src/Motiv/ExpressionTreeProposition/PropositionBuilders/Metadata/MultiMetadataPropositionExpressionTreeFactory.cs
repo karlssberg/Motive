@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Metadata;
 
@@ -8,10 +10,11 @@ namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Metadata;
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
 /// <typeparam name="TPredicateResult">The return type of the predicate expression.</typeparam>
-public readonly ref struct MultiMetadataPropositionExpressionTreeFactory<TModel, TMetadata, TPredicateResult>(
-    Expression<Func<TModel, TPredicateResult>> expression,
-    Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenTrue,
-    Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenFalse)
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiMetadataPropositionExpressionTreeFactory<TModel, TMetadata, TPredicateResult>(
+    [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenTrue,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<string>, IEnumerable<TMetadata>> whenFalse)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>

@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanation;
 
@@ -6,11 +7,12 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 /// A factory for creating propositions based on the supplied proposition and explanation factories.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
-public readonly ref struct MultiAssertionExplanationFromPolicyResultWithNamePropositionFactory<TModel, TUnderlyingMetadata>(
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>> predicate,
-    string trueBecause,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, IEnumerable<string>> falseBecause)
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MultiAssertionExplanationFromPolicyResultWithNamePropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> predicate,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
@@ -21,11 +23,11 @@ public readonly ref struct MultiAssertionExplanationFromPolicyResultWithNameProp
     public SpecBase<TModel, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new PolicyResultPredicateMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        return new PolicyResultPredicateMultiMetadataProposition<TModel, string, TMetadata>(
             predicate,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<TModel, PolicyResultBase<TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(statement)
         );
@@ -37,11 +39,11 @@ public readonly ref struct MultiAssertionExplanationFromPolicyResultWithNameProp
     /// </summary>
     /// <returns>A proposition for the model.</returns>
     public SpecBase<TModel, string> Create() =>
-        new PolicyResultPredicateMultiMetadataProposition<TModel, string, TUnderlyingMetadata>(
+        new PolicyResultPredicateMultiMetadataProposition<TModel, string, TMetadata>(
             predicate,
             trueBecause
                 .ToEnumerable()
-                .ToFunc<TModel, PolicyResultBase<TUnderlyingMetadata>, IEnumerable<string>>(),
+                .ToFunc<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>>(),
             falseBecause,
             new SpecDescription(trueBecause));
 }

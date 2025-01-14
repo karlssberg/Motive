@@ -1,9 +1,8 @@
-﻿using Motiv.Generator.Attributes;
-using Motiv.Shared;
+﻿using Motiv.Shared;
 
 namespace Motiv.SpecDecoratorProposition;
 
-internal sealed partial class SpecDecoratorMetadataPolicy<TModel, TMetadata, TUnderlyingMetadata>(
+internal sealed partial class PolicyDecoratorMetadataProposition<TModel, TMetadata, TUnderlyingMetadata>(
     PolicyBase<TModel, TUnderlyingMetadata> underlyingSpec,
     Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenTrue,
     Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenFalse,

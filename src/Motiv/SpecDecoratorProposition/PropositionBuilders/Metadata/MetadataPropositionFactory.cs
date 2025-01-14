@@ -7,20 +7,20 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Metadata;
 /// A factory for creating propositions based on the supplied proposition and metadata factories.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+/// <typeparam name="TReplacementMetadata">The type of the metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-public readonly ref struct MetadataPropositionFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TUnderlyingMetadata> spec,
-    [FluentMethod("WhenTrue")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, TMetadata> whenTrue,
-    [FluentMethod("WhenFalse")]Func<TModel, BooleanResultBase<TUnderlyingMetadata>, TMetadata> whenFalse)
+public readonly partial struct MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
+    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
-    public PolicyBase<TModel, TMetadata> Create(string statement) =>
-        new SpecDecoratorMetadataProposition<TModel, TMetadata, TUnderlyingMetadata>(
+    public PolicyBase<TModel, TReplacementMetadata> Create(string statement) =>
+        new SpecDecoratorMetadataProposition<TModel, TReplacementMetadata, TMetadata>(
             spec,
             whenTrue,
             whenFalse,

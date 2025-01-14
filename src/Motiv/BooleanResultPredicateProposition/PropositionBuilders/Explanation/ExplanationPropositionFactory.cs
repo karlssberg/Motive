@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanation;
 
@@ -7,11 +8,12 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 /// This is particularly useful for handling edge-case scenarios where it would be impossible or impractical to create a proposition that covers every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
-public readonly ref struct ExplanationPropositionFactory<TModel, TUnderlyingMetadata>(
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>> predicate,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> trueBecause,
-    Func<TModel, BooleanResultBase<TUnderlyingMetadata>, string> falseBecause)
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationPropositionFactory<TModel, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> predicate,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
@@ -22,7 +24,7 @@ public readonly ref struct ExplanationPropositionFactory<TModel, TUnderlyingMeta
     public PolicyBase<TModel, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new BooleanResultPredicateExplanationProposition<TModel, TUnderlyingMetadata>(
+        return new BooleanResultPredicateExplanationProposition<TModel, TMetadata>(
             predicate,
             trueBecause,
             falseBecause,

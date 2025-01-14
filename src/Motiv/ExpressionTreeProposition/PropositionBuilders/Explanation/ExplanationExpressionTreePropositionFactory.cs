@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Explanation;
 
@@ -8,10 +10,11 @@ namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Explanation;
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TPredicateResult">The return type of the predicate expression.</typeparam>
-public readonly ref struct ExplanationExpressionTreePropositionFactory<TModel, TPredicateResult>(
-    Expression<Func<TModel, TPredicateResult>> expression,
-    Func<TModel, BooleanResultBase<string>, string> trueBecause,
-    Func<TModel, BooleanResultBase<string>, string> falseBecause)
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationExpressionTreePropositionFactory<TModel, TPredicateResult>(
+    [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<string>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<string>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.

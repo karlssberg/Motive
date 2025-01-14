@@ -79,4 +79,6 @@ public static class StringExtensions
     }
 
     internal static bool ContainsReservedCharacters(this string text) => text.Any(c => Characters.Contains(c));
+
+    internal static string AsUnsatisfied(this string text) => $"¬{text}";
 }

@@ -10,29 +10,28 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Policy;
 /// every possibility, so instead it is done on a case-by-case basis.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TMetadata">The type of the metadata associated with the specification.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the specification.</typeparam>
-[FluentConstructor(typeof(Motiv.Spec))]
-public readonly ref struct MetadataFromPolicyHigherOrderPropositionFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    [FluentMethod("Build")]PolicyBase<TModel, TUnderlyingMetadata> spec,
-    [FluentMethod("As")]Func<IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, bool> higherOrderPredicate,
-    [FluentMethod("WithCauses")]Func<bool, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>, IEnumerable<PolicyResult<TModel, TUnderlyingMetadata>>> causeSelector,
-    [FluentMethod("WhenTrue")]Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenTrue,
-    [FluentMethod("WhenFalse")]Func<HigherOrderPolicyResultEvaluation<TModel, TUnderlyingMetadata>, TMetadata> whenFalse)
+/// <typeparam name="TReplacementMetadata">The type of the metadata associated with the specification.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the specification.</typeparam>
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
+    [FluentMethod("Build")]PolicyBase<TModel, TMetadata> spec,
+    [MultipleFluentMethods(typeof(HigherOrderPredicatePolicyMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
 {
     /// <summary>Creates a specification and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the specification represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A specification for the model.</returns>
-    public PolicyBase<IEnumerable<TModel>, TMetadata> Create(string statement)
+    public PolicyBase<IEnumerable<TModel>, TReplacementMetadata> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new HigherOrderFromPolicyResultMetadataProposition<TModel, TMetadata, TUnderlyingMetadata>(
+        return new HigherOrderFromPolicyResultMetadataProposition<TModel, TReplacementMetadata, TMetadata>(
             spec.IsSatisfiedBy,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             whenTrue,
             whenFalse,
             new SpecDescription(statement, spec.Description),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 }

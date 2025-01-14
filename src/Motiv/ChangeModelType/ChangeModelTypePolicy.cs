@@ -12,7 +12,7 @@ internal sealed class ChangeModelTypePolicy<TParentModel, TModel, TMetadata>(
     protected override BooleanResultBase<TMetadata> IsSpecSatisfiedBy(TParentModel model) =>
         IsPolicySatisfiedBy(model);
 
-    protected override PolicyResultBase<TMetadata> IsPolicySatisfiedBy(TParentModel model) => 
+    protected override PolicyResultBase<TMetadata> IsPolicySatisfiedBy(TParentModel model) =>
         policy.IsSatisfiedBy(modelSelector(model));
 
     public override string ToString() => policy.ToString();

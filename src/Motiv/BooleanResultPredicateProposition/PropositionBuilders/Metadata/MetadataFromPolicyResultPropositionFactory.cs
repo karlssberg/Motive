@@ -1,4 +1,5 @@
-﻿using Motiv.Shared;
+﻿using Motiv.Generator.Attributes;
+using Motiv.Shared;
 
 namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Metadata;
 
@@ -6,21 +7,22 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Metadata;
 /// A builder for creating propositions using a predicate function that returns a <see cref="PolicyResultBase{TMetadata}"/>.
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
-/// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
-/// <typeparam name="TUnderlyingMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
-public readonly ref struct MetadataFromPolicyResultPropositionFactory<TModel, TMetadata, TUnderlyingMetadata>(
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>> spec,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenTrue,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, TMetadata> whenFalse)
+/// <typeparam name="TReplacementMetadata">The type of the metadata associated with the proposition.</typeparam>
+/// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
+    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> spec,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
-    public PolicyBase<TModel, TMetadata> Create(string statement)
+    public PolicyBase<TModel, TReplacementMetadata> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new PolicyResultPredicateMetadataProposition<TModel, TMetadata, TUnderlyingMetadata>(
+        return new PolicyResultPredicateMetadataProposition<TModel, TReplacementMetadata, TMetadata>(
             spec,
             whenTrue,
             whenFalse,

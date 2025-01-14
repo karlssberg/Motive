@@ -1,13 +1,15 @@
+using Motiv.Generator.Attributes;
 using Motiv.Shared;
 
 namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Explanation;
 
 /// <summary>A factory for creating propositions based on a predicate and explanations for true and false conditions.</summary>
 /// <typeparam name="TModel">The type of the model the proposition is for.</typeparam>
-public readonly ref struct ExplanationWithNamePropositionFactory<TModel>(
-    Func<TModel, bool> predicate,
-    string trueBecause,
-    Func<TModel, string> falseBecause)
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationWithNamePropositionFactory<TModel>(
+    [FluentMethod("Build")]Func<TModel, bool> predicate,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition with explanations for when the condition is true or false. The propositional statement

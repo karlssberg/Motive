@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
-using Motiv.ExpressionTreeProposition;
+using Motiv.Generator.Attributes;
 using Motiv.HigherOrderProposition.ExpressionTree;
+using Motiv.Shared;
+using SpecDescription = Motiv.ExpressionTreeProposition.SpecDescription;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.ExpressionTree;
 
@@ -11,13 +13,12 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Expressio
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TPredicateResult">The return type of the predicate function.</typeparam>
-public readonly ref struct ExplanationWithNameHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
-    Expression<Func<TModel, TPredicateResult>> expression,
-    Func<IEnumerable<BooleanResult<TModel, string>>, bool> higherOrderPredicate,
-    string trueBecause,
-    Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> falseBecause,
-    Func<bool, IEnumerable<BooleanResult<TModel, string>>,
-        IEnumerable<BooleanResult<TModel, string>>> causeSelector)
+[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+public readonly partial struct ExplanationWithNameHigherOrderExpressionTreePropositionFactory<TModel, TPredicateResult>(
+    [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
+    [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation,
+    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, string>, string> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false. The propositional statement
@@ -27,11 +28,11 @@ public readonly ref struct ExplanationWithNameHigherOrderExpressionTreePropositi
     public PolicyBase<IEnumerable<TModel>, string> Create() =>
         new HigherOrderFromBooleanResultExplanationExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, string>(),
             falseBecause,
             new SpecDescription(trueBecause),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
 
     /// <summary>
     /// Creates a specification with descriptive assertions, but using the supplied proposition to succinctly explain
@@ -45,10 +46,10 @@ public readonly ref struct ExplanationWithNameHigherOrderExpressionTreePropositi
         statement.ThrowIfNullOrWhitespace(nameof(statement));
         return new HigherOrderFromBooleanResultExplanationExpressionTreeProposition<TModel, TPredicateResult>(
             expression,
-            higherOrderPredicate,
+            higherOrderOperation.HigherOrderPredicate,
             trueBecause.ToFunc<HigherOrderBooleanResultEvaluation<TModel, string>, string>(),
             falseBecause,
             new SpecDescription(statement),
-            causeSelector);
+            higherOrderOperation.CauseSelector);
     }
 }
