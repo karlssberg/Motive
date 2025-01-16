@@ -20,4 +20,8 @@
 
         <None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Generated\Motiv.Generator\" />
+    </ItemGroup>
 </Project>

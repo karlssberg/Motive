@@ -8,8 +8,8 @@ namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Explanation;
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiAssertionExplanationWithNamePropositionFactory<TModel>(
     [FluentMethod("Build")]Func<TModel, bool> predicate,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, IEnumerable<string>> falseBecause)
+    [FluentMethod("WhenTrue")]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a proposition with explanations for when the condition is true or false. The propositional statement

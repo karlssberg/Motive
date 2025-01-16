@@ -1,8 +1,5 @@
 using Motiv.Generator.Attributes;
 using Motiv.HigherOrderProposition.BooleanPredicate;
-using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.BooleanPredicate;
-using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.BooleanPredicateWithName;
-using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate;
 using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanPredicate;

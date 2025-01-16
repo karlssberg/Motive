@@ -12,8 +12,8 @@ namespace Motiv.ExpressionTreeProposition.PropositionBuilders.Explanation;
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct ExplanationWithNameExpressionTreePropositionFactory<TModel, TPredicateResult>(
     [FluentMethod("From")]Expression<Func<TModel, TPredicateResult>> expression,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
-    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<string>, string> falseBecause)
+    [FluentMethod("WhenTrue")]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<string>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition with descriptive assertions, but using the supplied proposition to succinctly explain

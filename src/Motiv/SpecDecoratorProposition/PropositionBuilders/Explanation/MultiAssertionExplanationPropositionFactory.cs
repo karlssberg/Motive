@@ -12,10 +12,40 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
-    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> trueBecause,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> falseBecause)
+    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]SpecBase<TModel, TMetadata> spec,
+    [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {
+    /// <summary>
+    /// A factory for creating propositions based on the supplied proposition and explanation factories.
+    /// </summary>
+    /// <param name="spec">The proposition to evaluate.</param>
+    /// <param name="trueBecause">The explanations for when the proposition is true.</param>
+    /// <param name="falseBecause">The explanation for when the proposition is false.</param>
+    [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+    public MultiAssertionExplanationPropositionFactory(
+        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]SpecBase<TModel, TMetadata> spec,
+        [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> trueBecause,
+        [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
+        : this(spec, trueBecause, falseBecause.ToEnumerableReturn())
+    {
+    }
+
+    /// <summary>
+    /// A factory for creating propositions based on the supplied proposition and explanation factories.
+    /// </summary>
+    /// <param name="spec">The proposition to evaluate.</param>
+    /// <param name="trueBecause">The explanations for when the proposition is true.</param>
+    /// <param name="falseBecause">The explanation for when the proposition is false.</param>
+    [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+    public MultiAssertionExplanationPropositionFactory(
+        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]SpecBase<TModel, TMetadata> spec,
+        [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause,
+        [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> falseBecause)
+        : this(spec, trueBecause.ToEnumerableReturn(), falseBecause)
+    {
+    }
+
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.
     /// </summary>

@@ -13,12 +13,11 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Spec;
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the specification.</typeparam>
 [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct ExplanationWithNameHigherOrderPropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]SpecBase<TModel, TMetadata> spec,
+    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]SpecBase<TModel, TMetadata> spec,
     [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
-    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
+    [FluentMethod("WhenTrue")]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
 {
-
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false. The propositional statement
     /// will be obtained from the .WhenTrue() assertion.

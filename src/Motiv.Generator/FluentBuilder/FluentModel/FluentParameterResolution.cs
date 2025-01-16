@@ -2,11 +2,17 @@ using Microsoft.CodeAnalysis;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public record FluentParameterResolution(IPropertySymbol? PropertySymbol = null, IFieldSymbol? FieldSymbol = null)
+public record FluentParameterResolution(IPropertySymbol? ExistingPropertySymbol = null, IFieldSymbol? ExistingFieldSymbol = null)
 {
-    public IPropertySymbol? PropertySymbol { get; } = PropertySymbol;
+    public enum ValueLocationType
+    {
+        Member,
+        PrimaryConstructorParameter
+    }
+    public IPropertySymbol? ExistingPropertySymbol { get; } = ExistingPropertySymbol;
 
-    public IFieldSymbol? FieldSymbol { get; } = FieldSymbol;
+    public IFieldSymbol? ExistingFieldSymbol { get; } = ExistingFieldSymbol;
 
-    public bool ShouldInitializeFromPrimaryConstructor { get; set; }
+    public ValueLocationType ResolutionType { get; set; } = ValueLocationType.Member;
 }
+

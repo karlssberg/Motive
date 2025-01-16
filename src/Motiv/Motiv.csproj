@@ -222,7 +222,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Generated\Motiv.Generator\" />
+      <Folder Include="Generated\" />
       <Folder Include="Generated\Motiv.Generator\Motiv.Generator.FluentBuilder.FluentFactoryGenerator\" />
     </ItemGroup>
 

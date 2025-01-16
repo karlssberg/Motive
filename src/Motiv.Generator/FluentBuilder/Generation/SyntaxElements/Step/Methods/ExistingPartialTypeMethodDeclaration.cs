@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Motiv.Generator.FluentBuilder.FluentModel.FluentParameterResolution.ValueLocationType;
 
 namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 
@@ -74,11 +75,13 @@ public static class ExistingPartialTypeMethodDeclaration
                 ExpressionSyntax node = foundMember
                     switch
                     {
-                        { PropertySymbol: not null and var property } =>
+                        { ExistingPropertySymbol: not null and var property } =>
                             MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(property.Name)),
-                        { FieldSymbol: not null and var field } =>
+                        { ExistingFieldSymbol: not null and var field } =>
                             MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression() , IdentifierName(field.Name)),
-                        { ShouldInitializeFromPrimaryConstructor: true } =>
+                        { ResolutionType: PrimaryConstructorParameter }  =>
+                            IdentifierName(parameter.Name),
+                        { ResolutionType: Member } =>
                             MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, ThisExpression(), IdentifierName(parameter.Name.ToParameterFieldName())),
                         _ => DefaultExpression(ParseTypeName(parameter.Type.ToDynamicDisplayString(method.RootNamespace)))
                     };

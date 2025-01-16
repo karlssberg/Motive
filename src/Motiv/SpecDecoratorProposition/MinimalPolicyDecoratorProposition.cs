@@ -2,13 +2,13 @@
 
 namespace Motiv.SpecDecoratorProposition;
 
-internal sealed partial class PolicyDecoratorExplanationProposition<TModel, TUnderlyingMetadata>(
+internal sealed partial class MinimalPolicyDecoratorProposition<TModel, TUnderlyingMetadata>(
     PolicyBase<TModel, TUnderlyingMetadata> underlyingPolicy,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> trueBecause,
-    Func<TModel, PolicyResultBase<TUnderlyingMetadata>, string> falseBecause,
     ISpecDescription description)
     : PolicyBase<TModel, string>
 {
+    private readonly string _trueBecause = GetTrueAssertion(underlyingPolicy.Statement);
+    private readonly string _falseBecause = GetFalseAssertion(underlyingPolicy.Statement);
     public override IEnumerable<SpecBase> Underlying => UnderlyingPolicy.ToEnumerable();
 
     public override ISpecDescription Description => description;
@@ -28,8 +28,8 @@ internal sealed partial class PolicyDecoratorExplanationProposition<TModel, TUnd
         return new Lazy<string>(() =>
             predicateResult.Satisfied switch
             {
-                true => trueBecause(model, predicateResult),
-                false => falseBecause(model, predicateResult)
+                true => _trueBecause,
+                false => _falseBecause
             });
     }
 
@@ -60,4 +60,15 @@ internal sealed partial class PolicyDecoratorExplanationProposition<TModel, TUnd
         Explanation Explanation() => explanation.Value;
         ResultDescriptionBase ResultDescription() => resultDescription.Value;
     }
+    
+
+    private static string GetTrueAssertion(string proposition) =>
+        proposition.ContainsReservedCharacters()
+            ? $"({proposition})"
+            : proposition;
+
+    private static string GetFalseAssertion(string proposition) =>
+        proposition.ContainsReservedCharacters()
+            ? $"({proposition})".AsUnsatisfied()
+            : proposition.AsUnsatisfied();
 }

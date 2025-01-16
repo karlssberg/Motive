@@ -598,10 +598,10 @@ public class FluentBuilderRootTypeTests
             public partial record struct Factory;
 
             [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-            public partial class MyBuildTargetA(in MyParameterValue value1, in MyParameterValue value2, MyParameterValue value3, MyParameterValue value4);
+            public partial class MyBuildTargetA(MyParameterValue value1, MyParameterValue value2, MyParameterValue value3, MyParameterValue value4);
 
             [Motiv.Generator.Attributes.FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-            public partial class MyBuildTargetB(in MyParameterValue value1, in MyParameterValue value2);
+            public partial class MyBuildTargetB(MyParameterValue value1, MyParameterValue value2);
 
             public record MyParameterValue();
             """;
@@ -636,12 +636,10 @@ public class FluentBuilderRootTypeTests
 
                 public partial class MyBuildTargetB
                 {
-                    private readonly MyParameterValue _value1__parameter = value1;
-                    private readonly MyParameterValue _value2__parameter = value2;
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public Step_2__Test_Factory WithValue3(in MyParameterValue value3)
                     {
-                        return new Step_2__Test_Factory(this._value1__parameter, this._value2__parameter, value3);
+                        return new Step_2__Test_Factory(value1, value2, value3);
                     }
                 }
 

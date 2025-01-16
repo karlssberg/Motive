@@ -306,7 +306,8 @@ public class ExplanationTests
                 .Create("is even wrapper");
 
         var isEvenWrapper2 =
-            Spec.Build(isEvenWrapper1).WhenTrueYield<string>((_, result) => result.Assertions)
+            Spec.Build(isEvenWrapper1)
+                .WhenTrueYield<string>((_, result) => result.Assertions)
                 .WhenFalseYield((_, result) => result.Assertions)
                 .Create("is even wrapper 2");
 

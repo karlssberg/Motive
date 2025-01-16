@@ -1,29 +1,27 @@
 ﻿using Motiv.Generator.Attributes;
 using Motiv.Shared;
 
-namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Metadata;
+namespace Motiv.BooleanPredicateProposition.PropositionBuilders.Explanation;
 
 /// <summary>
 /// A factory for creating propositions based on the supplied predicate and metadata factories.
 /// </summary>
 /// <typeparam name="TModel">The type of the model the proposition is for.</typeparam>
-/// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-public readonly partial struct MultiMetadataPropositionFactory<TModel, TMetadata>(
+public readonly partial struct MultiAssertionExplanationPropositionFactory<TModel>(
     [FluentMethod("Build")]Func<TModel, bool> predicate,
-    [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<TMetadata>> whenTrue,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<TMetadata>> whenFalse)
+    [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<string>> whenTrue,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<string>> whenFalse)
 {
     /// <summary>
     /// A factory for creating propositions based on the supplied predicate and metadata factories.
     /// </summary>
     /// <typeparam name="TModel">The type of the model the proposition is for.</typeparam>
-    /// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
     [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-    public MultiMetadataPropositionFactory(
+    public MultiAssertionExplanationPropositionFactory(
         [FluentMethod("Build")] Func<TModel, bool> predicate,
-        [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<TMetadata>> whenTrue,
-        [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))] Func<TModel, TMetadata> whenFalse)
+        [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<string>> whenTrue,
+        [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))] Func<TModel, string> whenFalse)
     : this(predicate, whenTrue, whenFalse.ToEnumerableReturn())
     {
     }
@@ -32,12 +30,11 @@ public readonly partial struct MultiMetadataPropositionFactory<TModel, TMetadata
     /// A factory for creating propositions based on the supplied predicate and metadata factories.
     /// </summary>
     /// <typeparam name="TModel">The type of the model the proposition is for.</typeparam>
-    /// <typeparam name="TMetadata">The type of the metadata associated with the proposition.</typeparam>
     [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
-    public MultiMetadataPropositionFactory(
+    public MultiAssertionExplanationPropositionFactory(
         [FluentMethod("Build")] Func<TModel, bool> predicate,
-        [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))] Func<TModel, TMetadata> whenTrue,
-        [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<TMetadata>> whenFalse)
+        [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))] Func<TModel, string> whenTrue,
+        [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))] Func<TModel, IEnumerable<string>> whenFalse)
         : this(predicate, whenTrue.ToEnumerableReturn(), whenFalse)
     {
     }
@@ -48,10 +45,10 @@ public readonly partial struct MultiMetadataPropositionFactory<TModel, TMetadata
     /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>
     /// <returns>A proposition for the model.</returns>
-    public SpecBase<TModel, TMetadata> Create(string statement)
+    public SpecBase<TModel, string> Create(string statement)
     {
         statement.ThrowIfNullOrWhitespace(nameof(statement));
-        return new MultiMetadataProposition<TModel, TMetadata>(
+        return new MultiMetadataProposition<TModel, string>(
             predicate,
             whenTrue,
             whenFalse,

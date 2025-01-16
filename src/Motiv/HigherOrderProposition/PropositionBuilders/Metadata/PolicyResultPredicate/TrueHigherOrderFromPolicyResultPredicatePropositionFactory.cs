@@ -1,7 +1,5 @@
 ﻿using Motiv.Generator.Attributes;
 using Motiv.HigherOrderProposition.PolicyResultPredicate;
-using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate;
-using Motiv.HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicateWithName;
 using Motiv.Shared;
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate;
@@ -15,7 +13,7 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.PolicyResult
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
+    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
     [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>

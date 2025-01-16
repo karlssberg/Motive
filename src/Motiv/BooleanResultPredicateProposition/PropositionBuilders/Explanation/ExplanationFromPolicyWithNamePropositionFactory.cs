@@ -11,8 +11,8 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct ExplanationFromPolicyResultWithNamePropositionFactory<TModel, TMetadata>(
     [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> predicate,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
-    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, string> falseBecause)
+    [FluentMethod("WhenTrue")]string trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, PolicyResultBase<TMetadata>, string> falseBecause)
 {
     /// <summary>
     /// Creates a proposition with explanations for when the condition is true or false. The propositional statement

@@ -12,9 +12,39 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Metadata;
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
     [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> spec,
-    [FluentMethod("WhenTrueYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
+    [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
 {
+    /// <summary>
+    /// A builder for creating propositions using a predicate function that returns a <see cref="BooleanResultBase{TMetadata}"/>.
+    /// </summary>
+    /// <param name="spec">The predicate function that returns a <see cref="BooleanResultBase{TMetadata}"/>.</param>
+    /// <param name="whenTrue">The function that returns the metadata when the predicate is true.</param>
+    /// <param name="whenFalse">The function that returns the metadata when the predicate is false.</param>
+    [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+    public MultiMetadataPropositionFactory(
+        [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> spec,
+        [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
+        [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        : this(spec, whenTrue, whenFalse.ToEnumerableReturn())
+    {
+    }
+
+    /// <summary>
+    /// A builder for creating propositions using a predicate function that returns a <see cref="BooleanResultBase{TMetadata}"/>.
+    /// </summary>
+    /// <param name="spec">The predicate function that returns a <see cref="BooleanResultBase{TMetadata}"/>.</param>
+    /// <param name="whenTrue">The function that returns the metadata when the predicate is true.</param>
+    /// <param name="whenFalse">The function that returns the metadata when the predicate is false.</param>
+    [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
+    public MultiMetadataPropositionFactory(
+        [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> spec,
+        [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue,
+        [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
+        : this(spec, whenTrue.ToEnumerableReturn(), whenFalse)
+    {
+    }
+
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>
     /// <param name="statement">The proposition statement of what the proposition represents.</param>
     /// <remarks>It is best to use short phases in natural-language, as if you were naming a boolean variable.</remarks>

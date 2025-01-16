@@ -12,8 +12,8 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.BooleanPr
 public readonly partial struct ExplanationFromBooleanPredicateHigherOrderPropositionFactory<TModel>(
     [FluentMethod("Build")]Func<TModel,bool> predicate,
     [MultipleFluentMethods(typeof(HigherOrderBooleanPredicateSpecMethods))]HigherOrderSpecBooleanPredicateOperation<TModel> higherOrderOperation,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanEvaluation<TModel>, string> trueBecause,
-    [FluentMethod("WhenFalse", Overloads = typeof(AllConverters))]Func<HigherOrderBooleanEvaluation<TModel>, string> falseBecause)
+    [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<HigherOrderBooleanEvaluation<TModel>, string> trueBecause,
+    [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<HigherOrderBooleanEvaluation<TModel>, string> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false, and names it with the propositional statement provided.

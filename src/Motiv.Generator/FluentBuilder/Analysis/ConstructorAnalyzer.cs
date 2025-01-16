@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using static Motiv.Generator.FluentBuilder.FluentModel.FluentParameterResolution.ValueLocationType;
 
 namespace Motiv.Generator.FluentBuilder.Analysis;
 
@@ -105,14 +106,18 @@ public class ConstructorAnalyzer(SemanticModel semanticModel)
         foreach (var parameter in constructor.Parameters)
         {
             if (results.TryGetValue(parameter, out var resolution)
-                && resolution is { FieldSymbol: not null } or { PropertySymbol: not null })
+                && resolution is { ExistingFieldSymbol: not null } or { ExistingPropertySymbol: not null })
             {
                 continue;
             }
 
             results[parameter] = new FluentParameterResolution
             {
-                ShouldInitializeFromPrimaryConstructor = true
+                ResolutionType = parameter.RefKind switch
+                {
+                    RefKind.In =>  Member,
+                    _ => PrimaryConstructorParameter
+                }
             };
         }
     }
@@ -136,7 +141,7 @@ public class ConstructorAnalyzer(SemanticModel semanticModel)
                             var isInitialized = IsInitializedFromParameter(initializer, parameter);
                             if (isInitialized)
                             {
-                                result[parameter] = new FluentParameterResolution(FieldSymbol: fieldSymbol);
+                                result[parameter] = new FluentParameterResolution(ExistingFieldSymbol: fieldSymbol);
                             }
                         }
                     }
@@ -153,7 +158,7 @@ public class ConstructorAnalyzer(SemanticModel semanticModel)
                             var isInitialized = IsInitializedFromParameter(initializer, parameter);
                             if (isInitialized)
                             {
-                                result[parameter] = new FluentParameterResolution(PropertySymbol: propertySymbol);
+                                result[parameter] = new FluentParameterResolution(ExistingPropertySymbol: propertySymbol);
                             }
                         }
                     }
@@ -165,13 +170,17 @@ public class ConstructorAnalyzer(SemanticModel semanticModel)
 
         var parametersRequiringStorageFields = primaryConstructor.Parameters
             .Where(parameter => result.TryGetValue(parameter, out var resolution)
-                                && resolution is { FieldSymbol: null, PropertySymbol: null });
+                                && resolution is { ExistingFieldSymbol: null, ExistingPropertySymbol: null });
 
         foreach (var parameter in parametersRequiringStorageFields)
         {
             result[parameter] = new FluentParameterResolution
             {
-                ShouldInitializeFromPrimaryConstructor = true
+                ResolutionType = parameter.RefKind switch
+                {
+                    RefKind.In =>  Member,
+                    _ => PrimaryConstructorParameter
+                }
             };
         }
     }

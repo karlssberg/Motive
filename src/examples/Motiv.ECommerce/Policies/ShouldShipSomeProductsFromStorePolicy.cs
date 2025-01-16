@@ -9,7 +9,6 @@ public class ShouldShipSomeProductsFromStorePolicy() : Policy<FulfillmentContext
         .WhenFalse(new DefaultBehavior())
         .Create("should ship from store"))
 {
-
     private static SpecBase<FulfillmentContext, string> AnyShouldShipFromStore =>
         Spec.Build(ShouldShipProductFromStore)
             .AsAnySatisfied()

@@ -571,15 +571,14 @@ public class FluentBuilderGeneratorMergeDissimilarStepsTests
             }
 
             [FluentConstructor(typeof(Shape), Options = FluentOptions.NoCreateMethod)]
-            public partial class Rectangle(int width, int height)
+            public partial class Rectangle(int width, in int height)
             {
                 public int Width { get; set; } = width;
-
                 public int Height { get; set; } = height;
             }
 
             [FluentConstructor(typeof(Shape), Options = FluentOptions.NoCreateMethod)]
-            public partial record Cuboid(int Width, int Height, int Depth)
+            public partial record Cuboid(in int Width, int Height, in int Depth)
             {
                 public int Width { get; set; } = Width;
                 public int Height { get; set; } = Height;

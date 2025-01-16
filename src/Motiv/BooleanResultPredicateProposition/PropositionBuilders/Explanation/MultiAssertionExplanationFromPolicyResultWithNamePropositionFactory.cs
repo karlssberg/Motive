@@ -11,8 +11,8 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiAssertionExplanationFromPolicyResultWithNamePropositionFactory<TModel, TMetadata>(
     [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> predicate,
-    [FluentMethod("WhenTrue", Overloads = typeof(AllConverters))]string trueBecause,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(AllConverters))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>> falseBecause)
+    [FluentMethod("WhenTrue")]string trueBecause,
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.

@@ -6,6 +6,7 @@ using Motiv.Generator.FluentBuilder.FluentModel;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static Motiv.Generator.FluentBuilder.FluentModel.FluentParameterResolution.ValueLocationType;
 
 namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 
@@ -20,7 +21,12 @@ public static class ExistingPartialTypeStepDeclaration
         var parameterFieldDeclaration = step.KnownConstructorParameters
             .Where(parameter =>
                 step.ParameterStoreMembers.TryGetValue(parameter, out var parameterResolution)
-                && parameterResolution.ShouldInitializeFromPrimaryConstructor)
+                && parameterResolution is
+                {
+                    ResolutionType: Member,
+                    ExistingFieldSymbol: null,
+                    ExistingPropertySymbol: null
+                })
             .Select(parameter =>
                 ParameterFieldDeclarations.CreateWithInitialization(
                     parameter,
