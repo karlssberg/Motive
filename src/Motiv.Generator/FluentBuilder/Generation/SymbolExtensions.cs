@@ -95,7 +95,8 @@ public static class SymbolExtensions
         {
             ITypeParameterSymbol typeParameter => [typeParameter],
             INamedTypeSymbol namedType => namedType.TypeArguments
-                .SelectMany(t => t.GetGenericTypeParameters()),
+                .SelectMany(typeArg => typeArg.GetGenericTypeParameters())
+                .Distinct<ITypeParameterSymbol>(SymbolEqualityComparer.Default),
             _ => []
         };
     }
@@ -199,8 +200,7 @@ public static class SymbolExtensions
        IEnumerable<ITypeParameterSymbol> second)
    {
        return first
-           .Union(second, SymbolEqualityComparer.IncludeNullability)
-           .OfType<ITypeParameterSymbol>()
+           .Union<ITypeParameterSymbol>(second, SymbolEqualityComparer.IncludeNullability)
            .OrderBy(symbol => symbol.Name);
    }
 
@@ -216,34 +216,6 @@ public static class SymbolExtensions
           if (!exclusionSet.Contains(item.ToDisplayString()))
             yield return item;
        }
-   }
-
-   public static ImmutableArray<IMethodSymbol> GetFluentMethodOverloads(
-       this Compilation compilation,
-       IParameterSymbol sourceParameter)
-   {
-       var typeConstant = sourceParameter
-           .GetAttributes()
-           .Where(attr => attr?.AttributeClass?.ToDisplayString() == TypeName.FluentMethodAttribute)
-           .Select(attr => attr.NamedArguments
-               .FirstOrDefault(namedArg => namedArg.Key == nameof(FluentMethodAttribute.Overloads))
-               .Value)
-           .FirstOrDefault();
-
-       // has overloads?
-       if (typeConstant.IsNull || typeConstant.Value is not INamedTypeSymbol typeSymbol)
-           return ImmutableArray<IMethodSymbol>.Empty;
-
-       return
-       [
-           ..typeSymbol
-               .GetMembers()
-               .OfType<IMethodSymbol>()
-               .Where(method => method.IsStatic)
-               .Where(method => compilation.IsAssignable(method.ReturnType.OriginalDefinition, sourceParameter.Type))
-               .Where(method => method.GetAttributes().Any(a =>
-                   a.AttributeClass?.ToDisplayString() == TypeName.FluentParameterOverloadAttribute))
-       ];
    }
 
    public static IEnumerable<SyntaxKind> AccessibilityToSyntaxKind(this Accessibility accessibility) =>

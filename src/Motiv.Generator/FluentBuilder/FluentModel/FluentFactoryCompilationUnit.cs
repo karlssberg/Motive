@@ -1,21 +1,23 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public record FluentFactoryCompilationUnit(
     INamedTypeSymbol RootType,
-    ImmutableArray<FluentMethod> FluentMethods,
-    ImmutableArray<FluentStep> FluentSteps,
+    ImmutableArray<IFluentMethod> FluentMethods,
+    ImmutableArray<IFluentStep> FluentSteps,
     ImmutableArray<INamespaceSymbol> Usings)
 {
     public string Name { get; } = RootType.Name;
 
     public string Namespace { get; } = RootType.ContainingNamespace.ToDisplayString();
 
-    public ImmutableArray<FluentMethod> FluentMethods { get; set; } = FluentMethods;
+    public ImmutableArray<IFluentMethod> FluentMethods { get; set; } = FluentMethods;
 
-    public ImmutableArray<FluentStep> FluentSteps { get; set; } = FluentSteps;
+    public ImmutableArray<IFluentStep> FluentSteps { get; set; } = FluentSteps;
 
     public INamedTypeSymbol RootType { get; } = RootType;
 

@@ -11,7 +11,7 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Metadata;
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(
-    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]PolicyBase<TModel, TMetadata> spec,
+    [MultipleFluentMethods(typeof(PolicyBuildOverloads))]PolicyBase<TModel, TMetadata> spec,
     [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
     [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
 {
@@ -23,7 +23,7 @@ public readonly partial struct MultiMetadataFromPolicyPropositionFactory<TModel,
     /// <param name="whenFalse">The function that returns the metadata when the proposition is false.</param>
     [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
     public MultiMetadataFromPolicyPropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]PolicyBase<TModel, TMetadata> spec,
+        [MultipleFluentMethods(typeof(PolicyBuildOverloads))]PolicyBase<TModel, TMetadata> spec,
         [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenTrue,
         [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
         : this(spec, whenTrue, whenFalse.ToEnumerableReturn())
@@ -38,7 +38,7 @@ public readonly partial struct MultiMetadataFromPolicyPropositionFactory<TModel,
     /// <param name="whenFalse">The function that returns the metadata when the proposition is false.</param>
     [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
     public MultiMetadataFromPolicyPropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]PolicyBase<TModel, TMetadata> spec,
+        [MultipleFluentMethods(typeof(PolicyBuildOverloads))]PolicyBase<TModel, TMetadata> spec,
         [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue,
         [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, PolicyResultBase<TMetadata>, IEnumerable<TReplacementMetadata>> whenFalse)
         : this(spec, whenTrue.ToEnumerableReturn(), whenFalse)

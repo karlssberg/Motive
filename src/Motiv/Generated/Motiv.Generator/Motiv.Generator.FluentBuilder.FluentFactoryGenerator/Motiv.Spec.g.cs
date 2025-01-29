@@ -135,21 +135,39 @@ namespace Motiv
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static BooleanResultPredicateProposition.PropositionBuilders.BooleanResultPredicatePropositionFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<TModel, BooleanResultBase<TMetadata>> predicate)
+        public static BooleanResultPredicateProposition.PropositionBuilders.BooleanResultPredicatePropositionFactory<TModel, TMetadata> WithPredicate<TMetadata, TModel>(in System.Func<TModel, BooleanResultBase<TMetadata>> predicate)
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.BooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static BooleanResultPredicateProposition.PropositionBuilders.PolicyResultPredicatePropositionFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<TModel, PolicyResultBase<TMetadata>> predicate)
+        public static BooleanResultPredicateProposition.PropositionBuilders.PolicyResultPredicatePropositionFactory<TModel, TMetadata> WithPredicate<TMetadata, TModel>(in System.Func<TModel, PolicyResultBase<TMetadata>> predicate)
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.PolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static BooleanResultPredicateProposition.PropositionBuilders.PolicyResultPredicatePropositionFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<System.Func<TModel, PolicyResultBase<TMetadata>>> function)
+        public static Step_19__Motiv_Spec<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<TModel, PolicyResultBase<TMetadata>> predicate)
         {
-            return new BooleanResultPredicateProposition.PropositionBuilders.PolicyResultPredicatePropositionFactory<TModel, TMetadata>(Shared.BuildOverloads.Convert<System.Func<TModel, PolicyResultBase<TMetadata>>>(function));
+            return new Step_19__Motiv_Spec<TModel, TMetadata>(predicate);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_28__Motiv_Spec<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<TModel, BooleanResultBase<TMetadata>> predicate)
+        {
+            return new Step_28__Motiv_Spec<TModel, TMetadata>(predicate);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_36__Motiv_Spec<TModel, TMetadata> WithSpec<TMetadata, TModel>(in System.Func<TModel, PolicyResultBase<TMetadata>> spec)
+        {
+            return new Step_36__Motiv_Spec<TModel, TMetadata>(spec);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_39__Motiv_Spec<TModel, TMetadata> WithSpec<TMetadata, TModel>(in System.Func<TModel, BooleanResultBase<TMetadata>> spec)
+        {
+            return new Step_39__Motiv_Spec<TModel, TMetadata>(spec);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -159,27 +177,75 @@ namespace Motiv
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in PolicyBase<TModel, TMetadata> policy)
+        public static Step_54__Motiv_Spec<TModel, TMetadata> WithResultResolver<TMetadata, TModel>(in System.Func<TModel, BooleanResultBase<TMetadata>> resultResolver)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(policy);
+            return new Step_54__Motiv_Spec<TModel, TMetadata>(resultResolver);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<PolicyBase<TModel, TMetadata>> function)
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in PolicyBase<TModel, TMetadata> policy)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(Shared.BuildOverloads.Convert<PolicyBase<TModel, TMetadata>>(function));
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(Shared.PolicyBuildOverloads.Build<TModel, TMetadata>(policy));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<PolicyBase<TModel, TMetadata>> policyFactory)
+        {
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(Shared.PolicyBuildOverloads.Build<TModel, TMetadata>(policyFactory));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TModel>(in PolicyBase<TModel, string> policy)
+        {
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(Shared.PolicyBuildOverloads.Build<TModel>(policy));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata> Build<TModel>(in System.Func<PolicyBase<TModel, string>> policyFactory)
+        {
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalPolicyDecoratorFactory<TModel, TMetadata>(Shared.PolicyBuildOverloads.Build<TModel>(policyFactory));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_69__Motiv_Spec<TModel> WithPolicy<TModel>(in PolicyBase<TModel, string> policy)
+        {
+            return new Step_69__Motiv_Spec<TModel>(policy);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in SpecBase<TModel, TMetadata> spec)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(spec);
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(Shared.SpecBuildOverloads.Build<TModel, TMetadata>(spec));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<SpecBase<TModel, TMetadata>> function)
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata> Build<TMetadata, TModel>(in System.Func<SpecBase<TModel, TMetadata>> specFactory)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(Shared.BuildOverloads.Convert<SpecBase<TModel, TMetadata>>(function));
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(Shared.SpecBuildOverloads.Build<TModel, TMetadata>(specFactory));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata> Build<TModel>(in SpecBase<TModel, string> spec)
+        {
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(Shared.SpecBuildOverloads.Build<TModel>(spec));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata> Build<TModel>(in System.Func<SpecBase<TModel, string>> specFactory)
+        {
+            return new SpecDecoratorProposition.PropositionBuilders.Explanation.MinimalSpecDecoratorFactory<TModel, TMetadata>(Shared.SpecBuildOverloads.Build<TModel>(specFactory));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_83__Motiv_Spec<TModel> WithSpec<TModel>(in SpecBase<TModel, string> spec)
+        {
+            return new Step_83__Motiv_Spec<TModel>(spec);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static Step_87__Motiv_Spec<TModel, TMetadata> WithResultResolver<TMetadata, TModel>(in System.Func<TModel, PolicyResultBase<TMetadata>> resultResolver)
+        {
+            return new Step_87__Motiv_Spec<TModel, TMetadata>(resultResolver);
         }
     }
 
@@ -521,24 +587,6 @@ namespace Motiv
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.ExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
-        }
     }
 
     public struct Step_13__Motiv_Spec<TModel, TMetadata>
@@ -615,298 +663,13 @@ namespace Motiv
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<TModel, string> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
-        }
     }
 
-    public struct Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_15__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            this._spec__parameter = spec;
-            this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
-        }
-    }
-
-    public struct Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_16__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            this._spec__parameter = spec;
-            this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-    }
-
-    public struct Step_18__Motiv_Spec<TModel, TMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly string _trueBecause__parameter;
-        public Step_18__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
-        {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._trueBecause__parameter = trueBecause;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-    }
-
-    public struct Step_19__Motiv_Spec<TModel, TMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_19__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
-        {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._trueBecause__parameter = trueBecause;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(value));
-        }
-    }
-
-    public struct Step_20__Motiv_Spec<TModel, TMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> _trueBecause__parameter;
-        public Step_20__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> trueBecause)
-        {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._trueBecause__parameter = trueBecause;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-    }
-
-    public struct Step_21__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_21__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-    }
-
-    public struct Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
-    {
-        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_22__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-    }
-
-    public struct Step_24__Motiv_Spec<TModel, TMetadata>
+    public struct Step_16__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>, string> _trueBecause__parameter;
-        public Step_24__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, string> trueBecause)
+        public Step_16__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, string> trueBecause)
         {
             this._predicate__parameter = predicate;
             this._trueBecause__parameter = trueBecause;
@@ -929,31 +692,13 @@ namespace Motiv
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.ExplanationFromPolicyResultPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
-        }
     }
 
-    public struct Step_25__Motiv_Spec<TModel, TMetadata>
+    public struct Step_17__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_25__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in string trueBecause)
+        public Step_17__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in string trueBecause)
         {
             this._predicate__parameter = predicate;
             this._trueBecause__parameter = trueBecause;
@@ -996,11 +741,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_26__Motiv_Spec<TModel, TMetadata>
+    public struct Step_18__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_26__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_18__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._predicate__parameter = predicate;
             this._trueBecause__parameter = trueBecause;
@@ -1023,6 +768,140 @@ namespace Motiv
         {
             return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
+    }
+
+    public struct Step_19__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
+        public Step_19__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate)
+        {
+            this._predicate__parameter = predicate;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_20__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            return new Step_20__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_20__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new Step_20__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_20__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        {
+            return new Step_20__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_21__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause)
+        {
+            return new Step_21__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_21__Motiv_Spec<TModel, TMetadata> WhenTrue(in string value)
+        {
+            return new Step_21__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_21__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
+        {
+            return new Step_21__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>> causeSelector)
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsAllSatisfied()
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAllSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsAnySatisfied()
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAnySatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsAtMostNSatisfied(in int n)
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsNoneSatisfied()
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNoneSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_24__Motiv_Spec<TModel, TMetadata> AsNSatisfied(in int n)
+        {
+            return new Step_24__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNSatisfied<TModel, TMetadata>(n));
+        }
+    }
+
+    public struct Step_20__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
+        public Step_20__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            this._predicate__parameter = predicate;
+            this._trueBecause__parameter = trueBecause;
+        }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<TModel, PolicyResultBase<TMetadata>, string> falseBecause)
@@ -1043,79 +922,43 @@ namespace Motiv
         }
     }
 
-    public struct Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_21__Motiv_Spec<TModel, TMetadata>
     {
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_27__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _predicate__parameter;
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, string> _trueBecause__parameter;
+        public Step_21__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, string> trueBecause)
         {
-            this._spec__parameter = spec;
-            this._whenTrue__parameter = whenTrue;
+            this._predicate__parameter = predicate;
+            this._trueBecause__parameter = trueBecause;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
         {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
         {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationFromPolicyPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
     }
 
-    public struct Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_28__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_22__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
             this._spec__parameter = spec;
             this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -1137,12 +980,76 @@ namespace Motiv
         }
     }
 
-    public struct Step_30__Motiv_Spec<TModel, TMetadata>
+    public struct Step_23__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_23__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_24__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        public Step_24__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_25__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        {
+            return new Step_25__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_26__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> trueBecause)
+        {
+            return new Step_26__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_27__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            return new Step_27__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_27__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new Step_27__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+    }
+
+    public struct Step_25__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_30__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
+        public Step_25__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
         {
             this._resultResolver__parameter = resultResolver;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1174,12 +1081,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_31__Motiv_Spec<TModel, TMetadata>
+    public struct Step_26__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> _trueBecause__parameter;
-        public Step_31__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> trueBecause)
+        public Step_26__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> trueBecause)
         {
             this._resultResolver__parameter = resultResolver;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1211,12 +1118,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_32__Motiv_Spec<TModel, TMetadata>
+    public struct Step_27__Motiv_Spec<TModel, TMetadata>
     {
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_32__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_27__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._resultResolver__parameter = resultResolver;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1224,15 +1131,15 @@ namespace Motiv
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_33__Motiv_Spec<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        public HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
         {
-            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+            return new HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_33__Motiv_Spec<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
+        public HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -1248,33 +1155,286 @@ namespace Motiv
         }
     }
 
-    public struct Step_33__Motiv_Spec<TModel, TMetadata>
+    public struct Step_28__Motiv_Spec<TModel, TMetadata>
     {
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> _falseBecause__parameter;
-        public Step_33__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _predicate__parameter;
+        public Step_28__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> predicate)
         {
-            this._resultResolver__parameter = resultResolver;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._trueBecause__parameter = trueBecause;
-            this._falseBecause__parameter = falseBecause;
+            this._predicate__parameter = predicate;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata> WithCauseSelector(in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>> causeSelector)
+        public Step_29__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.PolicyResultPredicate.MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, this._falseBecause__parameter, causeSelector);
+            return new Step_29__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_29__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new Step_29__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_29__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        {
+            return new Step_29__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_30__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause)
+        {
+            return new Step_30__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_30__Motiv_Spec<TModel, TMetadata> WhenTrue(in string value)
+        {
+            return new Step_30__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_30__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
+        {
+            return new Step_30__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._predicate__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>> causeSelector)
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsAllSatisfied()
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsAnySatisfied()
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsAtMostNSatisfied(in int n)
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsNoneSatisfied()
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_33__Motiv_Spec<TModel, TMetadata> AsNSatisfied(in int n)
+        {
+            return new Step_33__Motiv_Spec<TModel, TMetadata>(this._predicate__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, TMetadata>(n));
+        }
+    }
+
+    public struct Step_29__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _predicate__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
+        public Step_29__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            this._predicate__parameter = predicate;
+            this._trueBecause__parameter = trueBecause;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<TModel, string> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
+        }
+    }
+
+    public struct Step_30__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _predicate__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, string> _trueBecause__parameter;
+        public Step_30__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> predicate, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, string> trueBecause)
+        {
+            this._predicate__parameter = predicate;
+            this._trueBecause__parameter = trueBecause;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Explanation.MultiAssertionExplanationPropositionFactory<TModel, TMetadata>(this._predicate__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
+        }
+    }
+
+    public struct Step_31__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_31__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+    }
+
+    public struct Step_32__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_32__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_33__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        public Step_33__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
         }
     }
 
     public struct Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_34__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_34__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
             this._resultResolver__parameter = resultResolver;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1282,36 +1442,24 @@ namespace Motiv
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
         {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
         {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
         }
     }
 
     public struct Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_35__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_35__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
         {
             this._resultResolver__parameter = resultResolver;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1319,35 +1467,229 @@ namespace Motiv
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
         {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
     }
 
-    public struct Step_37__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_36__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
+        public Step_36__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec)
+        {
+            this._spec__parameter = spec;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_37__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_37__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+    }
+
+    public struct Step_38__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_38__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyResultPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_39__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
+        public Step_39__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec)
+        {
+            this._spec__parameter = spec;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(this._spec__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_40__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_40__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+    }
+
+    public struct Step_41__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _spec__parameter;
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_41__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        {
+            return new BooleanResultPredicateProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+        }
+    }
+
+    public struct Step_43__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly System.Func<TModel, BooleanResultBase<string>, string> _trueBecause__parameter;
-        public Step_37__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, string> trueBecause)
+        public Step_43__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, string> trueBecause)
         {
             this._expression__parameter = expression;
             this._trueBecause__parameter = trueBecause;
@@ -1390,11 +1732,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_38__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_44__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_38__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in string trueBecause)
+        public Step_44__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in string trueBecause)
         {
             this._expression__parameter = expression;
             this._trueBecause__parameter = trueBecause;
@@ -1437,11 +1779,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_39__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_45__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_39__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_45__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._expression__parameter = expression;
             this._trueBecause__parameter = trueBecause;
@@ -1484,11 +1826,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata>
+    public struct Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly System.Func<TModel, BooleanResultBase<string>, TMetadata> _whenTrue__parameter;
-        public Step_40__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, TMetadata> whenTrue)
+        public Step_46__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, TMetadata> whenTrue)
         {
             this._expression__parameter = expression;
             this._whenTrue__parameter = whenTrue;
@@ -1531,11 +1873,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata>
+    public struct Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>> _whenTrue__parameter;
-        public Step_41__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
+        public Step_47__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in System.Func<TModel, Motiv.BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
         {
             this._expression__parameter = expression;
             this._whenTrue__parameter = whenTrue;
@@ -1578,12 +1920,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_43__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_49__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, string> _trueBecause__parameter;
-        public Step_43__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause)
+        public Step_49__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause)
         {
             this._expression__parameter = expression;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1615,12 +1957,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_44__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_50__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_44__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in string trueBecause)
+        public Step_50__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in string trueBecause)
         {
             this._expression__parameter = expression;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1652,12 +1994,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_45__Motiv_Spec<TModel, TPredicateResult>
+    public struct Step_51__Motiv_Spec<TModel, TPredicateResult>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_45__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_51__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._expression__parameter = expression;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1689,12 +2031,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>
+    public struct Step_52__Motiv_Spec<TModel, TPredicateResult, TMetadata>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata> _whenTrue__parameter;
-        public Step_46__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata> whenTrue)
+        public Step_52__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata> whenTrue)
         {
             this._expression__parameter = expression;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1726,12 +2068,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>
+    public struct Step_53__Motiv_Spec<TModel, TPredicateResult, TMetadata>
     {
         private readonly System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> _expression__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>> _whenTrue__parameter;
-        public Step_47__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
+        public Step_53__Motiv_Spec(in System.Linq.Expressions.Expression<System.Func<TModel, TPredicateResult>> expression, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
         {
             this._expression__parameter = expression;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1763,12 +2105,224 @@ namespace Motiv
         }
     }
 
-    public struct Step_50__Motiv_Spec<TModel, TMetadata>
+    public struct Step_54__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        public Step_54__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver)
+        {
+            this._resultResolver__parameter = resultResolver;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>> causeSelector)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAllSatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAnySatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsNoneSatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, TMetadata>(n));
+        }
+    }
+
+    public struct Step_56__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly string _trueBecause__parameter;
+        public Step_56__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._trueBecause__parameter = trueBecause;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.ExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicateWithName.MultiAssertionExplanationFromBooleanResultWithNameHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+    }
+
+    public struct Step_57__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> _trueBecause__parameter;
+        public Step_57__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> trueBecause)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._trueBecause__parameter = trueBecause;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.ExplanationHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.ExplanationHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.ExplanationHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.ExplanationHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+    }
+
+    public struct Step_58__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
+        public Step_58__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._trueBecause__parameter = trueBecause;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> falseBecause)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, falseBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata> WhenFalse(in string value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.BooleanResultPredicate.MultiAssertionExplanationFromBooleanResultHigherOrderPropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._trueBecause__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string>(value));
+        }
+    }
+
+    public struct Step_59__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_59__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+    }
+
+    public struct Step_60__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, BooleanResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_60__Motiv_Spec(in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.MultiMetadataFromBooleanResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+    }
+
+    public struct Step_63__Motiv_Spec<TModel, TMetadata>
     {
         private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_50__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
+        public Step_63__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
         {
             this._policy__parameter = policy;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1788,49 +2342,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_51__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
-    {
-        private readonly PolicyBase<TModel, TMetadata> _spec__parameter;
-        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
-        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_51__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            this._spec__parameter = spec;
-            this._higherOrderOperation__parameter = higherOrderOperation;
-            this._whenTrue__parameter = whenTrue;
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-    }
-
-    public struct Step_52__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_64__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_52__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_64__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
             this._policy__parameter = policy;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -1862,11 +2379,36 @@ namespace Motiv
         }
     }
 
-    public struct Step_53__Motiv_Spec<TModel, TMetadata>
+    public struct Step_65__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_65__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._policy__parameter = policy;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+    }
+
+    public struct Step_66__Motiv_Spec<TModel, TMetadata>
     {
         private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>, string> _trueBecause__parameter;
-        public Step_53__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, string> trueBecause)
+        public Step_66__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, string> trueBecause)
         {
             this._policy__parameter = policy;
             this._trueBecause__parameter = trueBecause;
@@ -1909,11 +2451,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_54__Motiv_Spec<TModel, TMetadata>
+    public struct Step_67__Motiv_Spec<TModel, TMetadata>
     {
         private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_54__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in string trueBecause)
+        public Step_67__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in string trueBecause)
         {
             this._policy__parameter = policy;
             this._trueBecause__parameter = trueBecause;
@@ -1938,11 +2480,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_55__Motiv_Spec<TModel, TMetadata>
+    public struct Step_68__Motiv_Spec<TModel, TMetadata>
     {
         private readonly PolicyBase<TModel, TMetadata> _policy__parameter;
         private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_55__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_68__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> policy, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._policy__parameter = policy;
             this._trueBecause__parameter = trueBecause;
@@ -1985,106 +2527,124 @@ namespace Motiv
         }
     }
 
-    public struct Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_69__Motiv_Spec<TModel>
     {
-        private readonly PolicyBase<TModel, TMetadata> _spec__parameter;
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_56__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        private readonly PolicyBase<TModel, string> _policy__parameter;
+        public Step_69__Motiv_Spec(in Motiv.PolicyBase<TModel, string> policy)
         {
-            this._spec__parameter = spec;
+            this._policy__parameter = policy;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_70__Motiv_Spec<TModel> WithHigherOrderOperation(in HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> higherOrderOperation)
+        {
+            return new Step_70__Motiv_Spec<TModel>(this._policy__parameter, higherOrderOperation);
+        }
+    }
+
+    public struct Step_70__Motiv_Spec<TModel>
+    {
+        private readonly PolicyBase<TModel, string> _policy__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> _higherOrderOperation__parameter;
+        public Step_70__Motiv_Spec(in Motiv.PolicyBase<TModel, string> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> higherOrderOperation)
+        {
+            this._policy__parameter = policy;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_71__Motiv_Spec<TModel, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_71__Motiv_Spec<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_71__Motiv_Spec<TModel, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_71__Motiv_Spec<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_72__Motiv_Spec<TModel, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_72__Motiv_Spec<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_72__Motiv_Spec<TModel, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_72__Motiv_Spec<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata>(value));
+        }
+    }
+
+    public struct Step_71__Motiv_Spec<TModel, TReplacementMetadata>
+    {
+        private readonly PolicyBase<TModel, string> _policy__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_71__Motiv_Spec(in Motiv.PolicyBase<TModel, string> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._policy__parameter = policy;
+            this._higherOrderOperation__parameter = higherOrderOperation;
             this._whenTrue__parameter = whenTrue;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata> whenFalse)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MetadataPolicyFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalse(in TReplacementMetadata value)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata>(value));
         }
     }
 
-    public struct Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_72__Motiv_Spec<TModel, TReplacementMetadata>
     {
-        private readonly PolicyBase<TModel, TMetadata> _spec__parameter;
-        private readonly System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_57__Motiv_Spec(in Motiv.PolicyBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        private readonly PolicyBase<TModel, string> _policy__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_72__Motiv_Spec(in Motiv.PolicyBase<TModel, string> policy, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, TReplacementMetadata> whenTrue)
         {
-            this._spec__parameter = spec;
+            this._policy__parameter = policy;
+            this._higherOrderOperation__parameter = higherOrderOperation;
             this._whenTrue__parameter = whenTrue;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        public HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenFalse)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, whenFalse);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataFromPolicyPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Policy.MultiMetadataFromPolicyHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._policy__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
     }
 
-    public struct Step_60__Motiv_Spec<TModel, TMetadata>
+    public struct Step_75__Motiv_Spec<TModel, TMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_60__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
+        public Step_75__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in string trueBecause)
         {
             this._spec__parameter = spec;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -2104,12 +2664,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_61__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_76__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_61__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        public Step_76__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
         {
             this._spec__parameter = spec;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -2141,12 +2701,12 @@ namespace Motiv
         }
     }
 
-    public struct Step_62__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_77__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
         private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_62__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_77__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
             this._spec__parameter = spec;
             this._higherOrderOperation__parameter = higherOrderOperation;
@@ -2178,11 +2738,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_63__Motiv_Spec<TModel, TMetadata>
+    public struct Step_78__Motiv_Spec<TModel, TMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly System.Func<TModel, BooleanResultBase<TMetadata>, string> _trueBecause__parameter;
-        public Step_63__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, string> trueBecause)
+        public Step_78__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, string> trueBecause)
         {
             this._spec__parameter = spec;
             this._trueBecause__parameter = trueBecause;
@@ -2225,11 +2785,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_64__Motiv_Spec<TModel, TMetadata>
+    public struct Step_79__Motiv_Spec<TModel, TMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly string _trueBecause__parameter;
-        public Step_64__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in string trueBecause)
+        public Step_79__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in string trueBecause)
         {
             this._spec__parameter = spec;
             this._trueBecause__parameter = trueBecause;
@@ -2272,11 +2832,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_65__Motiv_Spec<TModel, TMetadata>
+    public struct Step_80__Motiv_Spec<TModel, TMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> _trueBecause__parameter;
-        public Step_65__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_80__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
             this._spec__parameter = spec;
             this._trueBecause__parameter = trueBecause;
@@ -2319,11 +2879,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> _whenTrue__parameter;
-        public Step_66__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        public Step_81__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
         {
             this._spec__parameter = spec;
             this._whenTrue__parameter = whenTrue;
@@ -2366,11 +2926,11 @@ namespace Motiv
         }
     }
 
-    public struct Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    public struct Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
     {
         private readonly SpecBase<TModel, TMetadata> _spec__parameter;
         private readonly System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
-        public Step_67__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_82__Motiv_Spec(in Motiv.SpecBase<TModel, TMetadata> spec, in System.Func<TModel, Motiv.BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
             this._spec__parameter = spec;
             this._whenTrue__parameter = whenTrue;
@@ -2410,6 +2970,208 @@ namespace Motiv
         public SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<TModel, TReplacementMetadata> function)
         {
             return new SpecDecoratorProposition.PropositionBuilders.Metadata.MultiMetadataPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._spec__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+        }
+    }
+
+    public struct Step_83__Motiv_Spec<TModel>
+    {
+        private readonly SpecBase<TModel, string> _spec__parameter;
+        public Step_83__Motiv_Spec(in Motiv.SpecBase<TModel, string> spec)
+        {
+            this._spec__parameter = spec;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel> WithHigherOrderOperation(in HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel>(this._spec__parameter, higherOrderOperation);
+        }
+    }
+
+    public struct Step_85__Motiv_Spec<TModel, TReplacementMetadata>
+    {
+        private readonly SpecBase<TModel, string> _spec__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_85__Motiv_Spec(in Motiv.SpecBase<TModel, string> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata>(value));
+        }
+    }
+
+    public struct Step_86__Motiv_Spec<TModel, TReplacementMetadata>
+    {
+        private readonly SpecBase<TModel, string> _spec__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_86__Motiv_Spec(in Motiv.SpecBase<TModel, string> spec, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata> whenTrue)
+        {
+            this._spec__parameter = spec;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.MultiMetadataFromSpecHigherOrderPropositionFactory<TModel, TReplacementMetadata>(this._spec__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+    }
+
+    public struct Step_87__Motiv_Spec<TModel, TMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
+        public Step_87__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver)
+        {
+            this._resultResolver__parameter = resultResolver;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>> causeSelector)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAllSatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAllSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAnySatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAnySatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsNoneSatisfied()
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNoneSatisfied<TModel, TMetadata>());
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(this._resultResolver__parameter, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNSatisfied<TModel, TMetadata>(n));
+        }
+    }
+
+    public struct Step_89__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> _whenTrue__parameter;
+        public Step_89__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+    }
+
+    public struct Step_90__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>
+    {
+        private readonly System.Func<TModel, PolicyResultBase<TMetadata>> _resultResolver__parameter;
+        private readonly HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> _higherOrderOperation__parameter;
+        private readonly System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> _whenTrue__parameter;
+        public Step_90__Motiv_Spec(in System.Func<TModel, Motiv.PolicyResultBase<TMetadata>> resultResolver, in Motiv.HigherOrderProposition.PropositionBuilders.HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation, in System.Func<Motiv.HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            this._resultResolver__parameter = resultResolver;
+            this._higherOrderOperation__parameter = higherOrderOperation;
+            this._whenTrue__parameter = whenTrue;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalseYield(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenFalse)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, whenFalse);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata> WhenFalse(in TReplacementMetadata value)
+        {
+            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.MultiMetadataFromPolicyResultHigherOrderPropositionFactory<TModel, TReplacementMetadata, TMetadata>(this._resultResolver__parameter, this._higherOrderOperation__parameter, this._whenTrue__parameter, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
         }
     }
 }
@@ -2495,308 +3257,44 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders
         {
             return new Step_14__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            return new Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
-        {
-            return new Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new Step_15__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            return new Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new Step_16__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>> causeSelector)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAllSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAnySatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsNoneSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate.TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, TMetadata>(n));
-        }
     }
 
     public partial struct PolicyResultPredicatePropositionFactory<TModel, TMetadata>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_24__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause)
+        public Step_16__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause)
         {
-            return new Step_24__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
+            return new Step_16__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_24__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
+        public Step_16__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
         {
-            return new Step_24__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
+            return new Step_16__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_25__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        public Step_17__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
         {
-            return new Step_25__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
+            return new Step_17__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_26__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_18__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new Step_26__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
+            return new Step_18__Motiv_Spec<TModel, TMetadata>(predicate, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_26__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        public Step_18__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_26__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new Step_18__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_26__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        public Step_18__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
         {
-            return new Step_26__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            return new Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
-        {
-            return new Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new Step_27__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            return new Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new Step_28__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.PolicyResult<TModel, TMetadata>>> causeSelector)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAllSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAllSatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAnySatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAnySatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsNoneSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNoneSatisfied<TModel, TMetadata>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate.TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>(predicate, HigherOrderProposition.PropositionBuilders.HigherOrderPredicatePolicyMethods.AsNSatisfied<TModel, TMetadata>(n));
-        }
-    }
-}
-
-namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate
-{
-    public partial struct TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>
-    {
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_18__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
-        {
-            return new Step_18__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_19__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
-        {
-            return new Step_19__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_19__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new Step_19__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_20__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> trueBecause)
-        {
-            return new Step_20__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_21__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            return new Step_21__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_21__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
-        {
-            return new Step_21__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            return new Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new Step_22__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-    }
-}
-
-namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate
-{
-    public partial struct TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>
-    {
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_30__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
-        {
-            return new Step_30__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_31__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> trueBecause)
-        {
-            return new Step_31__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_32__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
-        {
-            return new Step_32__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_32__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
-        {
-            return new Step_32__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            return new Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
-        {
-            return new Step_34__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            return new Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new Step_35__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+            return new Step_18__Motiv_Spec<TModel, TMetadata>(predicate, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
     }
 }
@@ -2806,117 +3304,81 @@ namespace Motiv.ExpressionTreeProposition.PropositionBuilders
     public partial struct MinimalExpressionTreePropositionFactory<TModel, TPredicateResult>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_37__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<TModel, BooleanResultBase<string>, string> trueBecause)
+        public Step_43__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<TModel, BooleanResultBase<string>, string> trueBecause)
         {
-            return new Step_37__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
+            return new Step_43__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_37__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<TModel, string> function)
+        public Step_43__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<TModel, string> function)
         {
-            return new Step_37__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, string>(function));
+            return new Step_43__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, string>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_38__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in string trueBecause)
+        public Step_44__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in string trueBecause)
         {
-            return new Step_38__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
+            return new Step_44__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_39__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_45__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new Step_39__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
+            return new Step_45__Motiv_Spec<TModel, TPredicateResult>(expression, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_39__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        public Step_45__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_39__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new Step_45__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_39__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        public Step_45__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
         {
-            return new Step_39__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>>(function));
+            return new Step_45__Motiv_Spec<TModel, TPredicateResult>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<string>>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<TModel, BooleanResultBase<string>, TMetadata> whenTrue)
+        public Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<TModel, BooleanResultBase<string>, TMetadata> whenTrue)
         {
-            return new Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, whenTrue);
+            return new Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in TMetadata value)
+        public Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in TMetadata value)
         {
-            return new Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, TMetadata>(value));
+            return new Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, TMetadata>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<TModel, TMetadata> function)
+        public Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<TModel, TMetadata> function)
         {
-            return new Step_40__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, TMetadata>(function));
+            return new Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<string>, TMetadata>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
+        public Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
         {
-            return new Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, whenTrue);
+            return new Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Collections.Generic.IEnumerable<TMetadata> value)
+        public Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Collections.Generic.IEnumerable<TMetadata> value)
         {
-            return new Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>>(value));
+            return new Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TMetadata>> function)
+        public Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TMetadata>> function)
         {
-            return new Step_41__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>>(function));
+            return new Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<string>, System.Collections.Generic.IEnumerable<TMetadata>>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, string>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, string>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, string>>> causeSelector)
+        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> WithHigherOrderOperation(in HigherOrderProposition.PropositionBuilders.HigherOrderSpecPredicateOperation<TModel, string> higherOrderOperation)
         {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, string>(higherOrderPredicate, causeSelector));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsAllSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, string>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsAnySatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, string>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsAtLeastNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, string>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsAtMostNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, string>(n));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsNoneSatisfied()
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, string>());
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult> AsNSatisfied(in int n)
-        {
-            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, string>(n));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTree.TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>(expression, higherOrderOperation);
         }
     }
 }
@@ -2926,51 +3388,105 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.ExpressionTr
     public partial struct TrueExpressionTreeHigherOrderFromSpecPropositionFactory<TModel, TPredicateResult>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_43__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause)
+        public Step_49__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, string> trueBecause)
         {
-            return new Step_43__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
+            return new Step_49__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_44__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in string trueBecause)
+        public Step_50__Motiv_Spec<TModel, TPredicateResult> WhenTrue(in string trueBecause)
         {
-            return new Step_44__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
+            return new Step_50__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_45__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_51__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new Step_45__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
+            return new Step_51__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_45__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        public Step_51__Motiv_Spec<TModel, TPredicateResult> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_45__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new Step_51__Motiv_Spec<TModel, TPredicateResult>(expression, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata> whenTrue)
+        public Step_52__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata> whenTrue)
         {
-            return new Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, whenTrue);
+            return new Step_52__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in TMetadata value)
+        public Step_52__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrue<TMetadata>(in TMetadata value)
         {
-            return new Step_46__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata>(value));
+            return new Step_52__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TMetadata>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
+        public Step_53__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>> whenTrue)
         {
-            return new Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, whenTrue);
+            return new Step_53__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Collections.Generic.IEnumerable<TMetadata> value)
+        public Step_53__Motiv_Spec<TModel, TPredicateResult, TMetadata> WhenTrueYield<TMetadata>(in System.Collections.Generic.IEnumerable<TMetadata> value)
         {
-            return new Step_47__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>>(value));
+            return new Step_53__Motiv_Spec<TModel, TPredicateResult, TMetadata>(expression, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TMetadata>>(value));
+        }
+    }
+}
+
+namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanResultPredicate
+{
+    public partial struct TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>
+    {
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_56__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        {
+            return new Step_56__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_57__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, string> trueBecause)
+        {
+            return new Step_57__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_58__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        {
+            return new Step_58__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_58__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        {
+            return new Step_58__Motiv_Spec<TModel, TMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_59__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_59__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_59__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_59__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_60__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_60__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_60__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_60__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
     }
 }
@@ -3022,192 +3538,156 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_53__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause)
+        public Step_66__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause)
         {
-            return new Step_53__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
+            return new Step_66__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_53__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
+        public Step_66__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
         {
-            return new Step_53__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
+            return new Step_66__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, string>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_54__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        public Step_67__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
         {
-            return new Step_54__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
+            return new Step_67__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_55__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_68__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new Step_55__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
+            return new Step_68__Motiv_Spec<TModel, TMetadata>(policy, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_55__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        public Step_68__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_55__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new Step_68__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_55__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        public Step_68__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
         {
-            return new Step_55__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata> whenTrue)
-        {
-            return new Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
-        {
-            return new Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
-        {
-            return new Step_56__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, Shared.WhenOverloads.Convert<TModel, PolicyResultBase<TMetadata>, TReplacementMetadata>(function));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
-        {
-            return new Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, whenTrue);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
-        {
-            return new Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
-        {
-            return new Step_57__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+            return new Step_68__Motiv_Spec<TModel, TMetadata>(policy, Shared.WhenYieldOverloads.Convert<TModel, PolicyResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
     }
 
     public partial struct MinimalSpecDecoratorFactory<TModel, TMetadata>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>> causeSelector)
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> As(in System.Func<System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, bool> higherOrderPredicate, in System.Func<bool, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>, System.Collections.Generic.IEnumerable<HigherOrderProposition.BooleanResult<TModel, TMetadata>>> causeSelector)
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.As<TModel, TMetadata>(higherOrderPredicate, causeSelector));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAllSatisfied()
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAllSatisfied()
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, TMetadata>());
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAllSatisfied<TModel, TMetadata>());
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAnySatisfied()
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAnySatisfied()
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, TMetadata>());
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAnySatisfied<TModel, TMetadata>());
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAtLeastNSatisfied(in int n)
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtLeastNSatisfied<TModel, TMetadata>(n));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsAtMostNSatisfied(in int n)
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsAtMostNSatisfied<TModel, TMetadata>(n));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsNoneSatisfied()
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsNoneSatisfied()
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, TMetadata>());
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNoneSatisfied<TModel, TMetadata>());
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
+        public HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata> AsNSatisfied(in int n)
         {
-            return new HigherOrderProposition.PropositionBuilders.Explanation.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, TMetadata>(n));
+            return new HigherOrderProposition.PropositionBuilders.Metadata.Spec.HigherOrderFromSpecPropositionFactory<TModel, TMetadata>(spec, HigherOrderProposition.PropositionBuilders.HigherOrderPredicateSpecMethods.AsNSatisfied<TModel, TMetadata>(n));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_63__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause)
+        public Step_78__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, BooleanResultBase<TMetadata>, string> trueBecause)
         {
-            return new Step_63__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
+            return new Step_78__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_63__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
+        public Step_78__Motiv_Spec<TModel, TMetadata> WhenTrue(in System.Func<TModel, string> function)
         {
-            return new Step_63__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
+            return new Step_78__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, string>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_64__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        public Step_79__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
         {
-            return new Step_64__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
+            return new Step_79__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_65__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
+        public Step_80__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>> trueBecause)
         {
-            return new Step_65__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
+            return new Step_80__Motiv_Spec<TModel, TMetadata>(spec, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_65__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
+        public Step_80__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Collections.Generic.IEnumerable<string> value)
         {
-            return new Step_65__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
+            return new Step_80__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_65__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
+        public Step_80__Motiv_Spec<TModel, TMetadata> WhenTrueYield(in System.Func<TModel, System.Collections.Generic.IEnumerable<string>> function)
         {
-            return new Step_65__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
+            return new Step_80__Motiv_Spec<TModel, TMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<string>>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
+        public Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata> whenTrue)
         {
-            return new Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, whenTrue);
+            return new Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        public Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
         {
-            return new Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
+            return new Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
+        public Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<TModel, TReplacementMetadata> function)
         {
-            return new Step_66__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
+            return new Step_81__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenOverloads.Convert<TModel, BooleanResultBase<TMetadata>, TReplacementMetadata>(function));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
-            return new Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, whenTrue);
+            return new Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        public Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+            return new Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
+        public Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<TModel, System.Collections.Generic.IEnumerable<TReplacementMetadata>> function)
         {
-            return new Step_67__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
+            return new Step_82__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, Shared.WhenYieldOverloads.Convert<TModel, BooleanResultBase<TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(function));
         }
     }
 }
@@ -3217,69 +3697,129 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Policy
     public partial struct HigherOrderFromPolicyPropositionFactory<TModel, TMetadata>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_50__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        public Step_63__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
         {
-            return new Step_50__Motiv_Spec<TModel, TMetadata>(policy, higherOrderOperation, trueBecause);
+            return new Step_63__Motiv_Spec<TModel, TMetadata>(policy, higherOrderOperation, trueBecause);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_51__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        public Step_64__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
-            return new Step_51__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, whenTrue);
+            return new Step_64__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_51__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        public Step_64__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new Step_51__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+            return new Step_64__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_52__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_65__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
         {
-            return new Step_52__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, whenTrue);
+            return new Step_65__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_52__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        public Step_65__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
         {
-            return new Step_52__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+            return new Step_65__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(policy, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+    }
+}
+
+namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.Spec
+{
+    public partial struct HigherOrderFromSpecPropositionFactory<TModel, TMetadata>
+    {
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_75__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        {
+            return new Step_75__Motiv_Spec<TModel, TMetadata>(spec, higherOrderOperation, trueBecause);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_76__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_76__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_76__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        {
+            return new Step_76__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_77__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_77__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_77__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_77__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
     }
 }
 
 namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.Spec
 {
-    public partial struct HigherOrderFromSpecPropositionFactory<TModel, TMetadata>
+    public partial struct HigherOrderFromSpecPropositionFactory<TModel>
     {
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_60__Motiv_Spec<TModel, TMetadata> WhenTrue(in string trueBecause)
+        public Step_85__Motiv_Spec<TModel, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
         {
-            return new Step_60__Motiv_Spec<TModel, TMetadata>(spec, higherOrderOperation, trueBecause);
+            return new Step_85__Motiv_Spec<TModel, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_61__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        public Step_85__Motiv_Spec<TModel, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
         {
-            return new Step_61__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
+            return new Step_85__Motiv_Spec<TModel, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_61__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
+        public Step_86__Motiv_Spec<TModel, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata> whenTrue)
         {
-            return new Step_61__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+            return new Step_86__Motiv_Spec<TModel, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_62__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        public Step_86__Motiv_Spec<TModel, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
         {
-            return new Step_62__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, whenTrue);
+            return new Step_86__Motiv_Spec<TModel, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, string>, TReplacementMetadata>(value));
+        }
+    }
+}
+
+namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.PolicyResultPredicate
+{
+    public partial struct TrueHigherOrderFromPolicyResultPredicatePropositionFactory<TModel, TMetadata>
+    {
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_89__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata> whenTrue)
+        {
+            return new Step_89__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public Step_62__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        public Step_89__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrue<TReplacementMetadata>(in TReplacementMetadata value)
         {
-            return new Step_62__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(spec, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderBooleanResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
+            return new Step_89__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, TReplacementMetadata>(value));
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_90__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Func<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>> whenTrue)
+        {
+            return new Step_90__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, whenTrue);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public Step_90__Motiv_Spec<TModel, TMetadata, TReplacementMetadata> WhenTrueYield<TReplacementMetadata>(in System.Collections.Generic.IEnumerable<TReplacementMetadata> value)
+        {
+            return new Step_90__Motiv_Spec<TModel, TMetadata, TReplacementMetadata>(resultResolver, higherOrderOperation, Shared.WhenYieldOverloads.Convert<HigherOrderProposition.HigherOrderPolicyResultEvaluation<TModel, TMetadata>, System.Collections.Generic.IEnumerable<TReplacementMetadata>>(value));
         }
     }
 }

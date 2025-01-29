@@ -2,19 +2,30 @@
 
 namespace Motiv.Generator.FluentBuilder.FluentModel;
 
-public class FluentParameter(IParameterSymbol parameterSymbol) : IEquatable<FluentParameter>
+public class FluentMethodParameter(
+    IParameterSymbol parameterSymbol,
+    IEnumerable<string> methodNames)
+    : IEquatable<FluentMethodParameter>
 {
-    private readonly (string, string) _key = (parameterSymbol.Type.ToDisplayString(), parameterSymbol.GetFluentMethodName());
+    public FluentMethodParameter(
+        IParameterSymbol parameterSymbol,
+        string methodName)
+        : this(parameterSymbol, [methodName])
+    {
+    }
 
     public IParameterSymbol ParameterSymbol { get; } = parameterSymbol;
 
-    public string Name { get; } = parameterSymbol.GetFluentMethodName();
+    public FluentType FluentType { get; } = new(parameterSymbol.Type);
 
-    public bool Equals(FluentParameter? other)
+    public ISet<string> Names { get; } = new HashSet<string>(methodNames);
+
+    public bool Equals(FluentMethodParameter? other)
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
-        return _key.Equals(other._key);
+        if (!FluentType.Equals(other.FluentType)) return false;
+        return Names.Overlaps(other.Names);
     }
 
     public override bool Equals(object? obj)
@@ -22,10 +33,14 @@ public class FluentParameter(IParameterSymbol parameterSymbol) : IEquatable<Flue
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((FluentParameter)obj);
+        return Equals((FluentMethodParameter)obj);
     }
 
-    public override int GetHashCode() => _key.GetHashCode();
+    public override int GetHashCode() => FluentType.GetHashCode();
 
-    public override string ToString() => $"{_key.Item1} {_key.Item2}";
+    public override string ToString()
+    {
+        var names = Names.Select(name => $"'{name}'");
+        return $"{FluentType} ({string.Join(", ", names)})";
+    }
 }

@@ -9,9 +9,9 @@ namespace Motiv.SpecDecoratorProposition.PropositionBuilders.Explanation;
 /// </summary>
 /// <typeparam name="TModel">The type of the model.</typeparam>
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
-[FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
+[FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MinimalPolicyDecoratorFactory<TModel, TMetadata>(
-    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]PolicyBase<TModel, TMetadata> policy)
+    [MultipleFluentMethods(typeof(PolicyBuildOverloads))]PolicyBase<TModel, TMetadata> policy)
 {
     /// <summary>
     /// Creates a proposition and names it with the propositional statement provided.

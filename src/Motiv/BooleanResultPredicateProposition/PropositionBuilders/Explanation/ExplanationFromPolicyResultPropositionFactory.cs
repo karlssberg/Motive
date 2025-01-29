@@ -11,7 +11,7 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct ExplanationFromPolicyResultPropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]Func<TModel, PolicyResultBase<TMetadata>> predicate,
+    [MultipleFluentMethods(typeof(PolicyResultBuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> predicate,
     [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<TModel, PolicyResultBase<TMetadata>, string> trueBecause,
     [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, PolicyResultBase<TMetadata>, string> falseBecause)
 {

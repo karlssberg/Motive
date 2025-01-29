@@ -10,7 +10,7 @@ namespace Motiv.BooleanResultPredicateProposition.PropositionBuilders.Explanatio
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiAssertionExplanationWithNamePropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> predicate,
+    [MultipleFluentMethods(typeof(BooleanResultBuildOverloads))]Func<TModel, BooleanResultBase<TMetadata>> predicate,
     [FluentMethod("WhenTrue")]string trueBecause,
     [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<TModel, BooleanResultBase<TMetadata>, IEnumerable<string>> falseBecause)
 {

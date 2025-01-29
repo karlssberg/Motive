@@ -18,13 +18,19 @@ public static class SymbolExtensions
 
     public static string GetFluentMethodName(this IParameterSymbol parameterSymbol)
     {
-        var attribute = parameterSymbol.GetAttribute(FluentMethodAttribute);
-        if (attribute is { ConstructorArguments.Length: 1 })
-        {
-            return attribute.ConstructorArguments.First().Value?.ToString() ?? string.Empty;
-        }
+        var regularMethodAttribute = parameterSymbol.GetAttribute(FluentMethodAttribute);
+        var multipleMethodAttribute = parameterSymbol.GetAttribute(MultipleFluentMethodsAttribute);
 
-        return $"With{parameterSymbol.Name.Capitalize()}";
+        var name = (regularMethodAttribute, mutlipleMethodAttribute: multipleMethodAttribute) switch
+        {
+            ({ ConstructorArguments: { Length: 1 } args }, _) when args.First().Value is not null =>
+                args.First().Value!.ToString(),
+            (_, { ConstructorArguments: { Length: 1 } args }) when args.First().Value is INamedTypeSymbol =>
+                args.First().Value!.ToString(),
+            _ => $"With{parameterSymbol.Name.Capitalize()}"
+        };
+
+        return name;
     }
 
     public static IEnumerable<IMethodSymbol> GetMultipleFluentMethodSymbols(
@@ -46,7 +52,7 @@ public static class SymbolExtensions
                 a.AttributeClass?.ToDisplayString() == FluentMethodTemplateAttribute));
     }
 
-    private static AttributeData? GetAttribute(
+    public  static AttributeData? GetAttribute(
         this IParameterSymbol parameterSymbol,
         string fluentMethodName)
     {

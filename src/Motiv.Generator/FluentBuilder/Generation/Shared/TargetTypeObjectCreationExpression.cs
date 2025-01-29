@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Shared;
@@ -9,38 +9,33 @@ namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 public static class TargetTypeObjectCreationExpression
 {
     public static ObjectCreationExpressionSyntax Create(
-        FluentMethod method,
-        INamedTypeSymbol constructorType,
-        IEnumerable<ArgumentSyntax> arguments)
+        INamespaceSymbol currentNamespace,
+        IFluentMethod method,
+        IEnumerable<ArgumentSyntax> fieldArguments,
+        IEnumerable<ArgumentSyntax> methodArguments)
     {
-        var name = IdentifierName(constructorType.ToDynamicDisplayString(method.RootNamespace));
+        var name = IdentifierName(method.Return.IdentifierDisplayString(currentNamespace));
 
-        if (method.ParameterConverter is not null)
+        if (method is MultiMethod multiMethod)
         {
-            return CreateMethodOverloadExpression(method, arguments, name);
+            return CreateMethodOverloadExpression(multiMethod, fieldArguments, methodArguments, name);
         }
 
         return ObjectCreationExpression(name)
             .WithNewKeyword(Token(SyntaxKind.NewKeyword))
-            .WithArgumentList(ArgumentList(SeparatedList(arguments)));
+            .WithArgumentList(ArgumentList(SeparatedList(methodArguments)));
     }
 
     private static ObjectCreationExpressionSyntax CreateMethodOverloadExpression(
-        FluentMethod method,
-        IEnumerable<ArgumentSyntax> arguments,
+        MultiMethod method,
+        IEnumerable<ArgumentSyntax> fieldArguments,
+        IEnumerable<ArgumentSyntax> methodArguments,
         TypeSyntax name)
     {
-        var argumentList = arguments.ToList();
-        var parameterConverterMethod = method.ParameterConverter!;
-
-        var fieldArgumentsIndex = argumentList.Count - method.FluentParameters.Length;
-        var fieldSourcedArguments = argumentList.Take(fieldArgumentsIndex);
-        var methodParameterSourcedArguments = argumentList.Skip(fieldArgumentsIndex);
-
         IEnumerable<ArgumentSyntax> argNodes =
         [
-            ..fieldSourcedArguments,
-            Argument(ParameterConverterInvocationExpression.Create(parameterConverterMethod, methodParameterSourcedArguments, method.RootNamespace))
+            ..fieldArguments,
+            Argument(ParameterConverterInvocationExpression.Create(method.ParameterConverter, methodArguments, method.RootNamespace))
         ];
 
         return ObjectCreationExpression(name)

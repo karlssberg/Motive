@@ -21,7 +21,7 @@ public readonly partial struct ExplanationWithNamePropositionFactory<TModel, TMe
     /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
     [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
     public ExplanationWithNamePropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]SpecBase<TModel, TMetadata> spec,
+        [MultipleFluentMethods(typeof(SpecBuildOverloads))]SpecBase<TModel, TMetadata> spec,
         [FluentMethod("WhenTrue")]string trueBecause,
         [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
     {
@@ -37,7 +37,7 @@ public readonly partial struct ExplanationWithNamePropositionFactory<TModel, TMe
     /// <typeparam name="TMetadata">The type of the underlying metadata associated with the proposition.</typeparam>
     [FluentConstructor(typeof(Spec), Options = FluentOptions.NoCreateMethod)]
     public ExplanationWithNamePropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]PolicyBase<TModel, TMetadata> policy,
+        [MultipleFluentMethods(typeof(SpecBuildOverloads))]PolicyBase<TModel, TMetadata> policy,
         [FluentMethod("WhenTrue")]string trueBecause,
         [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<TModel, BooleanResultBase<TMetadata>, string> falseBecause)
     {

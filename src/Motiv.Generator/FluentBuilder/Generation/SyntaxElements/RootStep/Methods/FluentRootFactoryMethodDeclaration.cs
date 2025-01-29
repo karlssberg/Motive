@@ -1,7 +1,8 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -10,16 +11,22 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.RootStep.Metho
 public static class FluentRootFactoryMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method)
+        INamespaceSymbol currentNamespace,
+        IFluentMethod method)
     {
-        var identifierNameSyntaxes = method.FluentParameters
+        var fieldSourcedArguments = method.AvailableParameterFields
+            .Select(parameter => IdentifierName(parameter.ParameterSymbol.Name.ToCamelCase()))
+            .Select(Argument);
+
+        var methodSourcedArguments = method.MethodParameters
             .Select(parameter => IdentifierName(parameter.ParameterSymbol.Name.ToCamelCase()))
             .Select(Argument);
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
+            currentNamespace,
             method,
-            method.TargetConstructor!.ContainingType,
-            identifierNameSyntaxes);
+            fieldSourcedArguments,
+            methodSourcedArguments);
 
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
@@ -33,12 +40,12 @@ public static class FluentRootFactoryMethodDeclaration
                     Token(SyntaxKind.PublicKeyword)))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (method.FluentParameters.Length > 0)
+        if (method.MethodParameters.Length > 0)
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
                     ParameterList(SeparatedList(
-                        method.FluentParameters
+                        method.MethodParameters
                             .Select(parameter =>
                                 Parameter(
                                         Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
@@ -47,11 +54,11 @@ public static class FluentRootFactoryMethodDeclaration
                                         IdentifierName(parameter.ParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace)))))));
         }
 
-        if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
+        if (!method.TypeParameters.Any())
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.TypeParameters
-            .Select(symbol => symbol.ToTypeParameterSyntax())
+            .Select(typeParameter => typeParameter.TypeParameterSymbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
         if (typeParameterSyntaxes.Length == 0)

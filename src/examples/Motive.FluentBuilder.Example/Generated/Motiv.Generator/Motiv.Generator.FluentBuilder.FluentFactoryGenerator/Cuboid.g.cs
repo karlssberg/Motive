@@ -20,7 +20,7 @@ public struct Step_0__Cuboid
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public Step_1__Cuboid WithHeight(in int height)
     {
-        return new Step_1__Cuboid(this._width__parameter, height);
+        return new Step_1__Cuboid(this._width__parameter, width);
     }
 }
 
@@ -37,7 +37,7 @@ public struct Step_1__Cuboid
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public Step_2__Cuboid WithDepth(in int depth)
     {
-        return new Step_2__Cuboid(this._width__parameter, this._height__parameter, depth);
+        return new Step_2__Cuboid(this._width__parameter, this._height__parameter, width, height);
     }
 }
 
@@ -54,8 +54,8 @@ public struct Step_2__Cuboid
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Cuboid Create()
+    public Cuboid Create(in int width)
     {
-        return new Cuboid(this._width__parameter, this._height__parameter, this._depth__parameter);
+        return new Cuboid(this._withWidth__parameter, this._withHeight__parameter, this._withDepth__parameter, width);
     }
 }

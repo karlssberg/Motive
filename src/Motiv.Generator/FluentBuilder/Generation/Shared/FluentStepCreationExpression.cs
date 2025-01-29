@@ -1,6 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace Motiv.Generator.FluentBuilder.Generation.Shared;
@@ -8,15 +9,25 @@ namespace Motiv.Generator.FluentBuilder.Generation.Shared;
 public static class FluentStepCreationExpression
 {
     public static ObjectCreationExpressionSyntax Create(
-        FluentMethod method,
+        INamespaceSymbol currentNamespace,
+        MultiMethod method,
         IEnumerable<ArgumentSyntax> arguments)
     {
-        var name = StepNameSyntax.Create(method.ReturnStep!);
+        var name = StepNameSyntax.Create(currentNamespace, method.Return);
+        return CreateMethodOverloadExpression(method, arguments, name);
+    }
 
-        if (method.ParameterConverter is not null)
-        {
-            return CreateMethodOverloadExpression(method, arguments, name);
-        }
+    public static ObjectCreationExpressionSyntax Create(
+        INamespaceSymbol currentNamespace,
+        IFluentMethod method,
+        IEnumerable<ArgumentSyntax> arguments)
+    {
+        var name = StepNameSyntax.Create(currentNamespace, method.Return);
+        return CreateObjectCreationExpression(arguments, name);
+    }
+
+    private static ObjectCreationExpressionSyntax CreateObjectCreationExpression(IEnumerable<ArgumentSyntax> arguments, NameSyntax name)
+    {
         return ObjectCreationExpression(name)
             .WithNewKeyword(
                 Token(SyntaxKind.NewKeyword))
@@ -24,14 +35,14 @@ public static class FluentStepCreationExpression
     }
 
     private static ObjectCreationExpressionSyntax CreateMethodOverloadExpression(
-        FluentMethod method,
+        MultiMethod method,
         IEnumerable<ArgumentSyntax> arguments,
         TypeSyntax name)
     {
         var argumentList = arguments.ToList();
         var parameterConverterMethod = method.ParameterConverter!;
 
-        var fieldArgumentsIndex = argumentList.Count - method.FluentParameters.Length;
+        var fieldArgumentsIndex = argumentList.Count - method.MethodParameters.Length;
         var fieldSourcedArguments = argumentList.Take(fieldArgumentsIndex);
         var methodParameterSourcedArguments = argumentList.Skip(fieldArgumentsIndex);
 

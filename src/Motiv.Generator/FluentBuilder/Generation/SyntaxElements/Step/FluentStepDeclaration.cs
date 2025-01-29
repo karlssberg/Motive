@@ -2,7 +2,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Constructors;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
@@ -14,19 +15,22 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 public static class FluentStepDeclaration
 {
     public static StructDeclarationSyntax Create(
-        FluentStep step)
+        RegularFluentStep step)
     {
         var methodDeclarationSyntaxes = step.FluentMethods
-            .Select<FluentMethod, MethodDeclarationSyntax>(method => method.TargetConstructor is not null && method.ReturnStep is null
-                ? FluentFactoryMethodDeclaration.Create(method, step, method.TargetConstructor)
-                : FluentStepMethodDeclaration.Create(method, step));
+            .Select<IFluentMethod, MethodDeclarationSyntax>(method => method switch
+            {
+                CreateMethod createMethod => FluentFactoryMethodDeclaration.Create(createMethod, step),
+                MultiMethod multiMethod => FluentStepMethodDeclaration.Create(multiMethod, step),
+                _ => FluentStepMethodDeclaration.Create(method, step)
+            });
 
         var fieldDeclaration = step.KnownConstructorParameters
             .Select(parameter => ParameterFieldDeclarations.Create(parameter, step.RootType.ContainingNamespace));
 
         var constructor = FluentStepConstructorDeclaration.Create(step);
 
-        var name = StepNameSyntax.Create(step);
+        var name = StepNameSyntax.Create(step.Namespace, step);
 
         var identifier = name is GenericNameSyntax genericName
             ? genericName.Identifier
@@ -42,23 +46,6 @@ public static class FluentStepDeclaration
                 ..methodDeclarationSyntaxes,
             ]));
 
-        if (step.GenericConstructorParameters.Length <= 0)
-            return structDeclaration;
-
-        var typeParameterSyntaxes = step.GenericConstructorParameters
-            .Select<IParameterSymbol, ITypeSymbol>(t => t.Type)
-            .GetGenericTypeParameters()
-            .Distinct(SymbolEqualityComparer.Default)
-            .OfType<ITypeParameterSymbol>()
-            .Select(symbol => symbol.ToTypeParameterSyntax())
-            .ToImmutableArray();
-
-        if (typeParameterSyntaxes.Length == 0)
-            return structDeclaration;
-
-        return structDeclaration
-            .WithTypeParameterList(
-                TypeParameterList(
-                    SeparatedList(typeParameterSyntaxes)));
+        return structDeclaration;
     }
 }

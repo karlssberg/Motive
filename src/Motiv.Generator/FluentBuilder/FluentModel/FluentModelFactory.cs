@@ -1,6 +1,8 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Analysis;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Motiv.Generator.FluentBuilder.FluentFactoryGeneratorOptions;
@@ -9,7 +11,6 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public class FluentModelFactory(Compilation compilation)
 {
-
     public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(
         INamedTypeSymbol rootType,
         ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
@@ -18,30 +19,30 @@ public class FluentModelFactory(Compilation compilation)
 
         var stepTrie = CreateFluentStepTrie(fluentConstructorContexts);
 
-        var rootFluentStep = ConvertNodeToFluentStep(rootType, stepTrie.Root);
+        var fluentRootMethods = ConvertNodeToFluentFluentMethods(rootType, stepTrie.Root);
 
-        var childFluentSteps = rootFluentStep?.FluentMethods
-            .Select(m => m.ReturnStep)
-            .OfType<FluentStep>() ?? [];
+        var childFluentSteps = fluentRootMethods
+            .Select(m => m.Return)
+            .OfType<IFluentStep>();
 
         var descendentFluentSteps = GetDescendentFluentSteps(childFluentSteps);
         var fluentBuilderSteps = descendentFluentSteps
-                .DistinctBy(step => step.KnownConstructorParameters)
-                .Select((step, index) =>
-                {
-                    if (step.IsExistingPartialType) return step;
+            .DistinctBy(step => step.KnownConstructorParameters)
+            .Select((step, index) =>
+            {
+                if (step is not RegularFluentStep) return step;
 
-                    var name = rootType.ToIdentifier();
-                    step.Name = $"Step_{index}__{name}";
+                var name = rootType.ToIdentifier();
+                step.Name = $"Step_{index}__{name}";
 
-                    return step;
-                })
-                .ToImmutableArray();
+                return step;
+            })
+            .ToImmutableArray();
 
         var sampleConstructorContext = fluentConstructorContexts.First();
         return new FluentFactoryCompilationUnit(
             rootType,
-            [..rootFluentStep?.FluentMethods ?? []],
+            fluentRootMethods,
             fluentBuilderSteps,
             usings)
         {
@@ -52,70 +53,85 @@ public class FluentModelFactory(Compilation compilation)
         };
     }
 
-    private static IEnumerable<FluentStep> GetDescendentFluentSteps(IEnumerable<FluentStep> fluentSteps)
+    private ImmutableArray<IFluentMethod> ConvertNodeToFluentFluentMethods(
+        INamedTypeSymbol type,
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node)
     {
-        foreach (var fluentStep in fluentSteps)
+        ImmutableArray<IFluentMethod> fluentMethods =
+        [
+            ..ConvertNodeToFluentMethods(type, node),
+            ..ConvertNodeToCreationMethods(type, node)
+        ];
+
+        return fluentMethods;
+    }
+
+    private IEnumerable<IFluentMethod> ConvertNodeToFluentMethods(
+        INamedTypeSymbol rootType,
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node)
+    {
+        IFluentMethod[] fluentMethods =
+        [
+            ..
+            from child in node.Children.Values
+            let nextStep = ConvertNodeToFluentStep(rootType, child)
+            let fluentParameters = child.EncounteredKeyParts
+            from fluentMethod in CreateFluentMethods(rootType, node, fluentParameters, nextStep, child.Values)
+            select fluentMethod
+        ];
+
+        var fluentMethodGroups = fluentMethods.GroupBy(m => m, FluentMethodSignatureEqualityComparer.Default);
+
+        foreach (var fluentMethodGroup in fluentMethodGroups)
         {
-            yield return fluentStep;
+            var nonRegularMethod = fluentMethodGroup.OfType<RegularMethod>().FirstOrDefault();
 
-            var childSteps = fluentStep.FluentMethods
-                .Select(m => m.ReturnStep)
-                .OfType<FluentStep>();
-
-            foreach (var underlyingFluentStep in GetDescendentFluentSteps(childSteps))
-                yield return underlyingFluentStep;
+            yield return nonRegularMethod ?? fluentMethodGroup.First();
         }
     }
 
-    private FluentStep? ConvertNodeToFluentStep(
+    private IFluentStep? ConvertNodeToFluentStep(
         INamedTypeSymbol rootType,
-        Trie<FluentParameter, ConstructorMetadata>.Node node)
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node)
     {
-        FluentMethod[] fluentMethods =
-        [
-            ..ConvertNodeToFluentMethods(rootType, node),
-            ..ConvertNodeToCreationMethods(rootType, node)
-        ];
-
+        var fluentMethods = ConvertNodeToFluentFluentMethods(rootType, node);
         if (fluentMethods.Length == 0)
             return null;
 
-        var metadata = node.EndValues.FirstOrDefault();
+        var constructorMetadata = node.EndValues.FirstOrDefault();
         var useExistingTypeAsStep = UseExistingTypeAsStep();
 
-        var fluentStep = new FluentStep(rootType)
+        return (useExistingTypeAsStep, constructorMetadata) switch
         {
-            Name = ResolveStepName(),
-            KnownConstructorParameters = new ParameterSequence(node.Key),
-            FluentMethods = fluentMethods,
-            Accessibility = metadata?.Constructor.ContainingType.DeclaredAccessibility ?? Accessibility.Public,
-            TypeKind = metadata?.Constructor.ContainingType.TypeKind ?? TypeKind.Struct,
-            IsEndStep = node.IsEnd,
-            IsRecord = metadata?.Constructor.ContainingType.IsRecord ?? false,
-            IsExistingPartialType = useExistingTypeAsStep,
-            ParameterStoreMembers = metadata?.ParameterStoreMembers ?? new Dictionary<IParameterSymbol, FluentParameterResolution>(FluentParameterComparer.Default),
-            ExistingStepConstructor = useExistingTypeAsStep
-                ? metadata?.Constructor
-                : null
+            (true, { } metadata) =>
+                new ExistingTypeFluentStep(rootType, metadata.Constructor)
+                {
+                    Name = constructorMetadata.Constructor.ContainingType.ToDisplayString(),
+                    KnownConstructorParameters = new ParameterSequence(node.Key),
+                    FluentMethods = fluentMethods,
+                    Accessibility = metadata.Constructor.ContainingType.DeclaredAccessibility,
+                    TypeKind = metadata.Constructor.ContainingType.TypeKind,
+                    IsRecord = metadata.Constructor.ContainingType.IsRecord,
+                    ParameterStoreMembers = metadata.ParameterStoreMembers
+                },
+            _ =>
+                new RegularFluentStep(rootType)
+                {
+                    Name = "Step",
+                    KnownConstructorParameters = new ParameterSequence(node.Key),
+                    FluentMethods = fluentMethods,
+                    IsEndStep = node.IsEnd
+                }
         };
-
-        return fluentStep;
-
-        string ResolveStepName()
-        {
-            return metadata is not null && useExistingTypeAsStep
-                ? metadata.Constructor.ContainingType.ToDisplayString()
-                : "Step";
-        }
 
         bool UseExistingTypeAsStep()
         {
-            if (metadata is null) return false;
+            if (constructorMetadata is null) return false;
 
-            var containingType = metadata.Constructor.ContainingType;
+            var containingType = constructorMetadata.Constructor.ContainingType;
             var isPartial = containingType.IsPartial();
             var isStatic = containingType.IsStatic;
-            var doNotGenerateCreateMethod = metadata.Options.HasFlag(NoCreateMethod);
+            var doNotGenerateCreateMethod = constructorMetadata.Options.HasFlag(NoCreateMethod);
 
             // it is necessary for the target type to be partial and instantiatable.  To is so avoid hiding other
             // constructors that begin with the same build steps, but have additional steps
@@ -123,154 +139,77 @@ public class FluentModelFactory(Compilation compilation)
         }
     }
 
-    private IEnumerable<FluentMethod> ConvertNodeToFluentMethods(
+    private IEnumerable<IFluentMethod> CreateFluentMethods(
         INamedTypeSymbol rootType,
-        Trie<FluentParameter, ConstructorMetadata>.Node node)
-    {
-        FluentMethod[] intermediateStepMethods =
-        [
-            ..
-            from child in node.Children.Values
-            let nextStep = ConvertNodeToFluentStep(rootType, child)
-            let fluentParameters = child.EncounteredKeyParts
-            from intermediateStepMethod in CreateIntermediateStepMethod(rootType, node, fluentParameters, nextStep, child.Values)
-            select intermediateStepMethod
-        ];
-
-        foreach (var intermediateStepMethodGroup in intermediateStepMethods.GroupBy(m => m, FluentMethod.FluentMethodSignatureComparer))
-        {
-            var intermediateStepMethod = intermediateStepMethodGroup.FirstOrDefault(m => m.ParameterConverter is null)
-                                         ?? intermediateStepMethodGroup.First();
-            yield return intermediateStepMethod;
-
-            var overloadedFluentMethods = CreateOverloadedFluentMethods(intermediateStepMethod);
-
-            foreach (var overloadedFluentMethod in overloadedFluentMethods) yield return overloadedFluentMethod;
-        }
-
-        yield break;
-
-        bool HasMethodSignatureClash(ImmutableArray<FluentParameter> fluentParameters)
-        {
-            return intermediateStepMethods
-                .Any(m =>
-                {
-                    var existingParameterSequence = m.FluentParameters.Select(mp => mp.ParameterSymbol.Type);
-                    var overloadedParameterSequence = fluentParameters.Select(p => p.ParameterSymbol.Type);
-
-                    return existingParameterSequence.SequenceEqual(overloadedParameterSequence, SymbolEqualityComparer.Default);
-                });
-        }
-
-        IEnumerable<FluentMethod> CreateOverloadedFluentMethods(FluentMethod intermediateStepMethod)
-        {
-            return from converter in intermediateStepMethod.ParameterConverters
-                let normalizedConverter = NormalizedConverterMethod(converter, intermediateStepMethod.SourceParameterSymbol!.Type)
-                let fluentParameters = normalizedConverter.Parameters.Select(p => new FluentParameter(p)).ToImmutableArray()
-                where !HasMethodSignatureClash(fluentParameters)
-                select new FluentMethod(
-                    intermediateStepMethod.MethodName,
-                    intermediateStepMethod.ReturnStep,
-                    intermediateStepMethod.RootNamespace,
-                    intermediateStepMethod.TargetConstructor,
-                    normalizedConverter)
-                {
-                    FluentParameters = fluentParameters,
-                    ReturnStep = intermediateStepMethod.ReturnStep,
-                    ParameterConverters = intermediateStepMethod.ParameterConverters,
-                    KnownConstructorParameters = intermediateStepMethod.KnownConstructorParameters
-                };
-        }
-    }
-
-    private IEnumerable<FluentMethod> ConvertNodeToCreationMethods(
-        INamedTypeSymbol rootType,
-        Trie<FluentParameter, ConstructorMetadata>.Node node)
-    {
-        if (!node.IsEnd) yield break;
-
-        var createMethods =
-            from value in node.Values
-            where value.Constructor.Parameters.Length == node.Key.Length
-            where !value.Options.HasFlag(NoCreateMethod)
-            select new FluentMethod("Create", rootType.ContainingNamespace, value.Constructor)
-            {
-                KnownConstructorParameters = new ParameterSequence(value.Constructor.Parameters)
-            };
-
-        foreach (var createMethod in createMethods) yield return createMethod;
-    }
-
-    private IEnumerable<FluentMethod> CreateIntermediateStepMethod(
-        INamedTypeSymbol rootType,
-        Trie<FluentParameter, ConstructorMetadata>.Node node,
-        ICollection<FluentParameter> fluentParameterInstances,
-        FluentStep? nextStep,
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node,
+        ICollection<FluentMethodParameter> fluentParameterInstances,
+        IFluentStep? nextStep,
         IList<ConstructorMetadata> constructorMetadataList)
     {
         var constructorMetadata = MergeConstructorMetadata(node, constructorMetadataList);
-        var constructor = nextStep is null
-            ? constructorMetadata.Constructor
-            : null;
-
-        var fluentParameter = fluentParameterInstances.First();
-        var multipleFluentMethodSymbols = compilation
-            .GetMultipleFluentMethodSymbols(fluentParameter.ParameterSymbol)
-            .Select(method => NormalizedConverterMethod(method, fluentParameter.ParameterSymbol.Type))
-            .ToArray();
-
-        if (multipleFluentMethodSymbols.Length > 0)
+        IFluentReturn methodReturn = nextStep switch
         {
-            foreach (var fluentMethodSymbol in multipleFluentMethodSymbols)
-            {
-                yield return new FluentMethod(fluentMethodSymbol.Name, nextStep, rootType.ContainingNamespace, constructor, fluentMethodSymbol)
-                {
-                    FluentParameters = [..fluentMethodSymbol.Parameters.Select(p => new FluentParameter(p))],
-                    KnownConstructorParameters = CreateKnownConstructorParameters()
-                };
-            }
-            yield break;
-        }
-
-        if (nextStep is null)
-        {
-            yield return new FluentMethod(fluentParameter.Name, rootType.ContainingNamespace, constructor)
-            {
-                FluentParameters = [new FluentParameter(fluentParameter.ParameterSymbol)],
-                KnownConstructorParameters = CreateKnownConstructorParameters(),
-                ParameterConverters = CreateParameterConverters()
-            };
-            yield break;
-        }
-
-        yield return new FluentMethod(fluentParameter.Name,  nextStep, rootType.ContainingNamespace,  constructor)
-        {
-            FluentParameters = [new FluentParameter(fluentParameter.ParameterSymbol)],
-            KnownConstructorParameters = CreateKnownConstructorParameters(),
-            ParameterConverters = CreateParameterConverters()
+            null => new TargetTypeReturn(
+                constructorMetadata.Constructor,
+                new ParameterSequence(node.Key.Select(p => p.ParameterSymbol))),
+            _ => nextStep
         };
 
-        yield break;
-
-        ImmutableArray<IMethodSymbol> CreateParameterConverters()
+        foreach (var parameter in fluentParameterInstances)
         {
-            ImmutableArray<IMethodSymbol> immutableArray =
-            [
-                ..fluentParameterInstances
-                    .SelectMany(p => compilation.GetFluentMethodOverloads(p.ParameterSymbol))
-                    .Distinct(SymbolEqualityComparer.Default)
-                    .OfType<IMethodSymbol>()
-            ];
-            return immutableArray;
-        }
+            var multipleFluentMethodSymbols = compilation
+                .GetMultipleFluentMethodSymbols(parameter.ParameterSymbol)
+                .Select(method => NormalizedConverterMethod(method, parameter.ParameterSymbol.Type));
 
-        ParameterSequence CreateKnownConstructorParameters()
-        {
-            return new ParameterSequence(node.Key.Select(p => p.ParameterSymbol));
+            foreach (var multipleFluentMethodSymbol in multipleFluentMethodSymbols)
+            {
+                yield return new MultiMethod(
+                    multipleFluentMethodSymbol.Name,
+                    parameter.ParameterSymbol,
+                    methodReturn,
+                    rootType.ContainingNamespace,
+                    multipleFluentMethodSymbol,
+                    node.Key);
+            }
+
+            var hasMultipleFluentMethodsAttribute = parameter.ParameterSymbol
+                .GetAttribute(TypeName.MultipleFluentMethodsAttribute) != null;
+
+            var hasFluentMethodAttribute = parameter.ParameterSymbol
+                .GetAttribute(TypeName.FluentMethodAttribute) != null;
+
+            if (!hasFluentMethodAttribute && hasMultipleFluentMethodsAttribute) continue;
+
+            var fluentParameter = fluentParameterInstances.First();
+            foreach (var name in fluentParameter.Names)
+            {
+                yield return new RegularMethod(
+                    name,
+                    fluentParameter.ParameterSymbol,
+                    methodReturn,
+                    rootType.ContainingNamespace,
+                    node.Key);
+            }
         }
     }
 
-    private static ConstructorMetadata MergeConstructorMetadata(Trie<FluentParameter, ConstructorMetadata>.Node node, IList<ConstructorMetadata> constructorMetadataList)
+    private static IEnumerable<IFluentStep> GetDescendentFluentSteps(IEnumerable<IFluentStep> fluentSteps)
+    {
+        foreach (var fluentStep in fluentSteps)
+        {
+            yield return fluentStep;
+
+            var childSteps = fluentStep.FluentMethods
+                .Select(m => m.Return)
+                .OfType<IFluentStep>();
+
+            foreach (var underlyingFluentStep in GetDescendentFluentSteps(childSteps))
+                yield return underlyingFluentStep;
+        }
+    }
+
+    private static ConstructorMetadata MergeConstructorMetadata(
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node, IList<ConstructorMetadata> constructorMetadataList)
     {
         return constructorMetadataList.Skip(1).Aggregate(constructorMetadataList.First().Clone(), (merged, metadata) =>
         {
@@ -280,8 +219,7 @@ public class FluentModelFactory(Compilation compilation)
 
             merged.Constructor = metadata.Constructor;
             var mergeableConstructors = metadata.CandidateConstructors
-                .Except(merged.CandidateConstructors, SymbolEqualityComparer.Default)
-                .OfType<IMethodSymbol>();
+                .Except<IMethodSymbol>(merged.CandidateConstructors, SymbolEqualityComparer.Default);
 
             merged.CandidateConstructors.AddRange(mergeableConstructors);
 
@@ -289,16 +227,43 @@ public class FluentModelFactory(Compilation compilation)
         });
     }
 
-    private Trie<FluentParameter, ConstructorMetadata> CreateFluentStepTrie(
+    private IEnumerable<IFluentMethod> ConvertNodeToCreationMethods(
+        INamedTypeSymbol rootType,
+        Trie<FluentMethodParameter, ConstructorMetadata>.Node node)
+    {
+        if (!node.IsEnd) yield break;
+
+        var createMethods =
+            from value in node.Values
+            where value.Constructor.Parameters.Length == node.Key.Length
+            where !value.Options.HasFlag(NoCreateMethod)
+            select new CreateMethod(
+                rootType.ContainingNamespace,
+                value.Constructor,
+                node.Key,
+                compilation);
+
+        foreach (var createMethod in createMethods) yield return createMethod;
+    }
+
+    private Trie<FluentMethodParameter, ConstructorMetadata> CreateFluentStepTrie(
         ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
-        var trie = new Trie<FluentParameter, ConstructorMetadata>();
+        var trie = new Trie<FluentMethodParameter, ConstructorMetadata>();
         foreach (var constructorContext in fluentConstructorContexts)
         {
             var fluentParameters =
                 constructorContext.Constructor.Parameters
-                    .Select(parameter => new FluentParameter(parameter))
-                    .ToImmutableArray();
+                    .Select(parameter =>
+                    {
+                        var methodNames = compilation
+                            .GetMultipleFluentMethodSymbols(parameter)
+                            .Select(symbol => symbol.Name)
+                            .DefaultIfEmpty(parameter.GetFluentMethodName());
+
+                        return new FluentMethodParameter(parameter, methodNames);
+                    });
+
 
             trie.Insert(
                 fluentParameters,
@@ -310,35 +275,16 @@ public class FluentModelFactory(Compilation compilation)
 
     private static IMethodSymbol NormalizedConverterMethod(IMethodSymbol converter, ITypeSymbol targetType)
     {
-        var returnType = converter.ReturnType;;
+        var mapping = TypeMapper.MapGenericArguments(converter.ReturnType, targetType);
 
-        var mapping = TypeMapper.MapGenericArguments(returnType, targetType);
-
-        var normalizedMethod = converter.NormalizeMethodTypeParameters(mapping);
-
-        return normalizedMethod;
+        return converter.NormalizeMethodTypeParameters(mapping);
     }
 
-    private class ConstructorMetadata(FluentConstructorContext constructorContext)
+    private static ImmutableArray<INamespaceSymbol> GetUsingStatements(
+        ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
-        public IMethodSymbol Constructor { get; set; } = constructorContext.Constructor;
-
-        public IList<IMethodSymbol> CandidateConstructors { get; set; } = [constructorContext.Constructor];
-
-        public FluentFactoryGeneratorOptions Options { get; set;  } = constructorContext.Options;
-        public IReadOnlyDictionary<IParameterSymbol, FluentParameterResolution> ParameterStoreMembers { get; set; } = constructorContext.ParameterStores;
-
-        public INamedTypeSymbol RootType { get; } = constructorContext.RootType;
-
-        public ConstructorMetadata Clone()
-        {
-            return new ConstructorMetadata(constructorContext);
-        }
-    }
-
-    private static ImmutableArray<INamespaceSymbol> GetUsingStatements(ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
-    {
-        return [
+        return
+        [
             ..fluentConstructorContexts
                 .SelectMany(ctx => ctx.Constructor.Parameters)
                 .Select(parameter => parameter.Type)
@@ -347,5 +293,22 @@ public class FluentModelFactory(Compilation compilation)
                 .DistinctBy(ns => ns.ToDisplayString())
                 .OrderBy(ns => ns.ToDisplayString())
         ];
+    }
+
+    private class ConstructorMetadata(FluentConstructorContext constructorContext)
+    {
+        public IMethodSymbol Constructor { get; set; } = constructorContext.Constructor;
+
+        public IList<IMethodSymbol> CandidateConstructors { get; } = [constructorContext.Constructor];
+
+        public FluentFactoryGeneratorOptions Options { get; set; } = constructorContext.Options;
+
+        public IReadOnlyDictionary<IParameterSymbol, FluentParameterResolution> ParameterStoreMembers { get; } =
+            constructorContext.ParameterStores;
+
+        public ConstructorMetadata Clone()
+        {
+            return new ConstructorMetadata(constructorContext);
+        }
     }
 }

@@ -20,7 +20,7 @@ public struct Step_0__Rectangle
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
     public Step_1__Rectangle WithHeight(in int height)
     {
-        return new Step_1__Rectangle(this._width__parameter, height);
+        return new Step_1__Rectangle(this._width__parameter, width);
     }
 }
 
@@ -35,8 +35,8 @@ public struct Step_1__Rectangle
     }
 
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-    public Rectangle Create()
+    public Rectangle Create(in int width)
     {
-        return new Rectangle(this._width__parameter, this._height__parameter);
+        return new Rectangle(this._withWidth__parameter, this._withHeight__parameter, width);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.RootStep;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -31,7 +32,8 @@ public static class CompilationUnit
     {
         var rootType = RootTypeDeclaration.Create(file);
         var namespacesGroups = file.FluentSteps
-            .GroupBy(step => step.ExistingStepConstructor?.ContainingNamespace ?? step.RootType.ContainingNamespace,
+            .GroupBy(
+                step => step.Namespace,
                 SymbolEqualityComparer.Default)
             .Select(stepsInNamespace =>
             {
@@ -55,13 +57,19 @@ public static class CompilationUnit
             : [..MaybeEncapsulateInNamespace(file.RootType.ContainingNamespace, [rootType]), ..memberDeclarations];
 
         IEnumerable<TypeDeclarationSyntax> CreateTypeDeclarations(
-            IEnumerable<FluentStep> fluentSteps)
+            IEnumerable<IFluentStep> fluentSteps)
         {
             foreach (var step in fluentSteps)
             {
-                yield return step.IsExistingPartialType
-                    ? ExistingPartialTypeStepDeclaration.Create(step)
-                    : FluentStepDeclaration.Create(step);
+                yield return
+                    step switch {
+                        ExistingTypeFluentStep existingPartialTypeStep =>
+                            ExistingPartialTypeStepDeclaration.Create(existingPartialTypeStep),
+                        RegularFluentStep regularFluentStep =>
+                            FluentStepDeclaration.Create(regularFluentStep),
+                        _ =>
+                            throw new NotSupportedException($"Step type {step.GetType()} is not supported.")
+                    };
             }
         }
 
@@ -82,9 +90,9 @@ public static class CompilationUnit
             var rootNamespace = file.RootType.ContainingNamespace;
             return
                 file.FluentSteps.Any(
-                    step => step.ExistingStepConstructor is null
+                    step => step is not ExistingTypeFluentStep existingTypeFluentStep
                             || SymbolEqualityComparer.Default.Equals(
-                                 step.ExistingStepConstructor.ContainingNamespace,
+                                existingTypeFluentStep.ExistingStepConstructor.ContainingNamespace,
                                  rootNamespace));
         }
     }

@@ -3,6 +3,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -11,26 +13,30 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 public static class FluentFactoryMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method,
-        FluentStep step,
-        IMethodSymbol constructor)
+        IFluentMethod method,
+        IFluentStep step)
     {
-        var identifierNameSyntaxes = method.KnownConstructorParameters
+        var fieldArguments = method.AvailableParameterFields
             .Select(ExpressionSyntax (p) =>
                 MemberAccessExpression(
                     SyntaxKind.SimpleMemberAccessExpression,
                     ThisExpression(),
-                    IdentifierName(p.Name.ToParameterFieldName())))
-            .AppendIfNotNull(
-                method.SourceParameterSymbol is not null
-                    ? IdentifierName(method.SourceParameterSymbol.Name.ToCamelCase())
-                    : null)
+                    IdentifierName(p.ParameterSymbol.Name.ToParameterFieldName())))
+            .Select(Argument);
+
+        var methodArguments = method.MethodParameters
+            .Select(ExpressionSyntax (p) =>
+                MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    ThisExpression(),
+                    IdentifierName(p.ParameterSymbol.Name.ToParameterFieldName())))
             .Select(Argument);
 
         var returnObjectExpression = TargetTypeObjectCreationExpression.Create(
+            step.Namespace,
             method,
-            constructor.ContainingType,
-            identifierNameSyntaxes);
+            fieldArguments,
+            methodArguments);
 
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
@@ -55,12 +61,14 @@ public static class FluentFactoryMethodDeclaration
                             IdentifierName(method.SourceParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace))))));
         }
 
-        if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
+        if (!method.TypeParameters.Any())
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.TypeParameters
-            .Except(step.KnownConstructorParameters.SelectMany(parameter => parameter.Type.GetGenericTypeParameters()))
-            .Select(symbol => symbol.ToTypeParameterSyntax())
+            .Except(step.KnownConstructorParameters
+                .SelectMany(parameter => parameter.Type.GetGenericTypeParameters())
+                .Select(genericTypeParameters => new FluentTypeParameter(genericTypeParameters)))
+            .Select(fluentTypeParameter => fluentTypeParameter.TypeParameterSymbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
         if (typeParameterSyntaxes.Length == 0)

@@ -2,7 +2,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Fields;
 using Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
@@ -13,10 +14,10 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step;
 public static class ExistingPartialTypeStepDeclaration
 {
     public static TypeDeclarationSyntax Create(
-        FluentStep step)
+        ExistingTypeFluentStep step)
     {
         var methodDeclarationSyntaxes = step.FluentMethods
-            .Select<FluentMethod, MethodDeclarationSyntax>(method => ExistingPartialTypeMethodDeclaration.Create(method, step));
+            .Select<IFluentMethod, MethodDeclarationSyntax>(method => ExistingPartialTypeMethodDeclaration.Create(method, step));
 
         var parameterFieldDeclaration = step.KnownConstructorParameters
             .Where(parameter =>
@@ -33,7 +34,7 @@ public static class ExistingPartialTypeStepDeclaration
                     IdentifierName(parameter.Name),
                     step.ExistingStepConstructor!.ContainingNamespace));
 
-        var typeDeclaration = CreateTypeDeclarationSyntax(step, IdentifierName(step.Identifier).Identifier)
+        var typeDeclaration = CreateTypeDeclarationSyntax(step, IdentifierName(step.Name).Identifier)
             .WithMembers(List<MemberDeclarationSyntax>([
                 ..parameterFieldDeclaration,
                 ..methodDeclarationSyntaxes,
@@ -45,8 +46,7 @@ public static class ExistingPartialTypeStepDeclaration
         var typeParameterSyntaxes = step.GenericConstructorParameters
             .Select<IParameterSymbol, ITypeSymbol>(t => t.Type)
             .GetGenericTypeParameters()
-            .Distinct(SymbolEqualityComparer.Default)
-            .OfType<ITypeParameterSymbol>()
+            .Distinct<ITypeParameterSymbol>(SymbolEqualityComparer.Default)
             .Select(symbol => symbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
@@ -59,7 +59,7 @@ public static class ExistingPartialTypeStepDeclaration
                     SeparatedList(typeParameterSyntaxes)));
     }
 
-    private static TypeDeclarationSyntax CreateTypeDeclarationSyntax(FluentStep step, SyntaxToken identifier)
+    private static TypeDeclarationSyntax CreateTypeDeclarationSyntax(IFluentStep step, SyntaxToken identifier)
     {
         return step.TypeKind switch
         {
@@ -90,7 +90,7 @@ public static class ExistingPartialTypeStepDeclaration
         };
     }
 
-    private static IEnumerable<SyntaxToken> GetRootTypeModifiers(FluentStep step)
+    private static IEnumerable<SyntaxToken> GetRootTypeModifiers(IFluentStep step)
     {
         return step.Accessibility
             .AccessibilityToSyntaxKind()

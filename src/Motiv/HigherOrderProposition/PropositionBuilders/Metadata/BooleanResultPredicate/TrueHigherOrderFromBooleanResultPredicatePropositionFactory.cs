@@ -13,7 +13,7 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Metadata.BooleanResul
 /// <typeparam name="TMetadata>The type of the underlying metadata associated with the proposition.</typeparam>
 [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct TrueHigherOrderFromBooleanResultPredicatePropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build")]Func<TModel, BooleanResultBase<TMetadata>> resultResolver,
+    [MultipleFluentMethods(typeof(BooleanResultBuildOverloads))]Func<TModel, BooleanResultBase<TMetadata>> resultResolver,
     [MultipleFluentMethods(typeof(HigherOrderPredicateSpecMethods))]HigherOrderSpecPredicateOperation<TModel, TMetadata> higherOrderOperation)
 {
     /// <summary>Creates a proposition and names it with the propositional statement provided.</summary>

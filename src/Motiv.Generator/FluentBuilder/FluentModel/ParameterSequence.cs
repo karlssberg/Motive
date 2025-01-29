@@ -30,7 +30,7 @@ public class ParameterSequence : IEquatable<ParameterSequence>, IEnumerable<IPar
                     left * 397 ^ right.Type.ToDisplayString().GetHashCode() * 397 ^ right.Name.GetHashCode());
     }
 
-    public ParameterSequence(IEnumerable<FluentParameter> fluentParameters) : this(fluentParameters.Select(fp => fp.ParameterSymbol))
+    public ParameterSequence(IEnumerable<FluentMethodParameter> fluentParameters) : this(fluentParameters.Select(fp => fp.ParameterSymbol))
     {
     }
 

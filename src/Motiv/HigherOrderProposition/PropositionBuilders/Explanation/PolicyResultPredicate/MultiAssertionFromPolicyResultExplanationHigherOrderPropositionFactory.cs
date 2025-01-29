@@ -11,11 +11,10 @@ namespace Motiv.HigherOrderProposition.PropositionBuilders.Explanation.PolicyRes
 /// <typeparam name="TMetadata">The type of the underlying metadata associated with the specification.</typeparam>
 [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
 public readonly partial struct MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory<TModel, TMetadata>(
-    [FluentMethod("Build", Overloads = typeof(BuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
+    [FluentMethod("Build", Overloads = typeof(PolicyResultBuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
     [MultipleFluentMethods(typeof(HigherOrderPredicatePolicyMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation,
     [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> trueBecause,
-    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> falseBecause,
-    Func<bool, IEnumerable<PolicyResult<TModel, TMetadata>>, IEnumerable<PolicyResult<TModel, TMetadata>>> causeSelector)
+    [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> falseBecause)
 {
     /// <summary>
     /// Creates a specification with explanations for when the condition is true or false, and names it with the propositional statement provided.
@@ -26,11 +25,11 @@ public readonly partial struct MultiAssertionExplanationFromPolicyResultHigherOr
     /// <param name="falseBecause">The explanation for when the predicate is false.</param>
     [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
     public MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
+        [FluentMethod("Build", Overloads = typeof(PolicyResultBuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
         [MultipleFluentMethods(typeof(HigherOrderPredicatePolicyMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation,
         [FluentMethod("WhenTrueYield", Overloads = typeof(WhenYieldOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> trueBecause,
         [FluentMethod("WhenFalse", Overloads = typeof(WhenOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> falseBecause)
-        : this(resultResolver, higherOrderOperation, trueBecause, falseBecause.ToEnumerableReturn(), higherOrderOperation.CauseSelector)
+        : this(resultResolver, higherOrderOperation, trueBecause, falseBecause.ToEnumerableReturn())
     {
     }
 
@@ -43,11 +42,11 @@ public readonly partial struct MultiAssertionExplanationFromPolicyResultHigherOr
     /// <param name="falseBecause">The explanation for when the predicate is false.</param>
     [FluentConstructor(typeof(Motiv.Spec), Options = FluentOptions.NoCreateMethod)]
     public MultiAssertionExplanationFromPolicyResultHigherOrderPropositionFactory(
-        [FluentMethod("Build", Overloads = typeof(BuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
+        [FluentMethod("Build", Overloads = typeof(PolicyResultBuildOverloads))]Func<TModel, PolicyResultBase<TMetadata>> resultResolver,
         [MultipleFluentMethods(typeof(HigherOrderPredicatePolicyMethods))]HigherOrderPolicyPredicateOperation<TModel, TMetadata> higherOrderOperation,
         [FluentMethod("WhenTrue", Overloads = typeof(WhenOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, string> trueBecause,
         [FluentMethod("WhenFalseYield", Overloads = typeof(WhenYieldOverloads))]Func<HigherOrderPolicyResultEvaluation<TModel, TMetadata>, IEnumerable<string>> falseBecause)
-        : this(resultResolver, higherOrderOperation, trueBecause.ToEnumerableReturn(), falseBecause, higherOrderOperation.CauseSelector)
+        : this(resultResolver, higherOrderOperation, trueBecause.ToEnumerableReturn(), falseBecause)
     {
     }
 

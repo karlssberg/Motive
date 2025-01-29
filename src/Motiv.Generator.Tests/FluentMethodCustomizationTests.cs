@@ -73,15 +73,21 @@ public class FluentMethodCustomizationTests
             public static partial class Factory;
 
             [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-            public class MyBuildTarget<T1, T2, T3>([FluentMethod("SetValue", Overloads = typeof(Converter))]Func<IEnumerable<T1>, T2, T3> function)
+            public class MyBuildTarget<T1, T2, T3>([MultipleFluentMethods(typeof(Methods))]Func<IEnumerable<T1>, T2, T3> function)
             {
                 public Func<IEnumerable<T1>, T2, T3> Value { get; set; } = function;
             }
 
-            public static class Converter
+            public static class Methods
             {
-                [FluentParameterOverload]
-                public static Func<IEnumerable<T1>, T2, T3> Convert<T1, T2, T3>(T3 value)
+                [FluentMethodTemplate]
+                public static Func<IEnumerable<T1>, T2, T3> SetValue<T1, T2, T3>(Func<IEnumerable<T1>, T2, T3> function)
+                {
+                    return function;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<IEnumerable<T1>, T2, T3> SetValue<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
                 }
@@ -139,15 +145,21 @@ public class FluentMethodCustomizationTests
             public static partial class Factory;
 
             [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-            public class MyBuildTarget<T>([FluentMethod("SetValue", Overloads = typeof(Converter))]IEnumerable<IEnumerable<T>> function)
+            public class MyBuildTarget<T>([MultipleFluentMethods(typeof(Converter))]IEnumerable<IEnumerable<T>> function)
             {
                 public IEnumerable<IEnumerable<T>> Value { get; set; } = function;
             }
 
             public static class Converter
             {
-                [FluentParameterOverload]
-                public static IEnumerable<IEnumerable<T>> Convert<T>(T value)
+                [FluentMethodTemplate]
+                public static IEnumerable<IEnumerable<T>> SetValue<T>(IEnumerable<IEnumerable<T>> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static IEnumerable<IEnumerable<T>> SetValue<T>(T value)
                 {
                     return [[value]];
                 }
@@ -485,7 +497,7 @@ public class FluentMethodCustomizationTests
             public class MyClass<T>
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-                public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
+                public MyClass([MultipleFluentMethods(typeof(Overloads))]T value)
                 {
                     Value = value;
                 }
@@ -495,8 +507,14 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterOverload]
-                public static T Convert<T>(Func<T> factory)
+                [FluentMethodTemplate]
+                public static T Create<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Create<T>(Func<T> factory)
                 {
                     return factory();
                 }
@@ -511,13 +529,13 @@ public class FluentMethodCustomizationTests
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static MyClass<T> Create<T>(in T value)
                 {
-                    return new MyClass<T>(value);
+                    return new MyClass<T>(Overloads.Create<T>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static MyClass<T> Create<T>(in System.Func<T> factory)
                 {
-                    return new MyClass<T>(Overloads.Convert<T>(factory));
+                    return new MyClass<T>(Overloads.Create<T>(factory));
                 }
             }
             """;
@@ -549,7 +567,7 @@ public class FluentMethodCustomizationTests
             public class MyClass<T>
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
-                public MyClass([FluentMethod("Create", Overloads = typeof(Overloads))]T value)
+                public MyClass([MultipleFluentMethods(typeof(Overloads))]T value)
                 {
                     Value = value;
                 }
@@ -559,8 +577,14 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterOverload]
-                public static T Convert<T>(Func<T> factory, string value)
+                [FluentMethodTemplate]
+                public static T Create<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Create<T>(Func<T> factory, string value)
                 {
                     return factory();
                 }
@@ -614,8 +638,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]string value1,
-                    [FluentMethod("Create", Overloads = typeof(Overloads))]string value2)
+                    [MultipleFluentMethods(typeof(Value1Methods))]string value1,
+                    [MultipleFluentMethods(typeof(CreateMethods))]string value2)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -625,10 +649,31 @@ public class FluentMethodCustomizationTests
                 public string Value2 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static T Convert<T>(Func<T> factory)
+                [FluentMethodTemplate]
+                public static T Value1<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Value1<T>(Func<T> factory)
+                {
+                    return factory();
+                }
+            }
+
+            public static class CreateMethods
+            {
+                [FluentMethodTemplate]
+                public static T Value2<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Value2<T>(Func<T> factory)
                 {
                     return factory();
                 }
@@ -651,7 +696,7 @@ public class FluentMethodCustomizationTests
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory Value1(in System.Func<string> factory)
                 {
-                    return new Step_0__Factory(Overloads.Convert<string>(factory));
+                    return new Step_0__Factory(Value1Methods.Value1<string>(factory));
                 }
             }
 
@@ -672,7 +717,7 @@ public class FluentMethodCustomizationTests
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClass Create(in System.Func<string> factory)
                 {
-                    return new MyClass(this._value1__parameter, Overloads.Convert<string>(factory));
+                    return new MyClass(this._value1__parameter, CreateMethods.Create<string>(factory));
                 }
             }
             """;
@@ -705,8 +750,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]T value1,
-                    [FluentMethod("Create", Overloads = typeof(Overloads))]T value2)
+                    [MultipleFluentMethods(typeof(Value1Methods))]T value1,
+                    [MultipleFluentMethods(typeof(CreateMethods))]T value2)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -716,10 +761,31 @@ public class FluentMethodCustomizationTests
                 public T Value2 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static T Convert<T>(Func<T> factory)
+                [FluentMethodTemplate]
+                public static T Value1<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Value1<T>(Func<T> factory)
+                {
+                    return factory();
+                }
+            }
+
+            public static class CreateMethods
+            {
+                [FluentMethodTemplate]
+                public static T Create<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static T Create<T>(Func<T> factory)
                 {
                     return factory();
                 }
@@ -794,9 +860,9 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]T1 value1,
-                    [FluentMethod("Value2", Overloads = typeof(Overloads))]T2 value2,
-                    [FluentMethod("Create", Overloads = typeof(Overloads))]T3 value3)
+                    [MultipleFluentMethods(typeof(Value1Methods))]T1 value1,
+                    [MultipleFluentMethods(typeof(Value2Methods))]T2 value2,
+                    [MultipleFluentMethods(typeof(CreateMethods))]T3 value3)
                 {
                     Value1 = value1;
                     Value2 = value2;
@@ -808,10 +874,50 @@ public class FluentMethodCustomizationTests
                 public T3 Value3 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static TResult Convert<TResult>(Func<string, string, TResult> function)
+                [FluentMethodTemplate]
+                public static T Value1<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static TResult Value1<TResult>(Func<string, string, TResult> function)
+                {
+                    // We are not interested in the string values - just that
+                    // the handling of generic arguments is correct
+                    return function("arbitrary-constant-string", "arbitrary-constant-string");
+                }
+            }
+
+            public static class Value2Methods
+            {
+                [FluentMethodTemplate]
+                public static T Value2<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static TResult Value2<TResult>(Func<string, string, TResult> function)
+                {
+                    // We are not interested in the string values - just that
+                    // the handling of generic arguments is correct
+                    return function("arbitrary-constant-string", "arbitrary-constant-string");
+                }
+            }
+
+            public static class CreateMethods
+            {
+                [FluentMethodTemplate]
+                public static T Create<T>(T value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static TResult Create<TResult>(Func<string, string, TResult> function)
                 {
                     // We are not interested in the string values - just that
                     // the handling of generic arguments is correct
@@ -910,7 +1016,7 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1A, T1B> factory)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1A, T1B> factory)
                 {
                     Factory = factory;
                 }
@@ -918,10 +1024,16 @@ public class FluentMethodCustomizationTests
                 public Func<T1A, T1B> Factory { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
@@ -976,9 +1088,9 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1A, T1B> factory1,
-                    [FluentMethod("Value2", Overloads = typeof(Overloads))]Func<T2A, T2B> factory2,
-                    [FluentMethod("Value3", Overloads = typeof(Overloads))]Func<T3A, T3B> factory3)
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T1A, T1B> factory1,
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T2A, T2B> factory2,
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T3A, T3B> factory3)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -990,10 +1102,46 @@ public class FluentMethodCustomizationTests
                 public Func<T3A, T3B> Factory3 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
+                {
+                    return _ => value;
+                }
+            }
+
+            public static class Value2Methods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value2<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value2<T1, T2>(T2 value)
+                {
+                    return _ => value;
+                }
+            }
+
+            public static class Value3Methods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value3<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value3<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
@@ -1092,9 +1240,9 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1, T2> factory1,
-                    [FluentMethod("Value2", Overloads = typeof(Overloads))]Func<T2, T3> factory2,
-                    [FluentMethod("Value3", Overloads = typeof(Overloads))]Func<T3, T4> factory3)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(Value2Methods))]Func<T2, T3> factory2,
+                    [MultipleFluentMethods(typeof(Value3Methods))]Func<T3, T4> factory3)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1106,10 +1254,46 @@ public class FluentMethodCustomizationTests
                 public Func<T3, T4> Factory3 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
+                {
+                    return _ => value;
+                }
+            }
+
+            public static class Value2Methods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value2<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value2<T1, T2>(T2 value)
+                {
+                    return _ => value;
+                }
+            }
+
+            public static class Value3Methods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value3<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value3<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
@@ -1208,8 +1392,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassA(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1, T2> factory1,
-                    [FluentMethod("CreateString", Overloads = typeof(Overloads))]Func<T1, T2, string> factory2)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(MyClassACreateMethods))]Func<T1, T2, string> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1223,8 +1407,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassB(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1, T2> factory1,
-                    [FluentMethod("CreateInt", Overloads = typeof(Overloads))]Func<T1, T2, int> factory2)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(MyClassBCreateMethods))]Func<T1, T2, int> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1234,16 +1418,46 @@ public class FluentMethodCustomizationTests
                 public Func<T1, T2, int> Factory2 { get; set; }
             }
 
-            public static class Overloads
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
+            }
 
-                [FluentParameterOverload]
-                public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
+            public static class MyClassACreateMethods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2, string> CreateString<T1, T2>(Func<T1, T2, string> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2, string> CreateString<T1, T2>(string value)
+                {
+                    return (_, _) => value;
+                }
+            }
+
+            public static class MyClassBCreateMethods
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2, int> CreateInt<T1, T2>(Func<T1, T2, int> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2, int> CreateInt<T1, T2>(int value)
                 {
                     return (_, _) => value;
                 }
@@ -1257,15 +1471,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> factory1)
+                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value)
                 {
-                    return new Step_0__Factory<T1, T2>(factory1);
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1, T2> Value1<T1, T2>(in T2 value)
                 {
-                    return new Step_0__Factory<T1, T2>(Overloads.Convert<T1, T2>(value));
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
             }
 
@@ -1278,27 +1492,27 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassA<T1, T2> CreateString(in System.Func<T1, T2, string> factory2)
+                public MyClassA<T1, T2> CreateString(in System.Func<T1, T2, string> value)
                 {
-                    return new MyClassA<T1, T2>(this._factory1__parameter, factory2);
+                    return new MyClassA<T1, T2>(this._factory1__parameter, MyClassACreateMethods.CreateString<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClassA<T1, T2> CreateString(in string value)
                 {
-                    return new MyClassA<T1, T2>(this._factory1__parameter, Overloads.Convert<T1, T2, string>(value));
+                    return new MyClassA<T1, T2>(this._factory1__parameter, MyClassACreateMethods.CreateString<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassB<T1, T2> CreateInt(in System.Func<T1, T2, int> factory2)
+                public MyClassB<T1, T2> CreateInt(in System.Func<T1, T2, int> value)
                 {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, factory2);
+                    return new MyClassB<T1, T2>(this._factory1__parameter, MyClassBCreateMethods.CreateInt<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClassB<T1, T2> CreateInt(in int value)
                 {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, Overloads.Convert<T1, T2, int>(value));
+                    return new MyClassB<T1, T2>(this._factory1__parameter, MyClassBCreateMethods.CreateInt<T1, T2>(value));
                 }
             }
             """;
@@ -1331,8 +1545,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassA(
-                    [FluentMethod("Value1")]Func<T1, T2> factory1,
-                    [FluentMethod("Create")]Func<T1, T2, string> factory2)
+                    [FluentMethod("Value")]Func<T1, T2> factory1,
+                    [FluentMethod("Value")]Func<T1, T2, string> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1346,8 +1560,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassB(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1, T2> factory1,
-                    [FluentMethod("Create", Overloads = typeof(Overloads))]Func<T1, T2, int> factory2)
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T1, T2, int> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1359,14 +1573,20 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
 
-                [FluentParameterOverload]
-                public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2, T3> Value<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
                 }
@@ -1380,15 +1600,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> factory1)
+                public static Step_0__Factory<T1, T2> Value<T1, T2>(in System.Func<T1, T2> factory1)
                 {
                     return new Step_0__Factory<T1, T2>(factory1);
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in T2 value)
+                public static Step_0__Factory<T1, T2> Value<T1, T2>(in T2 value)
                 {
-                    return new Step_0__Factory<T1, T2>(Overloads.Convert<T1, T2>(value));
+                    return new Step_0__Factory<T1, T2>(Overloads.Value<T1, T2>(value));
                 }
             }
 
@@ -1401,21 +1621,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassA<T1, T2> Create(in System.Func<T1, T2, string> factory2)
+                public MyClassA<T1, T2> Value(in System.Func<T1, T2, string> factory2)
                 {
                     return new MyClassA<T1, T2>(this._factory1__parameter, factory2);
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassB<T1, T2> Create(in System.Func<T1, T2, int> factory2)
+                public MyClassB<T1, T2> Value(in int value)
                 {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, factory2);
-                }
-
-                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassB<T1, T2> Create(in int value)
-                {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, Overloads.Convert<T1, T2, int>(value));
+                    return new MyClassB<T1, T2>(this._factory1__parameter, Overloads.Value<T1, T2, int>(value));
                 }
             }
             """;
@@ -1448,8 +1662,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassA(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T1, T2> factory1,
-                    [FluentMethod("Create", Overloads = typeof(Overloads))]Func<T1, T2, string> factory2)
+                    [MultipleFluentMethods(typeof(FirstStep))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(SecondStep))]Func<T1, T2, string> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1474,16 +1688,31 @@ public class FluentMethodCustomizationTests
                 public Func<T1, T2, int> Factory2 { get; set; }
             }
 
-            public static class Overloads
+            public static class FirstStep
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
+            }
 
-                [FluentParameterOverload]
-                public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
+            public static class SecondStep
+            {
+                [FluentMethodTemplate]
+                public static Func<T1, T2, string> Create<T1, T2>(Func<T1, T2, string> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2, T3> Create<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
                 }
@@ -1505,7 +1734,7 @@ public class FluentMethodCustomizationTests
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1, T2> Value1<T1, T2>(in T2 value)
                 {
-                    return new Step_0__Factory<T1, T2>(Overloads.Convert<T1, T2>(value));
+                    return new Step_0__Factory<T1, T2>(FirstStep.Value1<T1, T2>(value));
                 }
             }
 
@@ -1518,15 +1747,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassA<T1, T2> Create(in System.Func<T1, T2, string> factory2)
+                public MyClassA<T1, T2> Create(in System.Func<T1, T2, string> value)
                 {
-                    return new MyClassA<T1, T2>(this._factory1__parameter, factory2);
+                    return new MyClassA<T1, T2>(this._factory1__parameter, SecondStep.Create<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClassA<T1, T2> Create(in string value)
                 {
-                    return new MyClassA<T1, T2>(this._factory1__parameter, Overloads.Convert<T1, T2, string>(value));
+                    return new MyClassA<T1, T2>(this._factory1__parameter, SecondStep.Create<T1, T2, string>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -1565,7 +1794,7 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassA(
-                    [FluentMethod("Value1", Overloads = typeof(OverloadsA))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1, T2> factory1,
                     [FluentMethod("Create")]Func<T1, T2, string> factory2)
                 {
                     Factory1 = factory1;
@@ -1580,8 +1809,8 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassB(
-                    [FluentMethod("Value1", Overloads = typeof(OverloadsB))]Func<T1, T2> factory1,
-                    [FluentMethod("Create", Overloads = typeof(OverloadsB))]Func<T1, T2, int> factory2)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1, T2> factory1,
+                    [MultipleFluentMethods(typeof(CreateMethods))]Func<T1, T2, int> factory2)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1591,19 +1820,31 @@ public class FluentMethodCustomizationTests
                 public Func<T1, T2, int> Factory2 { get; set; }
             }
 
-            public static class OverloadsA
+            public static class Value1Methods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
             }
 
-            public static class OverloadsB
+            public static class CreateMethods
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2, T3> Convert<T1, T2, T3>(T3 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2, T3> Create<T1, T2, T3>(Func<T1, T2, T3> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2, T3> Create<T1, T2, T3>(T3 value)
                 {
                     return (_, _) => value;
                 }
@@ -1617,15 +1858,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> factory1)
+                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value)
                 {
-                    return new Step_0__Factory<T1, T2>(factory1);
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1, T2> Value1<T1, T2>(in T2 value)
                 {
-                    return new Step_0__Factory<T1, T2>(OverloadsA.Convert<T1, T2>(value));
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
             }
 
@@ -1644,15 +1885,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClassB<T1, T2> Create(in System.Func<T1, T2, int> factory2)
+                public MyClassB<T1, T2> Create(in System.Func<T1, T2, int> value)
                 {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, factory2);
+                    return new MyClassB<T1, T2>(this._factory1__parameter, CreateMethods.Create<T1, T2, int>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClassB<T1, T2> Create(in int value)
                 {
-                    return new MyClassB<T1, T2>(this._factory1__parameter, OverloadsB.Convert<T1, T2, int>(value));
+                    return new MyClassB<T1, T2>(this._factory1__parameter, CreateMethods.Create<T1, T2, int>(value));
                 }
             }
             """;
@@ -1685,7 +1926,7 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClassA(
-                    [FluentMethod("Value1", Overloads = typeof(Overloads))]Func<T, string> value1,
+                    [MultipleFluentMethods(typeof(Overloads))]Func<T, string> value1,
                     [FluentMethod("Create")]Func<T, string> value2)
                 {
                     Value1 = value1;
@@ -1713,8 +1954,14 @@ public class FluentMethodCustomizationTests
 
             public static class Overloads
             {
-                [FluentParameterOverload]
-                public static Func<T1, T2> Convert<T1, T2>(T2 value)
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(Func<T1, T2> value)
+                {
+                    return value;
+                }
+
+                [FluentMethodTemplate]
+                public static Func<T1, T2> Value1<T1, T2>(T2 value)
                 {
                     return _ => value;
                 }
@@ -1728,9 +1975,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T> Value1<T>(in System.Func<T, string> value1)
+                public static Step_0__Factory<T> Value1<T>(in System.Func<T, string> value)
                 {
-                    return new Step_0__Factory<T>(value1);
+                    return new Step_0__Factory<T>(Overloads.Value1<T, string>(value));
+                }
+
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                public static Step_0__Factory<T> Value1<T>(in string value)
+                {
+                    return new Step_0__Factory<T>(Overloads.Value1<T, string>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

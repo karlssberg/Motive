@@ -3,6 +3,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static Motiv.Generator.FluentBuilder.FluentModel.FluentParameterResolution.ValueLocationType;
@@ -12,14 +14,16 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 public static class ExistingPartialTypeMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method,
-        FluentStep step)
+        IFluentMethod method,
+        IFluentStep step)
     {
         var stepActivationArgs = CreateStepConstructorArguments(method, step);
 
-        var returnObjectExpression = method.TargetConstructor is not null
-            ? TargetTypeObjectCreationExpression.Create(method, method.TargetConstructor.ContainingType, stepActivationArgs)
-            : FluentStepCreationExpression.Create(method, CreateStepConstructorArguments(method, step));
+        var returnObjectExpression = method.Return switch
+        {
+            ExistingTypeFluentStep => TargetTypeObjectCreationExpression.Create(step.Namespace, method, stepActivationArgs, []),
+            _ => FluentStepCreationExpression.Create(step.Namespace, method, stepActivationArgs)
+        };
 
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
@@ -33,12 +37,12 @@ public static class ExistingPartialTypeMethodDeclaration
                     Token(SyntaxKind.PublicKeyword)))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (method.FluentParameters.Length > 0)
+        if (method.MethodParameters.Length > 0)
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
                     ParameterList(SeparatedList(
-                        method.FluentParameters
+                        method.MethodParameters
                             .Select(parameter =>
                                 Parameter(
                                         Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
@@ -47,12 +51,15 @@ public static class ExistingPartialTypeMethodDeclaration
                                         IdentifierName(parameter.ParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace)))))));
         }
 
-        if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
+        if (!method.TypeParameters.Any())
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.TypeParameters
-            .Except(step.KnownConstructorParameters.SelectMany(parameter => parameter.Type.GetGenericTypeParameters()))
-            .Select(symbol => symbol.ToTypeParameterSyntax())
+            .Except(
+                step.KnownConstructorParameters
+                    .SelectMany(parameter => parameter.Type.GetGenericTypeParameters())
+                    .Select(genericTypeParameters => new FluentTypeParameter(genericTypeParameters)))
+            .Select(fluentTypeParameter => fluentTypeParameter.TypeParameterSymbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
         return typeParameterSyntaxes.Length == 0
@@ -62,8 +69,8 @@ public static class ExistingPartialTypeMethodDeclaration
     }
 
     private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(
-        FluentMethod method,
-        FluentStep step)
+        IFluentMethod method,
+        IFluentStep step)
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
@@ -88,7 +95,7 @@ public static class ExistingPartialTypeMethodDeclaration
 
                 return Argument(node);
             })
-            .Concat(method.FluentParameters
+            .Concat(method.AvailableParameterFields
                 .Select(p => p.ParameterSymbol.Name.ToCamelCase())
                 .Select(IdentifierName)
                 .Select(Argument));

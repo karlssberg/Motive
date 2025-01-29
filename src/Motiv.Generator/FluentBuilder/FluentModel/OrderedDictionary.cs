@@ -25,6 +25,7 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     }
 
     public int Count => _dictionary.Count;
+
     public bool IsReadOnly => ((IDictionary<TKey, TValue>)_dictionary).IsReadOnly;
 
     public ICollection<TKey> Keys => _dictionary.Keys;

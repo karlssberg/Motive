@@ -661,7 +661,7 @@ public class MultipleFluentMethodTests
     }
 
     [Fact]
-    public async Task Should_ensure_that_generic_parameters_used_inside_multiple_fluent_methdos_are_converted_to_those_used_in_the_fluent_constructor()
+    public async Task Should_ensure_that_generic_parameters_used_inside_multiple_fluent_methods_are_converted_to_those_used_in_the_fluent_constructor()
     {
         const string code =
             """
@@ -753,4 +753,161 @@ public class MultipleFluentMethodTests
             }
         }.RunAsync();
     }
+
+    [Fact]
+    public async Task Should_support_multiple_methods_containing_overload_methods_where_a_concrete_generic_argument_type_is_used()
+    {
+        const string code =
+            """
+            using System;
+            using Motiv.Generator.Attributes;
+
+            namespace Test.Namespace
+            {
+                [FluentFactory]
+                public static partial class Factory;
+
+                public class MyBuildTarget<T1, T2>
+                {
+                    [FluentConstructor(typeof(Factory))]
+                    public MyBuildTarget(
+                        [MultipleFluentMethods(typeof(FirstMethods))]T1 first,
+                        [MultipleFluentMethods(typeof(SecondMethods))]T2 second)
+                    {
+                        First = first;
+                        Second = second;
+                    }
+
+                    public T1 First { get; set; }
+                    public T2 Second { get; set; }
+                }
+
+                public class FirstMethods
+                {
+                    [FluentMethodTemplate]
+                    public static T SetFirst<T>(in Func<T> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static int SetFirst(in Func<int> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static string SetFirst(in Func<string> function)
+                    {
+                        return function();
+                    }
+                }
+
+                public class SecondMethods
+                {
+                    [FluentMethodTemplate]
+                    public static T SetSecond<T>(in Func<T> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static int SetSecond(in Func<int> function)
+                    {
+                        return function();
+                    }
+
+                    [FluentMethodTemplate]
+                    public static string SetSecond(in Func<string> function)
+                    {
+                        return function();
+                    }
+                }
+            }
+            """;
+
+        const string expected =
+            """
+            namespace Test.Namespace
+            {
+                public static partial class Factory
+                {
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory<T1> SetFirst<T1>(in System.Func<T1> function)
+                    {
+                        return new Step_0__Test_Namespace_Factory<T1>(FirstMethods.SetFirst<T1>(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory<int> SetFirst(in System.Func<int> function)
+                    {
+                        return new Step_0__Test_Namespace_Factory<int>(FirstMethods.SetFirst(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public static Step_0__Test_Namespace_Factory<string> SetFirst(in System.Func<string> function)
+                    {
+                        return new Step_0__Test_Namespace_Factory<string>(FirstMethods.SetFirst(function));
+                    }
+                }
+
+                public struct Step_0__Test_Namespace_Factory<T1>
+                {
+                    private readonly T1 _first__parameter;
+                    public Step_0__Test_Namespace_Factory(in T1 first)
+                    {
+                        this._first__parameter = first;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T1, T2> SetSecond<T2>(in System.Func<T2> function)
+                    {
+                        return new Step_1__Test_Namespace_Factory<T1, T2>(this._first__parameter, SecondMethods.SetSecond<T2>(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T1, int> SetSecond(in System.Func<int> function)
+                    {
+                        return new Step_1__Test_Namespace_Factory<T1, int>(this._first__parameter, SecondMethods.SetSecond(function));
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public Step_1__Test_Namespace_Factory<T1, string> SetSecond(in System.Func<string> function)
+                    {
+                        return new Step_1__Test_Namespace_Factory<T1, string>(this._first__parameter, SecondMethods.SetSecond(function));
+                    }
+                }
+
+                public struct Step_1__Test_Namespace_Factory<T1, T2>
+                {
+                    private readonly T1 _first__parameter;
+                    private readonly T2 _second__parameter;
+                    public Step_1__Test_Namespace_Factory(in T1 first, in T2 second)
+                    {
+                        this._first__parameter = first;
+                        this._second__parameter = second;
+                    }
+
+                    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+                    public MyBuildTarget<T1, T2> Create()
+                    {
+                        return new MyBuildTarget<T1, T2>(this._first__parameter, this._second__parameter);
+                    }
+                }
+            }
+            """;
+
+        await new VerifyCS.Test
+        {
+            TestState =
+            {
+                Sources = { code },
+                GeneratedSources =
+                {
+                    (typeof(FluentFactoryGenerator), "Test.Namespace.Factory.g.cs", expected)
+                }
+            }
+        }.RunAsync();
+    }
+
 }

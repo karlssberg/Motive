@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motiv.Generator.FluentBuilder.FluentModel;
+using Motiv.Generator.FluentBuilder.FluentModel.Methods;
+using Motiv.Generator.FluentBuilder.FluentModel.Steps;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
@@ -10,13 +12,30 @@ namespace Motiv.Generator.FluentBuilder.Generation.SyntaxElements.Step.Methods;
 public static class FluentStepMethodDeclaration
 {
     public static MethodDeclarationSyntax Create(
-        FluentMethod method,
-        FluentStep step)
+        MultiMethod multiMethod,
+        IFluentStep step)
+    {
+        var stepActivationArgs = CreateStepConstructorArguments(multiMethod, step);
+
+        var returnObjectExpression = FluentStepCreationExpression.Create(step.Namespace, multiMethod, stepActivationArgs);
+
+        return CreateMethodDeclaration(multiMethod, step, returnObjectExpression);
+    }
+
+    public static MethodDeclarationSyntax Create(
+        IFluentMethod method,
+        IFluentStep step)
     {
         var stepActivationArgs = CreateStepConstructorArguments(method, step);
 
-        var returnObjectExpression = FluentStepCreationExpression.Create(method, stepActivationArgs);
+        var returnObjectExpression = FluentStepCreationExpression.Create(step.Namespace, method, stepActivationArgs);
 
+        return CreateMethodDeclaration(method, step, returnObjectExpression);
+    }
+
+    private static MethodDeclarationSyntax CreateMethodDeclaration(IFluentMethod method, IFluentStep step,
+        ObjectCreationExpressionSyntax returnObjectExpression)
+    {
         var methodDeclaration = MethodDeclaration(
                 returnObjectExpression.Type,
                 Identifier(method.MethodName))
@@ -29,12 +48,12 @@ public static class FluentStepMethodDeclaration
                     Token(SyntaxKind.PublicKeyword)))
             .WithBody(Block(ReturnStatement(returnObjectExpression)));
 
-        if (method.FluentParameters.Length > 0)
+        if (method.MethodParameters.Length > 0)
         {
             methodDeclaration = methodDeclaration
                 .WithParameterList(
                     ParameterList(SeparatedList(
-                        method.FluentParameters
+                        method.MethodParameters
                             .Select(parameter =>
                                 Parameter(
                                         Identifier(parameter.ParameterSymbol.Name.ToCamelCase()))
@@ -43,12 +62,14 @@ public static class FluentStepMethodDeclaration
                                         IdentifierName(parameter.ParameterSymbol.Type.ToDynamicDisplayString(method.RootNamespace)))))));
         }
 
-        if (!method.SourceParameterSymbol?.Type.ContainsGenericTypeParameter() ?? method.ParameterConverter?.TypeArguments.Length == 0)
+        if (!method.TypeParameters.Any())
             return methodDeclaration;
 
         var typeParameterSyntaxes = method.TypeParameters
-            .Except(step.KnownConstructorParameters.SelectMany(parameter => parameter.Type.GetGenericTypeParameters()))
-            .Select(symbol => symbol.ToTypeParameterSyntax())
+            .Except(step.KnownConstructorParameters
+                .SelectMany(parameter => parameter.Type.GetGenericTypeParameters())
+                .Select(genericTypeParameters => new FluentTypeParameter(genericTypeParameters)))
+            .Select(fluentTypeParameter => fluentTypeParameter.TypeParameterSymbol.ToTypeParameterSyntax())
             .ToImmutableArray();
 
         return typeParameterSyntaxes.Length == 0
@@ -58,8 +79,8 @@ public static class FluentStepMethodDeclaration
     }
 
     private static IEnumerable<ArgumentSyntax> CreateStepConstructorArguments(
-        FluentMethod method,
-        FluentStep step)
+        IFluentMethod method,
+        IFluentStep step)
     {
         return step.KnownConstructorParameters
             .Select(parameter =>
@@ -69,7 +90,7 @@ public static class FluentStepMethodDeclaration
                         ThisExpression(),
                         IdentifierName(parameter.Name.ToParameterFieldName()))))
             .Concat(
-                method.FluentParameters.Select(p => p.ParameterSymbol.Name.ToCamelCase())
+                method.MethodParameters.Select(p => p.ParameterSymbol.Name.ToCamelCase())
                     .Select(IdentifierName)
                     .Select(Argument));
     }
