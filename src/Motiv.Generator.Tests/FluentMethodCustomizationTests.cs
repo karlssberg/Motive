@@ -105,13 +105,13 @@ public class FluentMethodCustomizationTests
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T1, T2, T3> SetValue<T1, T2, T3>(in System.Func<System.Collections.Generic.IEnumerable<T1>, T2, T3> function)
                     {
-                        return new MyBuildTarget<T1, T2, T3>(function);
+                        return new MyBuildTarget<T1, T2, T3>(Methods.SetValue<T1, T2, T3>(function));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T1, T2, T3> SetValue<T1, T2, T3>(in T3 value)
                     {
-                        return new MyBuildTarget<T1, T2, T3>(Converter.Convert<T1, T2, T3>(value));
+                        return new MyBuildTarget<T1, T2, T3>(Methods.SetValue<T1, T2, T3>(value));
                     }
                 }
             }
@@ -175,15 +175,15 @@ public class FluentMethodCustomizationTests
                 public static partial class Factory
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public static MyBuildTarget<T> SetValue<T>(in System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> function)
+                    public static MyBuildTarget<T> SetValue<T>(in System.Collections.Generic.IEnumerable<System.Collections.Generic.IEnumerable<T>> value)
                     {
-                        return new MyBuildTarget<T>(function);
+                        return new MyBuildTarget<T>(Converter.SetValue<T>(value));
                     }
 
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                     public static MyBuildTarget<T> SetValue<T>(in T value)
                     {
-                        return new MyBuildTarget<T>(Converter.Convert<T>(value));
+                        return new MyBuildTarget<T>(Converter.SetValue<T>(value));
                     }
                 }
             }
@@ -599,13 +599,13 @@ public class FluentMethodCustomizationTests
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static MyClass<T> Create<T>(in T value)
                 {
-                    return new MyClass<T>(value);
+                    return new MyClass<T>(Overloads.Create<T>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static MyClass<T> Create<T>(in System.Func<T> factory, in string value)
                 {
-                    return new MyClass<T>(Overloads.Convert<T>(factory, value));
+                    return new MyClass<T>(Overloads.Create<T>(factory, value));
                 }
             }
             """;
@@ -667,13 +667,13 @@ public class FluentMethodCustomizationTests
             public static class CreateMethods
             {
                 [FluentMethodTemplate]
-                public static T Value2<T>(T value)
+                public static T Create<T>(T value)
                 {
                     return value;
                 }
 
                 [FluentMethodTemplate]
-                public static T Value2<T>(Func<T> factory)
+                public static T Create<T>(Func<T> factory)
                 {
                     return factory();
                 }
@@ -688,9 +688,9 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory Value1(in string value1)
+                public static Step_0__Factory Value1(in string value)
                 {
-                    return new Step_0__Factory(value1);
+                    return new Step_0__Factory(Value1Methods.Value1<string>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -709,9 +709,9 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClass Create(in string value2)
+                public MyClass Create(in string value)
                 {
-                    return new MyClass(this._value1__parameter, value2);
+                    return new MyClass(this._value1__parameter, CreateMethods.Create<string>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -798,15 +798,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T> Value1<T>(in T value1)
+                public static Step_0__Factory<T> Value1<T>(in T value)
                 {
-                    return new Step_0__Factory<T>(value1);
+                    return new Step_0__Factory<T>(Value1Methods.Value1<T>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T> Value1<T>(in System.Func<T> factory)
                 {
-                    return new Step_0__Factory<T>(Overloads.Convert<T>(factory));
+                    return new Step_0__Factory<T>(Value1Methods.Value1<T>(factory));
                 }
             }
 
@@ -819,15 +819,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClass<T> Create(in T value2)
+                public MyClass<T> Create(in T value)
                 {
-                    return new MyClass<T>(this._value1__parameter, value2);
+                    return new MyClass<T>(this._value1__parameter, CreateMethods.Create<T>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClass<T> Create(in System.Func<T> factory)
                 {
-                    return new MyClass<T>(this._value1__parameter, Overloads.Convert<T>(factory));
+                    return new MyClass<T>(this._value1__parameter, CreateMethods.Create<T>(factory));
                 }
             }
             """;
@@ -931,15 +931,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1> Value1<T1>(in T1 value1)
+                public static Step_0__Factory<T1> Value1<T1>(in T1 value)
                 {
-                    return new Step_0__Factory<T1>(value1);
+                    return new Step_0__Factory<T1>(Value1Methods.Value1<T1>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1> Value1<T1>(in System.Func<string, string, T1> function)
                 {
-                    return new Step_0__Factory<T1>(Overloads.Convert<T1>(function));
+                    return new Step_0__Factory<T1>(Value1Methods.Value1<T1>(function));
                 }
             }
 
@@ -952,15 +952,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public Step_1__Factory<T1, T2> Value2<T2>(in T2 value2)
+                public Step_1__Factory<T1, T2> Value2<T2>(in T2 value)
                 {
-                    return new Step_1__Factory<T1, T2>(this._value1__parameter, value2);
+                    return new Step_1__Factory<T1, T2>(this._value1__parameter, Value2Methods.Value2<T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public Step_1__Factory<T1, T2> Value2<T2>(in System.Func<string, string, T2> function)
                 {
-                    return new Step_1__Factory<T1, T2>(this._value1__parameter, Overloads.Convert<T2>(function));
+                    return new Step_1__Factory<T1, T2>(this._value1__parameter, Value2Methods.Value2<T2>(function));
                 }
             }
 
@@ -975,15 +975,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClass<T1, T2, T3> Create<T3>(in T3 value3)
+                public MyClass<T1, T2, T3> Create<T3>(in T3 value)
                 {
-                    return new MyClass<T1, T2, T3>(this._value1__parameter, this._value2__parameter, value3);
+                    return new MyClass<T1, T2, T3>(this._value1__parameter, this._value2__parameter, CreateMethods.Create<T3>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClass<T1, T2, T3> Create<T3>(in System.Func<string, string, T3> function)
                 {
-                    return new MyClass<T1, T2, T3>(this._value1__parameter, this._value2__parameter, Overloads.Convert<T3>(function));
+                    return new MyClass<T1, T2, T3>(this._value1__parameter, this._value2__parameter, CreateMethods.Create<T3>(function));
                 }
             }
             """;
@@ -1047,15 +1047,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static MyClass<T1A, T1B> Value1<T1A, T1B>(in System.Func<T1A, T1B> factory)
+                public static MyClass<T1A, T1B> Value1<T1A, T1B>(in System.Func<T1A, T1B> value)
                 {
-                    return new MyClass<T1A, T1B>(factory);
+                    return new MyClass<T1A, T1B>(Value1Methods.Value1<T1A, T1B>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static MyClass<T1A, T1B> Value1<T1A, T1B>(in T1B value)
                 {
-                    return new MyClass<T1A, T1B>(Overloads.Convert<T1A, T1B>(value));
+                    return new MyClass<T1A, T1B>(Value1Methods.Value1<T1A, T1B>(value));
                 }
             }
             """;
@@ -1088,9 +1088,9 @@ public class FluentMethodCustomizationTests
             {
                 [FluentConstructor(typeof(Factory), Options = FluentOptions.NoCreateMethod)]
                 public MyClass(
-                    [MultipleFluentMethods(typeof(Overloads))]Func<T1A, T1B> factory1,
-                    [MultipleFluentMethods(typeof(Overloads))]Func<T2A, T2B> factory2,
-                    [MultipleFluentMethods(typeof(Overloads))]Func<T3A, T3B> factory3)
+                    [MultipleFluentMethods(typeof(Value1Methods))]Func<T1A, T1B> factory1,
+                    [MultipleFluentMethods(typeof(Value2Methods))]Func<T2A, T2B> factory2,
+                    [MultipleFluentMethods(typeof(Value3Methods))]Func<T3A, T3B> factory3)
                 {
                     Factory1 = factory1;
                     Factory2 = factory2;
@@ -1155,15 +1155,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1A, T1B> Value1<T1A, T1B>(in System.Func<T1A, T1B> factory1)
+                public static Step_0__Factory<T1A, T1B> Value1<T1A, T1B>(in System.Func<T1A, T1B> value)
                 {
-                    return new Step_0__Factory<T1A, T1B>(factory1);
+                    return new Step_0__Factory<T1A, T1B>(Value1Methods.Value1<T1A, T1B>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1A, T1B> Value1<T1A, T1B>(in T1B value)
                 {
-                    return new Step_0__Factory<T1A, T1B>(Overloads.Convert<T1A, T1B>(value));
+                    return new Step_0__Factory<T1A, T1B>(Value1Methods.Value1<T1A, T1B>(value));
                 }
             }
 
@@ -1176,15 +1176,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public Step_1__Factory<T1A, T1B, T2A, T2B> Value2<T2A, T2B>(in System.Func<T2A, T2B> factory2)
+                public Step_1__Factory<T1A, T1B, T2A, T2B> Value2<T2A, T2B>(in System.Func<T2A, T2B> value)
                 {
-                    return new Step_1__Factory<T1A, T1B, T2A, T2B>(this._factory1__parameter, factory2);
+                    return new Step_1__Factory<T1A, T1B, T2A, T2B>(this._factory1__parameter, Value2Methods.Value2<T2A, T2B>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public Step_1__Factory<T1A, T1B, T2A, T2B> Value2<T2A, T2B>(in T2B value)
                 {
-                    return new Step_1__Factory<T1A, T1B, T2A, T2B>(this._factory1__parameter, Overloads.Convert<T2A, T2B>(value));
+                    return new Step_1__Factory<T1A, T1B, T2A, T2B>(this._factory1__parameter, Value2Methods.Value2<T2A, T2B>(value));
                 }
             }
 
@@ -1199,15 +1199,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClass<T1A, T1B, T2A, T2B, T3A, T3B> Value3<T3A, T3B>(in System.Func<T3A, T3B> factory3)
+                public MyClass<T1A, T1B, T2A, T2B, T3A, T3B> Value3<T3A, T3B>(in System.Func<T3A, T3B> value)
                 {
-                    return new MyClass<T1A, T1B, T2A, T2B, T3A, T3B>(this._factory1__parameter, this._factory2__parameter, factory3);
+                    return new MyClass<T1A, T1B, T2A, T2B, T3A, T3B>(this._factory1__parameter, this._factory2__parameter, Value3Methods.Value3<T3A, T3B>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClass<T1A, T1B, T2A, T2B, T3A, T3B> Value3<T3A, T3B>(in T3B value)
                 {
-                    return new MyClass<T1A, T1B, T2A, T2B, T3A, T3B>(this._factory1__parameter, this._factory2__parameter, Overloads.Convert<T3A, T3B>(value));
+                    return new MyClass<T1A, T1B, T2A, T2B, T3A, T3B>(this._factory1__parameter, this._factory2__parameter, Value3Methods.Value3<T3A, T3B>(value));
                 }
             }
             """;
@@ -1307,15 +1307,15 @@ public class FluentMethodCustomizationTests
             public static partial class Factory
             {
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> factory1)
+                public static Step_0__Factory<T1, T2> Value1<T1, T2>(in System.Func<T1, T2> value)
                 {
-                    return new Step_0__Factory<T1, T2>(factory1);
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public static Step_0__Factory<T1, T2> Value1<T1, T2>(in T2 value)
                 {
-                    return new Step_0__Factory<T1, T2>(Overloads.Convert<T1, T2>(value));
+                    return new Step_0__Factory<T1, T2>(Value1Methods.Value1<T1, T2>(value));
                 }
             }
 
@@ -1328,15 +1328,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public Step_1__Factory<T1, T2, T3> Value2<T3>(in System.Func<T2, T3> factory2)
+                public Step_1__Factory<T1, T2, T3> Value2<T3>(in System.Func<T2, T3> value)
                 {
-                    return new Step_1__Factory<T1, T2, T3>(this._factory1__parameter, factory2);
+                    return new Step_1__Factory<T1, T2, T3>(this._factory1__parameter, Value2Methods.Value2<T2, T3>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public Step_1__Factory<T1, T2, T3> Value2<T3>(in T3 value)
                 {
-                    return new Step_1__Factory<T1, T2, T3>(this._factory1__parameter, Overloads.Convert<T2, T3>(value));
+                    return new Step_1__Factory<T1, T2, T3>(this._factory1__parameter, Value2Methods.Value2<T2, T3>(value));
                 }
             }
 
@@ -1351,15 +1351,15 @@ public class FluentMethodCustomizationTests
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                public MyClass<T1, T2, T3, T4> Value3<T4>(in System.Func<T3, T4> factory3)
+                public MyClass<T1, T2, T3, T4> Value3<T4>(in System.Func<T3, T4> value)
                 {
-                    return new MyClass<T1, T2, T3, T4>(this._factory1__parameter, this._factory2__parameter, factory3);
+                    return new MyClass<T1, T2, T3, T4>(this._factory1__parameter, this._factory2__parameter, Value3Methods.Value3<T3, T4>(value));
                 }
 
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
                 public MyClass<T1, T2, T3, T4> Value3<T4>(in T4 value)
                 {
-                    return new MyClass<T1, T2, T3, T4>(this._factory1__parameter, this._factory2__parameter, Overloads.Convert<T3, T4>(value));
+                    return new MyClass<T1, T2, T3, T4>(this._factory1__parameter, this._factory2__parameter, Value3Methods.Value3<T3, T4>(value));
                 }
             }
             """;

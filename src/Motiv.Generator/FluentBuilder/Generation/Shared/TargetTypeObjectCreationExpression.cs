@@ -23,7 +23,7 @@ public static class TargetTypeObjectCreationExpression
 
         return ObjectCreationExpression(name)
             .WithNewKeyword(Token(SyntaxKind.NewKeyword))
-            .WithArgumentList(ArgumentList(SeparatedList(methodArguments)));
+            .WithArgumentList(ArgumentList(SeparatedList([..fieldArguments, ..methodArguments])));
     }
 
     private static ObjectCreationExpressionSyntax CreateMethodOverloadExpression(
