@@ -140,30 +140,31 @@ public static class SymbolExtensions
 
                 return true;
             }
-            case (ITypeParameterSymbol sourceParam, _) when sourceParam.ConstraintTypes
-                .Select(constraint => compilation.ClassifyCommonConversion(constraint, destination))
-                .Any(typeConversion => typeConversion is { Exists: true, IsImplicit: true }):
+            case (ITypeParameterSymbol sourceTypeParam, _):
             {
-                return true;
-            }
-            case (ITypeParameterSymbol sourceParam, _):
+                if (sourceTypeParam.ConstraintTypes
+                    .Select(constraint => compilation.ClassifyCommonConversion(constraint, destination))
+                    .Any(typeConversion => typeConversion is { Exists: true, IsImplicit: true }))
                 {
+                    return true;
+                }
+
                 // Check special constraints against target
-                if (sourceParam.HasValueTypeConstraint && !destination.IsValueType)
+                if (sourceTypeParam.HasValueTypeConstraint && !destination.IsValueType)
                     return false;
 
-                return !sourceParam.HasReferenceTypeConstraint || destination.IsReferenceType;
-        }
-            case (INamedTypeSymbol paramNamedType, INamedTypeSymbol argNamedType):
+                return !sourceTypeParam.HasReferenceTypeConstraint || destination.IsReferenceType;
+            }
+            case (INamedTypeSymbol sourceNamedType, INamedTypeSymbol destinationNamedType):
             {
                 // Check if they have the same number of type arguments
-                if (paramNamedType.TypeArguments.Length != argNamedType.TypeArguments.Length)
+                if (sourceNamedType.TypeArguments.Length != destinationNamedType.TypeArguments.Length)
                     return false;
                 // All other parameters are contravariant
-                for (var i = 0; i < paramNamedType.TypeArguments.Length; i++)
+                for (var i = 0; i < sourceNamedType.TypeArguments.Length; i++)
                 {
-                    var paramTypeArg = paramNamedType.TypeArguments[i];
-                    var argTypeArg = argNamedType.TypeArguments[i];
+                    var paramTypeArg = sourceNamedType.TypeArguments[i];
+                    var argTypeArg = destinationNamedType.TypeArguments[i];
 
                     if (!compilation.IsAssignable(paramTypeArg, argTypeArg))
                         return false;
