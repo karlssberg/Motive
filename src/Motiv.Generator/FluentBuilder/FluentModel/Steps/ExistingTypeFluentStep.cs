@@ -13,7 +13,7 @@ public class ExistingTypeFluentStep(INamedTypeSymbol rootType, IMethodSymbol exi
 #if DEBUG
     public int InstanceId => RuntimeHelpers.GetHashCode(this);
 #endif
-    public string Name { get; } = existingStepConstructor.ContainingType.ToUnqualifiedDisplayStriong();
+    public string Name { get; } = existingStepConstructor.ContainingType.ToUnqualifiedDisplayString();
 
     public string FullName => existingStepConstructor.ContainingType.ToFullyQualifiedDisplayString();
 
