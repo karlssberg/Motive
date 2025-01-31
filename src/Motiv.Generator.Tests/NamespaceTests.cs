@@ -223,9 +223,9 @@ public class NamespaceTests
                 public partial class MyBuildTargetB<T>
                 {
                     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-                    public NamespaceA.MyBuildTargetA<T> WithValue(in int value)
+                    public Test.NamespaceA.MyBuildTargetA<T> WithValue(in int value)
                     {
-                        return new NamespaceA.MyBuildTargetA<T>(this.Data, value);
+                        return new Test.NamespaceA.MyBuildTargetA<T>(this.Data, value);
                     }
                 }
             }

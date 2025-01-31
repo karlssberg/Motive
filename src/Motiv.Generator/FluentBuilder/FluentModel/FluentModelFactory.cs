@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis;
 using Motiv.Generator.FluentBuilder.Analysis;
 using Motiv.Generator.FluentBuilder.FluentModel.Methods;
 using Motiv.Generator.FluentBuilder.FluentModel.Steps;
-using Motiv.Generator.FluentBuilder.Generation;
 using Motiv.Generator.FluentBuilder.Generation.Shared;
 using static Motiv.Generator.FluentBuilder.FluentFactoryGeneratorOptions;
 
@@ -11,10 +10,14 @@ namespace Motiv.Generator.FluentBuilder.FluentModel;
 
 public class FluentModelFactory(Compilation compilation)
 {
+    private readonly OrderedDictionary<ParameterSequence, RegularFluentStep> _regularFluentSteps = new();
+
     public FluentFactoryCompilationUnit CreateFluentFactoryCompilationUnit(
         INamedTypeSymbol rootType,
         ImmutableArray<FluentConstructorContext> fluentConstructorContexts)
     {
+        _regularFluentSteps.Clear();
+
         var usings = GetUsingStatements(fluentConstructorContexts);
 
         var stepTrie = CreateFluentStepTrie(fluentConstructorContexts);
@@ -30,10 +33,9 @@ public class FluentModelFactory(Compilation compilation)
             .DistinctBy(step => step.KnownConstructorParameters)
             .Select((step, index) =>
             {
-                if (step is not RegularFluentStep) return step;
+                if (step is not RegularFluentStep regularFluentStep) return step;
 
-                var name = rootType.ToIdentifier();
-                step.Name = $"Step_{index}__{name}";
+                regularFluentStep.Index = index;
 
                 return step;
             })
@@ -80,7 +82,8 @@ public class FluentModelFactory(Compilation compilation)
             select fluentMethod
         ];
 
-        var fluentMethodGroups = fluentMethods.GroupBy(m => m, FluentMethodSignatureEqualityComparer.Default);
+        var fluentMethodGroups = fluentMethods
+            .GroupBy(m => m, FluentMethodSignatureEqualityComparer.Default);
 
         foreach (var fluentMethodGroup in fluentMethodGroups)
         {
@@ -101,13 +104,14 @@ public class FluentModelFactory(Compilation compilation)
         var constructorMetadata = node.EndValues.FirstOrDefault();
         var useExistingTypeAsStep = UseExistingTypeAsStep();
 
+        var knownConstructorParameters = new ParameterSequence(node.Key);
+
         return (useExistingTypeAsStep, constructorMetadata) switch
         {
             (true, { } metadata) =>
                 new ExistingTypeFluentStep(rootType, metadata.Constructor)
                 {
-                    Name = constructorMetadata.Constructor.ContainingType.ToDisplayString(),
-                    KnownConstructorParameters = new ParameterSequence(node.Key),
+                    KnownConstructorParameters = knownConstructorParameters,
                     FluentMethods = fluentMethods,
                     Accessibility = metadata.Constructor.ContainingType.DeclaredAccessibility,
                     TypeKind = metadata.Constructor.ContainingType.TypeKind,
@@ -115,13 +119,15 @@ public class FluentModelFactory(Compilation compilation)
                     ParameterStoreMembers = metadata.ParameterStoreMembers
                 },
             _ =>
-                new RegularFluentStep(rootType)
-                {
-                    Name = "Step",
-                    KnownConstructorParameters = new ParameterSequence(node.Key),
-                    FluentMethods = fluentMethods,
-                    IsEndStep = node.IsEnd
-                }
+                 _regularFluentSteps.GetOrAdd(
+                         knownConstructorParameters,
+                         () =>
+                             new RegularFluentStep(rootType)
+                             {
+                                 KnownConstructorParameters = knownConstructorParameters,
+                                 FluentMethods = fluentMethods,
+                                 IsEndStep = node.IsEnd
+                             })
         };
 
         bool UseExistingTypeAsStep()
@@ -263,7 +269,6 @@ public class FluentModelFactory(Compilation compilation)
 
                         return new FluentMethodParameter(parameter, methodNames);
                     });
-
 
             trie.Insert(
                 fluentParameters,

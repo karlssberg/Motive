@@ -30,9 +30,8 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 
     public ICollection<TKey> Keys => _dictionary.Keys;
 
-    ICollection<TValue> IDictionary<TKey, TValue>.Values => _dictionary.Values;
+    public ICollection<TValue> Values => GetOrderedItems() .Select(pair => pair.Value).ToList();
 
-    public IEnumerable<TValue> Values => _keys.Select(key => _dictionary[key]);
 
     public void Add(TKey key, TValue value)
     {
@@ -47,18 +46,16 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 
     public bool Remove(TKey key)
     {
-        if (_dictionary.Remove(key))
-        {
-            _keys.Remove(key);
-            return true;
-        }
+        if (!_dictionary.Remove(key)) return false;
 
-        return false;
+        _keys.Remove(key);
+        return true;
+
     }
 
     public IEnumerable<KeyValuePair<TKey, TValue>> GetOrderedItems()
     {
-        foreach (var key in _keys) yield return new KeyValuePair<TKey, TValue>(key, _dictionary[key]);
+        return _keys.Select(key => new KeyValuePair<TKey, TValue>(key, _dictionary[key]));
     }
 
     public bool ContainsKey(TKey key)
@@ -97,5 +94,14 @@ public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)_dictionary).GetEnumerator();
+    }
+
+    public TValue GetOrAdd(TKey key, Func<TValue> getValue)
+    {
+        if (TryGetValue(key, out var existingValue)) return existingValue;
+
+        var value = getValue();
+        Add(key, value);
+        return value;
     }
 }

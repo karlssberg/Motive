@@ -21,7 +21,7 @@ public static class ExistingPartialTypeMethodDeclaration
 
         var returnObjectExpression = method.Return switch
         {
-            ExistingTypeFluentStep => TargetTypeObjectCreationExpression.Create(step.Namespace, method, stepActivationArgs, []),
+            TargetTypeReturn => TargetTypeObjectCreationExpression.Create(step.Namespace, method, stepActivationArgs, []),
             _ => FluentStepCreationExpression.Create(step.Namespace, method, stepActivationArgs)
         };
 
@@ -95,7 +95,7 @@ public static class ExistingPartialTypeMethodDeclaration
 
                 return Argument(node);
             })
-            .Concat(method.AvailableParameterFields
+            .Concat(method.MethodParameters
                 .Select(p => p.ParameterSymbol.Name.ToCamelCase())
                 .Select(IdentifierName)
                 .Select(Argument));

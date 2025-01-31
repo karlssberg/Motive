@@ -15,7 +15,9 @@ public class RegularFluentStep(INamedTypeSymbol rootType) : IFluentStep
 #if DEBUG
     public int InstanceId => RuntimeHelpers.GetHashCode(this);
 #endif
-    public string Name { get; set; } = "Step";
+    public string Name => GetStepName(rootType);
+
+    public string FullName => $"{Namespace.ToDisplayString()}.{Name}";
 
 
     /// <summary>
@@ -70,20 +72,15 @@ public class RegularFluentStep(INamedTypeSymbol rootType) : IFluentStep
     }
 
     public INamespaceSymbol Namespace => RootType.ContainingNamespace;
+    public int Index { get; set; }
 
-    public IFluentStep MergeWith(IFluentStep other)
+
+
+    private string GetStepName(INamedTypeSymbol rootType)
     {
-        return other switch
-        {
-            ExistingTypeFluentStep otherStep => otherStep.MergeWith(this),
-            RegularFluentStep regularFluentStep => new RegularFluentStep(RootType)
-            {
-                Name = "Step",
-                KnownConstructorParameters = KnownConstructorParameters,
-                FluentMethods = [..FluentMethods, ..regularFluentStep.FluentMethods],
-                IsEndStep = IsEndStep && regularFluentStep.IsEndStep,
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(other), other, $"Unknown IFluentStep implementation '{other.GetType()}'")
-        };
+        var identifier = rootType.ToIdentifier();
+        var name = $"Step_{Index}__{identifier}";
+
+        return name;
     }
 }

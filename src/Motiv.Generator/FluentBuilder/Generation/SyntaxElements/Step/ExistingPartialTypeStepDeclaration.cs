@@ -40,23 +40,7 @@ public static class ExistingPartialTypeStepDeclaration
                 ..methodDeclarationSyntaxes,
             ]));
 
-        if (step.GenericConstructorParameters.Length <= 0)
-            return typeDeclaration;
-
-        var typeParameterSyntaxes = step.GenericConstructorParameters
-            .Select<IParameterSymbol, ITypeSymbol>(t => t.Type)
-            .GetGenericTypeParameters()
-            .Distinct<ITypeParameterSymbol>(SymbolEqualityComparer.Default)
-            .Select(symbol => symbol.ToTypeParameterSyntax())
-            .ToImmutableArray();
-
-        if (typeParameterSyntaxes.Length == 0)
-            return typeDeclaration;
-
-        return typeDeclaration
-            .WithTypeParameterList(
-                TypeParameterList(
-                    SeparatedList(typeParameterSyntaxes)));
+        return typeDeclaration;
     }
 
     private static TypeDeclarationSyntax CreateTypeDeclarationSyntax(IFluentStep step, SyntaxToken identifier)

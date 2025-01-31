@@ -13,7 +13,9 @@ public class ExistingTypeFluentStep(INamedTypeSymbol rootType, IMethodSymbol exi
 #if DEBUG
     public int InstanceId => RuntimeHelpers.GetHashCode(this);
 #endif
-    public string Name { get; set; } = existingStepConstructor.ContainingType.Name;
+    public string Name { get; } = existingStepConstructor.ContainingType.ToUnqualifiedDisplayStriong();
+
+    public string FullName => existingStepConstructor.ContainingType.ToFullyQualifiedDisplayString();
 
     /// <summary>
     /// The known constructor parameters up until this step.
@@ -48,19 +50,4 @@ public class ExistingTypeFluentStep(INamedTypeSymbol rootType, IMethodSymbol exi
 
     public INamespaceSymbol Namespace => ExistingStepConstructor.ContainingNamespace;
 
-    public IFluentStep MergeWith(IFluentStep other)
-    {
-        Debug.Assert(other is ExistingTypeFluentStep, "Cannot merge two existing ExistingTypeFluentStep instances");
-
-        return new ExistingTypeFluentStep(RootType, ExistingStepConstructor)
-        {
-            Name = Name,
-            KnownConstructorParameters = KnownConstructorParameters,
-            FluentMethods = [..FluentMethods, ..other.FluentMethods],
-            Accessibility = Accessibility,
-            TypeKind = TypeKind,
-            IsRecord = IsRecord,
-            ParameterStoreMembers = ParameterStoreMembers
-        };
-    }
 }

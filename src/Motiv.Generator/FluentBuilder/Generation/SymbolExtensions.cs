@@ -8,18 +8,9 @@ namespace Motiv.Generator.FluentBuilder.Generation;
 
 public static class SymbolExtensions
 {
-    private static readonly SymbolDisplayFormat FullyQualifiedWithGlobalFormat = new (
-        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
-        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
-    );
-
-    private static readonly SymbolDisplayFormat FullyQualifiedFormat = new (
-        globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
-        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
-        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
-        miscellaneousOptions: SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+    private static readonly SymbolDisplayFormat TypeNameOnlyFormat = new(
+        typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
+        genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters
     );
 
     public static bool IsOpenGenericType(this IParameterSymbol parameter)
@@ -230,37 +221,6 @@ public static class SymbolExtensions
            _ => [SyntaxKind.None]
        };
 
-   // public static string ToDynamicDisplayString(this ITypeSymbol typeSymbol, INamespaceSymbol namespaceSymbol)
-   // {
-   //     if (typeSymbol.SpecialType != SpecialType.None)
-   //         return typeSymbol.ToDisplayString(NameFormat);
-   //     if (typeSymbol is ITypeParameterSymbol typeParameter)
-   //         return typeParameter.Name;
-   //
-   //     var typeSymbolNamespaceParts = typeSymbol.ContainingNamespace.ToDisplayParts();
-   //     var namespaceSymbolParts = namespaceSymbol.ToDisplayParts();
-   //
-   //     var sb = new StringBuilder();
-   //     var isCommonPrefixMode = true;
-   //     for (var i = 0; i < typeSymbolNamespaceParts.Length; i++)
-   //     {
-   //         var typePart = i < typeSymbolNamespaceParts.Length ? typeSymbolNamespaceParts[i].ToString() : null;
-   //         var namespacePart = i < namespaceSymbolParts.Length ? namespaceSymbolParts[i].ToString() : null;
-   //
-   //         if (isCommonPrefixMode && typePart == namespacePart)
-   //             continue;
-   //
-   //         isCommonPrefixMode = false;
-   //         sb.Append(typePart);
-   //
-   //     }
-   //
-   //     var serializedMinimalNamespace = sb.ToString();
-   //
-   //     return serializedMinimalNamespace == string.Empty
-   //         ? typeSymbol.ToDisplayString(NameFormat)
-   //         : $"{serializedMinimalNamespace}.{typeSymbol.ToDisplayString(NameFormat)}";
-   // }
 
    private static readonly SymbolDisplayFormat NameFormat = new(
          typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameOnly,
@@ -272,6 +232,10 @@ public static class SymbolExtensions
    {
        return typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
    }
+
+   public static string ToUnqualifiedDisplayStriong(this ITypeSymbol typeSymbol) =>
+       typeSymbol.ToDisplayString(TypeNameOnlyFormat);
+
 
    public static string ToDynamicDisplayString(this ITypeSymbol typeSymbol, INamespaceSymbol currentNamespace)
    {
